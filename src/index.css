@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+@tailwind base;
+@tailwin components;
+@tailwind utilities;
+
+
+:root{
+  font-family: 'Poppins', sans-serif;
+}
+
+body{
+  background: white;
+  
+}
+
+li{
+  list-style: none;
+  cursor: pointer;
+  position: relative;
+}
+li:hover::before{
+  position: absolute;
+  content: '';
+  height: 4px;
+  width: 100%;
+  background: #2a68ff;
+  right: 0;
+  bottom: -2px;
+  color: #2a68ff;
+}
+.icon{
+  cursor: pointer;
+}
+.card{
+  background: #000;
+}
+.search-input input{
+  border: none;
+}
+select{
+  border:none;
+}
+.hammer{
+  font-size: 50px;
+}
+.img-brand{
+ width: 20px;
+ height: 20px;
+ border-radius: 50%;
+}
+.card-value{
+  background: url('/src/assets/logos/handshake.jpg');
+}
+
+
+
+
+
+
+/* Product.css */
+.product-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 4 products in a row */
+  gap: 10px; 
+}
+
+.product {
+
+  padding: 20px;
+  text-align: center;
+}
+
+.product img {
+  width: 100%;
+
+  height: 400px; 
+}
+
+.product h3 {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.product p {
+  margin: 5px 0;
+}
+
+.our-services{
+  margin: 20px;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 400px) {
+  .product-container {
+    grid-template-columns: repeat(1, 1fr); /* One product in a row for screens up to 400px */
+  }
+}
+
+@media  (max-width: 767px) {
+  .product-container {
+    grid-template-columns: repeat(2, 1fr); /* Two products in a row for screens between 401px and 767px */
+  }
+}
+
+@media (max-width: 768px) and (max-width: 1023px) {
+  .product-container {
+    grid-template-columns: repeat(3, 1fr); /* Three products in a row for screens between 768px and 1023px */
+  }
+}
+
+@media (max-width: 1024px) {
+  .product-container {
+    grid-template-columns: repeat(3, 1fr); /* Four products in a row for screens 1024px and above */
+  }
+}
+
+
+
+
+
+
+
