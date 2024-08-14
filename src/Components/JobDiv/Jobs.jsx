@@ -19,6 +19,7 @@ const Jobs = () => {
           headers: {
             Authorization: `Token ${token}`
           }
+          
         });
       
         setData(response.data);
