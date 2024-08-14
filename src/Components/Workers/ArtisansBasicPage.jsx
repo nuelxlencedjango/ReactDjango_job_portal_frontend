@@ -51,7 +51,7 @@ const BasicDetailsForm = () => {
 
         setLoading(true); // Start loading
         try {
-            const response = await axios.post('https://web-production-b1ed.up.railway.app/accounts/register-artisan/', formDataToSend, {
+            const response = await axios.post('https://i-wanwok-backend.up.railway.app/accounts/register-artisan/', formDataToSend, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 

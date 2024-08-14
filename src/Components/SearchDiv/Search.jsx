@@ -24,7 +24,7 @@ const JobSearch = ({ messages }) => {
 
     const fetchLocations = async () => {
         try {
-            const response = await axios.get('https://web-production-b1ed.up.railway.app/artisans/location-list/');
+            const response = await axios.get('https://i-wanwok-backend.up.railway.app/artisans/location-list/');
             setLocations(response.data);
             
         } catch (error) {
@@ -34,7 +34,7 @@ const JobSearch = ({ messages }) => {
 
     const fetchJobTypes = async () => {
         try {
-            const response = await axios.get('https://web-production-b1ed.up.railway.app/artisans/profession-list/');
+            const response = await axios.get('https://i-wanwok-backend.up.railway.app/artisans/profession-list/');
             setJobTypes(response.data);
             console.log("job types:", response)
         } catch (error) {
@@ -44,7 +44,7 @@ const JobSearch = ({ messages }) => {
 
     const fetchIndustries = async () => {
         try {
-            const response = await axios.get('https://web-production-b1ed.up.railway.app/industry-list/');
+            const response = await axios.get('https://i-wanwok-backend.up.railway.app/industry-list/');
             setIndustries(response.data);
             console.log("industries:",)
         } catch (error) {
@@ -70,7 +70,7 @@ const JobSearch = ({ messages }) => {
 
         try {
             //API request
-            const response = await axios.get(`https://web-production-b1ed.up.railway.app/artisans/artisans-search/?${queryParams}`);
+            const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-search/?${queryParams}`);
             
             // Navigate to result
             navigate('/results', { state: { searchParams: formState, results: response.data } }); 

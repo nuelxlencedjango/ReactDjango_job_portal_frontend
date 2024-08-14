@@ -59,7 +59,7 @@ const EmployerRegistrationForm = () => {
                 phone_number: formData.phone_number
             };
     
-            await axios.post('https://web-production-b1ed.up.railway.app/employers/add_employer/', completeData, {
+            await axios.post('https://i-wanwok-backend.up.railway.app/employers/add_employer/', completeData, {
                 headers: { 'Content-Type': 'application/json' }
             });
     

@@ -42,7 +42,7 @@ const ArtisanDetailsForm = () => {
 
     const fetchLocations = async () => {
         try {
-            const response = await axios.get('https://web-production-b1ed.up.railway.app/artisans/location-list/');
+            const response = await axios.get('https://i-wanwok-backend.up.railway.app/artisans/location-list/'); 
             setLocations(response.data);
             console.log(response)
         } catch (error) {
@@ -53,7 +53,7 @@ const ArtisanDetailsForm = () => {
     
     const fetchServices = async () => {
         try {
-            const response = await axios.get('https://web-production-b1ed.up.railway.app/artisans/profession-list/');
+            const response = await axios.get('https://i-wanwok-backend.up.railway.app/artisans/profession-list/'); 
             setServices(response.data);
             console.log("profession:",response)
         } catch (error) {
@@ -101,7 +101,7 @@ const ArtisanDetailsForm = () => {
     
         try {
             setLoading(true);
-            const response = await axios.post('https://web-production-b1ed.up.railway.app/artisans/add_artisan/', formDataToSend, {
+            const response = await axios.post('https://i-wanwok-backend.up.railway.app/artisans/add_artisan/', formDataToSend, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
     

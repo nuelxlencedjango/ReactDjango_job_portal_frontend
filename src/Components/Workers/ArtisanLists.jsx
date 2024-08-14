@@ -9,7 +9,7 @@ const Artisans = () => {
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
-        const response = await axios.get(`https://web-production-b1ed.up.railway.app/artisans/artisans-by-service/${service_title}/`);
+        const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
       } catch (error) {
         console.error("There was an error fetching the artisans!", error);
