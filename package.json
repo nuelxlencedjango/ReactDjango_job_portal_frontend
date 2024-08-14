@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "aos": "^2.3.4",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "cloudinary-core": "^2.13.1",
     "cloudinary-react": "^1.8.1",
     "flowbite": "^2.5.1",

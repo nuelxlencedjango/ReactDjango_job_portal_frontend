@@ -12,12 +12,13 @@ const Jobs = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('token');  // localStorage
+      const token = localStorage.getItem('token');  //localStorage
 
       try {
         const response = await axios.get('https://i-wanwok-backend.up.railway.app', {
           headers: {
             Authorization: `Token ${token}`
+          
           }
           
         });
