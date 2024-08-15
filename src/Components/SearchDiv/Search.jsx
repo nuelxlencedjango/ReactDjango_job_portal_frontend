@@ -36,7 +36,7 @@ const JobSearch = ({ messages }) => {
         try {
             const response = await axios.get('https://i-wanwok-backend.up.railway.app/artisans/profession-list/');
             setJobTypes(response.data);
-            console.log("job types:", response)
+           
         } catch (error) {
             console.error('Error fetching job types:', error);
         }
@@ -46,7 +46,7 @@ const JobSearch = ({ messages }) => {
         try {
             const response = await axios.get('https://i-wanwok-backend.up.railway.app/industry-list/');
             setIndustries(response.data);
-            console.log("industries:",)
+            
         } catch (error) {
             console.error('Error fetching industries:', error);
         }
