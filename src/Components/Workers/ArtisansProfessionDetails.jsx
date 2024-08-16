@@ -170,7 +170,7 @@ const ArtisanDetailsForm = () => {
                             >
                                 <option value="">Select Location</option>
                                 {locations.map(location => (
-                                    <option key={location.id} value={location.id}>{location.location?.location}</option>
+                                    <option key={location.id} value={location.id}>{location.location}</option>
                                 ))}
                             </select>
                             {errors.location && (
