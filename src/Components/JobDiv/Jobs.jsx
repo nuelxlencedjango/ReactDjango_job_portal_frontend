@@ -26,9 +26,8 @@ const Jobs = () => {
           
         });
       
-        console.console.log("responses:", response);
+      
         setData(response.data);
-        
       } catch (error) {
         console.error("There was an error fetching the services!", error);
       }
