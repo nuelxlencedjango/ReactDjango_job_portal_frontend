@@ -43,9 +43,9 @@ const Artisans = () => {
 
             <h2 className="text-lg font-semibold">{artisan.user?.first_name} {artisan.user?.last_name}</h2>
             <p>{artisan.experience} years of experience</p>
-            <p>{artisan.service?.title}</p>
+            <p>{artisan.service}</p>
             <p>Fees: ${artisan.fees}</p>
-            <p>Location: {artisan.location?.location}</p>
+            <p>Location: {artisan.location}</p>
             <button
               onClick={() => handleOrder(artisan.id)}
               className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-red-600"
