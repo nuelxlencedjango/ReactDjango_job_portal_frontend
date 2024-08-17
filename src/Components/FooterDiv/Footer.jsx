@@ -55,13 +55,13 @@ const Footer = () => {
         <span className="divTitle text-lg font-semibold pb-4 text-white">
           Contact Us
         </span>
-        
+
         <div>
           <small className="text-sm text-white">contact@info.com</small>
           <div className="icons flex gap-4 py-4">
-            <AiFillInstagram className="bg-white p-2 h-9 w-9 rounded-full icon text-greenColor" />
-            <BsFacebook className="bg-white p-2 h-9 w-9 rounded-full icon text-greenColor" />
-            <AiOutlineTwitter className="bg-white p-2 h-9 w-9 rounded-full icon text-greenColor" />
+            <AiFillInstagram className="bg-white p-2 h-9 w-9 rounded-full icon text-green-600" />
+            <BsFacebook className="bg-white p-2 h-9 w-9 rounded-full icon text-green-600" />
+            <AiOutlineTwitter className="bg-white p-2 h-9 w-9 rounded-full icon text-green-600" />
           </div>
         </div>
       </div>
