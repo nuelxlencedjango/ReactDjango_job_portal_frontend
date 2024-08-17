@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 const Artisans = () => {
-  const { service_title } = useParams();
+  const { service_id } = useParams();
   const [artisans, setArtisans] = useState([]);
 
   useEffect(() => {
