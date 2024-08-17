@@ -60,7 +60,7 @@ const Jobs = () => {
               </div>
               
               <Link 
-                to={`/artisans/artisans-by-service/${encodeURIComponent(job.service)}`} 
+                to={`/artisans/artisans-by-service/${encodeURIComponent(job.title)}`} 
                 className="mt-4 border-2 border-green-500 rounded-lg py-2 px-4 w-full text-center text-gray-800 font-semibold hover:bg-green-500 hover:text-white transition duration-300 block"
               >
               See Workers
