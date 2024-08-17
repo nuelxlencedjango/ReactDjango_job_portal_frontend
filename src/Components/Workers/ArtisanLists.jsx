@@ -3,13 +3,13 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 const Artisans = () => {
-  const { service_id } = useParams();
+  const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
 
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
-        const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans-by-service/${service_id}/`);
+        const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
       } catch (error) {
         console.error("There was an error fetching the artisans!", error);
@@ -17,13 +17,13 @@ const Artisans = () => {
     };
 
     fetchArtisans();
-  }, [service_id]);
+  }, [service_title]);
  
   
 
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
-      <h1 className="text-2xl font-semibold mb-4 artisanlist-heading">Available {service_id} for your service</h1>
+      <h1 className="text-2xl font-semibold mb-4 artisanlist-heading">Available {service_title} for your service</h1>
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
         {artisans.map(artisan => (
           <div

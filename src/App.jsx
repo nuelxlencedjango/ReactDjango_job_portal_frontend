@@ -59,7 +59,7 @@ const App = () => {
           
         <Route path="/" element={<Jobs />} />
 
-        <Route path="/artisans/artisans-by-service/:service_id" element={<ArtisanList />} />
+        <Route path="/artisans/artisans-by-service/:service_title" element={<ArtisanList />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<NotFound />}></Route>
