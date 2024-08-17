@@ -55,6 +55,7 @@ const Footer = () => {
         <span className="divTitle text-lg font-semibold pb-4 text-white">
           Contact Us
         </span>
+        
         <div>
           <small className="text-sm text-white">contact@info.com</small>
           <div className="icons flex gap-4 py-4">
