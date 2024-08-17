@@ -20,12 +20,15 @@ const Jobs = () => {
         const response = await axios.get('https://i-wanwok-backend.up.railway.app', {
           headers: {
             Authorization: `Token ${token}`
+            
           
           }
           
         });
       
+        console.console.log("responses:", response);
         setData(response.data);
+        
       } catch (error) {
         console.error("There was an error fetching the services!", error);
       }
