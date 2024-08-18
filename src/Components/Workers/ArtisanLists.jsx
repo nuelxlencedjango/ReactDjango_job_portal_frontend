@@ -10,8 +10,23 @@ const Artisans = () => {
     const fetchArtisans = async () => {
       try {
         const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`);
-        setArtisans(response.data);
-        console.log("Responses:",response)
+        
+        // Fetch additional details for each artisan
+        const artisansWithDetails = await Promise.all(
+          response.data.map(async (artisan) => {
+            const locationResponse = await axios.get(`https://i-wanwok-backend.up.railway.app/locations/${artisan.location}/`);
+            const serviceResponse = await axios.get(`https://i-wanwok-backend.up.railway.app/services/${artisan.service}/`);
+            
+            return {
+              ...artisan,
+              location: locationResponse.data,
+              service: serviceResponse.data,
+            };
+          })
+        );
+
+        setArtisans(artisansWithDetails);
+        console.log("Responses:", artisansWithDetails);
       } catch (error) {
         console.error("There was an error fetching the artisans!", error);
       }
@@ -19,9 +34,7 @@ const Artisans = () => {
 
     fetchArtisans();
   }, [service_title]);
- 
   
-
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
       <h1 className="text-2xl font-semibold mb-4 artisanlist-heading">Available {service_title} for your service</h1>
@@ -41,12 +54,11 @@ const Artisans = () => {
   <p>No profile image available</p> 
 )}
 
-
             <h2 className="text-lg font-semibold">{artisan.user?.first_name} {artisan.user?.last_name}</h2>
             <p>{artisan.experience} years of experience</p>
-            <p>{artisan.service}</p>
+            <p>{artisan.service?.title}</p>
             <p>Fees: ${artisan.fees}</p>
-            <p>Location: {artisan.location}</p>
+            <p>Location: {artisan.location?.location}</p>
             <button
               onClick={() => handleOrder(artisan.id)}
               className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-red-600"
@@ -60,14 +72,11 @@ const Artisans = () => {
   );
 };
 
-// Function to handle order click
 const handleOrder = (artisanId) => {
- 
-
+  // handle order
 };
 
 export default Artisans;
-
 
 
 
