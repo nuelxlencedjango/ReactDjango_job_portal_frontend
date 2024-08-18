@@ -11,6 +11,7 @@ const Artisans = () => {
       try {
         const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
+        console.log("Responses:",response)
       } catch (error) {
         console.error("There was an error fetching the artisans!", error);
       }
