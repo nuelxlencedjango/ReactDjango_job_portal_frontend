@@ -45,7 +45,7 @@ const Artisans = () => {
             <h2 className="text-lg font-semibold">{artisan.user?.first_name} {artisan.user?.last_name}</h2>
             <p>{artisan.experience} years of experience</p>
             <p>{artisan.service?.title}</p>
-            <p>Fees: ${artisan.fees}</p>
+            <p>Daily Fees: ${artisan.pay}</p>
             <p>Location: {artisan.location?.location}</p>
             <button
               onClick={() => handleOrder(artisan.id)}

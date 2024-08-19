@@ -27,6 +27,7 @@ const ResultsPage = () => {
                             <p className="text-gray-700 mb-.5"><strong>Location:</strong> {artisan.location?.location || 'N/A'}</p>
                             <p className="text-gray-700 mb-.5"><strong>Service:</strong> {artisan.service?.title || 'N/A'}</p>
                             <p className="text-gray-700 mb-2"><strong>Experience:</strong> {artisan.experience || 'Unknown'} years</p>
+                            <p className="text-gray-700 mb-2"><strong>Average Daily Pay:</strong> {artisan.pay || 'Unknown'}</p>
                             <Link
                                 to={`/order/${artisan.id}`} 
                                 className="inline-block px-4 py-2 bg-green-500 text-white rounded-lg text-center hover:bg-red-600 transition-colors duration-300"
