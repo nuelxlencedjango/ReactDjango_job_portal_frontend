@@ -158,6 +158,7 @@ const Artisans = () => {
                 className="w-full p-2 mb-2 border rounded-lg"
                 required
               />
+              <label htmlFor="preferred_time" className="block text-gray-700">Preferred Time</label>
               <input
                 type="time"
                 name="preferred_time"
@@ -187,19 +188,20 @@ const Artisans = () => {
                 required
               />
               <div className="flex justify-end mt-4">
-                <button
-                  type="button"
-                  className="mr-4 px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-400"
-                  onClick={() => setSelectedArtisan(null)}
-                >
-                  Cancel
-                </button>
-                <button
+              <button
                   type="submit"
                   className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-red-600"
                 >
                   Submit Order
                 </button>
+                <button
+                  type="button"
+                  className="mr-4 px-4 py-2 bg-red-500 text-black rounded-lg hover:bg-gray-400"
+                  onClick={() => setSelectedArtisan(null)}
+                >
+                  Cancel
+                </button>
+
               </div>
             </form>
           </div>
