@@ -72,7 +72,7 @@ export default Artisans;
 
   import React, { useEffect, useState } from 'react';
   import axios from 'axios';
-  import { useParams, useHistory } from 'react-router-dom';
+  import { useParams, useNavigate } from 'react-router-dom'; // useNavigate instead of useHistory
   
   const Artisans = () => {
     const { service_title } = useParams();
@@ -86,7 +86,7 @@ export default Artisans;
       contact_person: '',
       phone_number: ''
     });
-    const history = useHistory();
+    const navigate = useNavigate(); // Use useNavigate instead of useHistory
   
     useEffect(() => {
       const fetchArtisans = async () => {
@@ -115,12 +115,12 @@ export default Artisans;
         });
   
         if (response.status === 201) {
-          history.push('/dashboard'); // Redirect to dashboard upon successful order
+          navigate('/dashboard'); // Use navigate instead of history.push
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
           alert('You need to be logged in to place an order.');
-          history.push('/login'); // Redirect to login if not authenticated
+          navigate('/login'); // Use navigate instead of history.push
         } else {
           console.error("There was an error placing the order!", error);
         }
