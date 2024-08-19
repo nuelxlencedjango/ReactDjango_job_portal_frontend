@@ -11,7 +11,7 @@ const Artisans = () => {
     address: '',
     area: '',
     job_date: '',
-    preferred_time: 'HH:MM',  // Updated: Preferred Time
+    preferred_time: 'HH:MM',  // Default placeholder for preferred time
     contact_person: '',
     phone_number: ''
   });
@@ -38,14 +38,17 @@ const Artisans = () => {
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
 
+    const employerId = localStorage.getItem('employer_id');  // Assuming the employer ID is stored in localStorage
+
     const payload = {
-      artisan: selectedArtisan.id,  // Selected artisan's ID
-      service: service_title,       // Service title from URL params
+      employer: employerId,             // Employer's ID
+      artisan: selectedArtisan.id,      // Selected artisan's ID
+      service: service_title,           // Service title from URL params
       description: formData.description,
       address: formData.address,
       area: formData.area,
       job_date: formData.job_date,
-      preferred_time: formData.preferred_time,  // Updated: Preferred Time
+      preferred_time: formData.preferred_time,
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
@@ -158,7 +161,7 @@ const Artisans = () => {
                 className="w-full p-2 mb-2 border rounded-lg"
                 required
               />
-              <label htmlFor="preferred_time" className="block text-gray-700">Preferred Time</label>
+              <label htmlFor="preferred_time">Preferred Time</label>
               <input
                 type="time"
                 name="preferred_time"
@@ -188,20 +191,19 @@ const Artisans = () => {
                 required
               />
               <div className="flex justify-end mt-4">
-              <button
+                <button
+                  type="button"
+                  className="mr-4 px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-400"
+                  onClick={() => setSelectedArtisan(null)}
+                >
+                  Cancel
+                </button>
+                <button
                   type="submit"
                   className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-red-600"
                 >
                   Submit Order
                 </button>
-                <button
-                  type="button"
-                  className="mr-4 px-4 py-2 bg-red-500 text-black rounded-lg hover:bg-gray-400"
-                  onClick={() => setSelectedArtisan(null)}
-                >
-                  Cancel
-                </button>
-
               </div>
             </form>
           </div>
