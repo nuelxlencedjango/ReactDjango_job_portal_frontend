@@ -1,4 +1,3 @@
-  
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -12,7 +11,7 @@ const Artisans = () => {
     address: '',
     area: '',
     job_date: '',
-    time: 'HH:MM',
+    preferred_time: 'HH:MM',  // Updated: Preferred Time
     contact_person: '',
     phone_number: ''
   });
@@ -46,7 +45,7 @@ const Artisans = () => {
       address: formData.address,
       area: formData.area,
       job_date: formData.job_date,
-      time: formData.time,
+      preferred_time: formData.preferred_time,  // Updated: Preferred Time
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
@@ -161,11 +160,11 @@ const Artisans = () => {
               />
               <input
                 type="time"
-                name="time"
-                value={formData.time}
+                name="preferred_time"
+                value={formData.preferred_time}
                 onChange={handleChange}
-                onFocus={() => formData.time === 'HH:MM' && setFormData({ ...formData, time: '' })}
-                onBlur={() => formData.time === '' && setFormData({ ...formData, time: 'HH:MM' })}
+                onFocus={() => formData.preferred_time === 'HH:MM' && setFormData({ ...formData, preferred_time: '' })}
+                onBlur={() => formData.preferred_time === '' && setFormData({ ...formData, preferred_time: 'HH:MM' })}
                 className="w-full p-2 mb-2 border rounded-lg"
                 required
               />
