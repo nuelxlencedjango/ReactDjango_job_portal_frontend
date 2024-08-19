@@ -84,7 +84,7 @@ const Artisans = () => {
     address: '',
     area: '',
     job_date: '',
-    time: '',
+    time: 'HH:MM',  // Simulated placeholder for time
     contact_person: '',
     phone_number: ''
   });
@@ -141,6 +141,24 @@ const Artisans = () => {
     });
   };
 
+  const handleTimeFocus = () => {
+    if (formData.time === 'HH:MM') {
+      setFormData({
+        ...formData,
+        time: ''
+      });
+    }
+  };
+
+  const handleTimeBlur = () => {
+    if (formData.time === '') {
+      setFormData({
+        ...formData,
+        time: 'HH:MM'
+      });
+    }
+  };
+
   const handleCloseModal = () => {
     setSelectedArtisan(null);
   };
@@ -182,7 +200,7 @@ const Artisans = () => {
 
       {selectedArtisan && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
             <h2 className="text-2xl font-semibold mb-4">Order Service from {selectedArtisan.user?.first_name} {selectedArtisan.user?.last_name}</h2>
             <form onSubmit={handleOrderSubmit}>
               <textarea
@@ -219,17 +237,16 @@ const Artisans = () => {
                 className="w-full p-2 mb-2 border rounded-lg"
                 required
               />
-              <div className="mb-2">
-                <label className="block text-sm font-medium mb-1">Preferred Time</label>
-                <input
-                  type="time"
-                  name="time"
-                  value={formData.time}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                />
-              </div>
+              <input
+                type="time"
+                name="time"
+                value={formData.time}
+                onChange={handleChange}
+                onFocus={handleTimeFocus}
+                onBlur={handleTimeBlur}
+                className="w-full p-2 mb-2 border rounded-lg"
+                required
+              />
               <input
                 type="text"
                 name="contact_person"
