@@ -41,9 +41,9 @@ const Artisans = () => {
     const employerId = localStorage.getItem('employer_id');  // Assuming the employer ID is stored in localStorage
 
     const payload = {
-      employer: employerId,             // Employer's ID
-      artisan: selectedArtisan.id,      // Selected artisan's ID
-      service: service_title,           // Service title from URL params
+      employer: employerId,             
+      artisan: selectedArtisan.id,      
+      service: service_title,           
       description: formData.description,
       address: formData.address,
       area: formData.area,
@@ -68,7 +68,7 @@ const Artisans = () => {
       if (response.status === 201) {
         alert('Order placed successfully!');
         setSelectedArtisan(null);
-        navigate('/dashboard');  // Redirect to a relevant page upon success
+        navigate('/dashboard'); 
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
