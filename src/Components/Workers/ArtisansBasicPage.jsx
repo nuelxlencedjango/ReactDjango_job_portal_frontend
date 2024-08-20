@@ -204,6 +204,17 @@ const BasicDetailsForm = () => {
                         {loading ? "Loading..." : "Next"} {/* Display loading text when loading */}
                     </button>
                 </form>
+
+                  {/* Link to login page */}
+                  <div className="text-center mt-4">
+                    <p className="text-sm text-gray-600">
+                        Already have an account?{" "}
+                        <Link to="/login" className="text-green-500 hover:underline">
+                            Log in
+                        </Link>
+                    </p>
+                </div>
+                
             </div>
             </div>
         </div>
@@ -211,3 +222,6 @@ const BasicDetailsForm = () => {
 };
 
 export default BasicDetailsForm;
+
+
+

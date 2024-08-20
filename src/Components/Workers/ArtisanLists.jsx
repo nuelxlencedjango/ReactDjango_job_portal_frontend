@@ -59,7 +59,7 @@ const Artisans = () => {
         payload,
         {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // Ensure the user is authenticated
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
             'Content-Type': 'application/json'
           },
         }
