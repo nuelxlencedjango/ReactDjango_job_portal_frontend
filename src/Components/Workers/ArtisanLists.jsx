@@ -11,7 +11,7 @@ const Artisans = () => {
     address: '',
     area: '',
     job_date: '',
-    preferred_time: 'HH:MM',  // Default placeholder for preferred time
+    preferred_time: 'HH:mm',
     contact_person: '',
     phone_number: ''
   });
@@ -40,6 +40,7 @@ const Artisans = () => {
   
     const employerId = localStorage.getItem('employer_id');
     const accessToken = localStorage.getItem('access_token');
+    console.log("access details:", accessToken)
   
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
