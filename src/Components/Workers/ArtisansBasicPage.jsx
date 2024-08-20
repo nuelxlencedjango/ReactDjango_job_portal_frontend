@@ -3,7 +3,8 @@ import axios from 'axios';
 import { FaUser } from 'react-icons/fa';
 import { MdOutlineEmail } from 'react-icons/md';
 import { RiLockPasswordFill } from 'react-icons/ri';
-import { useNavigate } from 'react-router-dom';
+
+import { useNavigate, Link } from "react-router-dom";
 
 const BasicDetailsForm = () => {
     const [formData, setFormData] = useState({
