@@ -55,7 +55,7 @@ const Artisans = () => {
 
     try {
       const response = await axios.post(
-        'https://i-wanwok-backend.up.railway.app/order-request/',
+        'https://i-wanwok-backend.up.railway.app/employers/order-request/',
         payload,
         {
           headers: {
@@ -153,6 +153,7 @@ const Artisans = () => {
                 className="w-full p-2 mb-2 border rounded-lg"
                 required
               />
+              <label htmlFor="preferred_time">Select A Date</label>
               <input
                 type="date"
                 name="job_date"
