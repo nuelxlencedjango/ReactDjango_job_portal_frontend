@@ -64,7 +64,7 @@ const EmployerRegistrationForm = () => {
             });
     
             alert('User registration was successful.');
-            navigate('/available-jobs');
+            navigate('/');
     
         } catch (error) {
             alert('ERROR! Username or email is wrong.', error.response ? error.response.data : error.message); 
