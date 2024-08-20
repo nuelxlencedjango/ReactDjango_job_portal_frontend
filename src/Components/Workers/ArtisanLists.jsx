@@ -37,13 +37,20 @@ const Artisans = () => {
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-
-    const employerId = localStorage.getItem('employer_id');  // Assuming the employer ID is stored in localStorage
-
+  
+    const employerId = localStorage.getItem('employer_id');
+    const accessToken = localStorage.getItem('access_token');
+  
+    if (!accessToken) {
+      alert('You need to be logged in to place an order.');
+      navigate('/login');
+      return;
+    }
+  
     const payload = {
-      employer: employerId,             
-      artisan: selectedArtisan.id,      
-      service: service_title,           
+      employer: employerId,
+      artisan: selectedArtisan.id,
+      service: service_title,
       description: formData.description,
       address: formData.address,
       area: formData.area,
@@ -52,33 +59,34 @@ const Artisans = () => {
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
-
+  
     try {
       const response = await axios.post(
         'https://i-wanwok-backend.up.railway.app/employers/order-request/',
         payload,
         {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-            'Content-Type': 'application/json'
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
           },
         }
       );
-
+  
       if (response.status === 201) {
         alert('Order placed successfully!');
         setSelectedArtisan(null);
-        navigate('/dashboard'); 
+        navigate('/dashboard');
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert('You need to be logged in to place an order.');
-        navigate('/login');  // Redirect to login if the user is not authenticated
+        navigate('/login');
       } else {
-        console.error("Error placing order:", error);
+        console.error('Error placing order:', error);
       }
     }
   };
+  
 
   const handleChange = (e) => {
     setFormData({
@@ -215,3 +223,6 @@ const Artisans = () => {
 };
 
 export default Artisans;
+
+
+
