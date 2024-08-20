@@ -20,6 +20,8 @@ function Form({ route, method }) {
         setLoading(true);
         try {
             const res = await api.post(route, { username, password });
+            console.log("Login Response:", res.data); // Log the entire response
+            
             if (method === "login") {
                 localStorage.setItem(ACCESS_TOKEN, res.data.access);
                 localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
@@ -33,6 +35,7 @@ function Form({ route, method }) {
             setLoading(false);
         }
     };
+    
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-6">
