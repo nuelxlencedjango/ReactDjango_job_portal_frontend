@@ -228,7 +228,7 @@ export default Artisans;*/}
 
 
 import React, { useEffect, useState } from 'react';
-import api from '../../api.js';
+import api from '../../api.js'; // Ensure this path is correct
 import { useParams, useNavigate } from 'react-router-dom';
 
 const Artisans = () => {
@@ -251,6 +251,7 @@ const Artisans = () => {
     const fetchArtisans = async () => {
       try {
         const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
+        console.log("Fetched Artisans:", response.data);
         setArtisans(response.data);
       } catch (error) {
         console.error("Error fetching artisans:", error);
@@ -261,20 +262,16 @@ const Artisans = () => {
   }, [service_title]);
 
   const handleOrderClick = (artisan) => {
+    console.log("Selected Artisan:", artisan);
     setSelectedArtisan(artisan);
   };
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
 
-    const employerId = localStorage.getItem('employerId'); 
-    if (!employerId) {
-      console.error("No employer ID found in localStorage");
-      return;
-    }
-
-    if (!selectedArtisan) {
-      console.error("No artisan selected");
+    const employerId = localStorage.getItem('employerId');
+    if (!employerId || !selectedArtisan) {
+      console.error("Employer ID or Selected Artisan is missing");
       return;
     }
 
@@ -285,6 +282,7 @@ const Artisans = () => {
     };
 
     try {
+      console.log("Order Data:", orderData);
       await api.post('https://i-wanwok-backend.up.railway.app/employers/order-request/', orderData);
       navigate('/order-confirmation');
     } catch (error) {
@@ -296,14 +294,12 @@ const Artisans = () => {
     <div>
       <h1>Artisans Offering {service_title}</h1>
       <div>
-        {artisans.length > 0 ? (
+        {Array.isArray(artisans) && artisans.length > 0 ? (
           artisans.map(artisan => (
             <div key={artisan.id}>
-              <h3>
-                {artisan.user?.first_name ?? "N/A"} {artisan.user?.last_name ?? ""}
-              </h3>
-              <p>Experience: {artisan.experience ?? "N/A"}</p>
-              <p>Location: {artisan.location ?? "N/A"}</p>
+              <h3>{artisan.user?.first_name || "Unknown"} {artisan.user?.last_name || "Unknown"}</h3>
+              <p>Experience: {artisan.experience || "N/A"}</p>
+              <p>Location: {artisan.location || "N/A"}</p>
               <button onClick={() => handleOrderClick(artisan)}>Order Service</button>
             </div>
           ))
@@ -314,7 +310,7 @@ const Artisans = () => {
 
       {selectedArtisan && (
         <div>
-          <h2>Order Service from {selectedArtisan.user?.first_name}</h2>
+          <h2>Order Service from {selectedArtisan.user?.first_name || "this artisan"}</h2>
           <form onSubmit={handleOrderSubmit}>
             <input
               type="text"
