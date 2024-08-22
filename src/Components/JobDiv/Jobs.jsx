@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 
 const Jobs = () => {
   const [data, setData] = useState([]);
-  
 
   useEffect(() => {
     const fetchData = async () => {

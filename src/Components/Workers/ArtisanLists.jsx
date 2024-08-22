@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+{/*import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ const Artisans = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch artisans by service title
+    
     const fetchArtisans = async () => {
       try {
         const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`);
@@ -38,6 +38,7 @@ const Artisans = () => {
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
   
+
     const employerId = localStorage.getItem('employer_id');
     const accessToken = localStorage.getItem('access_token');
     console.log("access details:", accessToken)
@@ -223,7 +224,131 @@ const Artisans = () => {
   );
 };
 
+export default Artisans;*/}
+
+
+
+
+
+import React, { useEffect, useState } from 'react';
+import api from '../../api.js'
+import { useParams, useNavigate } from 'react-router-dom';
+
+const Artisans = () => {
+  const { service_title } = useParams();
+  const [artisans, setArtisans] = useState([]);
+  const [selectedArtisan, setSelectedArtisan] = useState(null);
+  const [formData, setFormData] = useState({
+    description: '',
+    address: '',
+    area: '',
+    job_date: '',
+    preferred_time: 'HH:mm',
+    contact_person: '',
+    phone_number: ''
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch artisans by service title
+    const fetchArtisans = async () => {
+      try {
+        const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
+        setArtisans(response.data);
+      } catch (error) {
+        console.error("Error fetching artisans:", error);
+      }
+    };
+
+    fetchArtisans();
+  }, [service_title]);
+
+  const handleOrderClick = (artisan) => {
+    setSelectedArtisan(artisan);
+  };
+
+  const handleOrderSubmit = async (e) => {
+    e.preventDefault();
+  
+    const employerId = localStorage.getItem('employerId'); 
+    const orderData = {
+      ...formData,
+      employer: employerId,
+      artisan: selectedArtisan.id
+    };
+  ///orders/create/
+    try {
+      await api.post('https://i-wanwok-backend.up.railway.app/employers/order-request/', orderData);
+      navigate('/order-confirmation');
+    } catch (error) {
+      console.error("Error creating order:", error);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Artisans Offering {service_title}</h1>
+      <div>
+        {artisans.map(artisan => (
+          <div key={artisan.id}>
+            <h3>{artisan.user.first_name} {artisan.user.last_name}</h3>
+            <p>Experience: {artisan.experience}</p>
+            <p>Location: {artisan.location}</p>
+            <button onClick={() => handleOrderClick(artisan)}>Order Service</button>
+          </div>
+        ))}
+      </div>
+
+      {selectedArtisan && (
+        <div>
+          <h2>Order Service from {selectedArtisan.user.first_name}</h2>
+          <form onSubmit={handleOrderSubmit}>
+            <input
+              type="text"
+              placeholder="Description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Address"
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Area"
+              value={formData.area}
+              onChange={(e) => setFormData({ ...formData, area: e.target.value })}
+            />
+            <input
+              type="date"
+              value={formData.job_date}
+              onChange={(e) => setFormData({ ...formData, job_date: e.target.value })}
+            />
+            <input
+              type="time"
+              value={formData.preferred_time}
+              onChange={(e) => setFormData({ ...formData, preferred_time: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Contact Person"
+              value={formData.contact_person}
+              onChange={(e) => setFormData({ ...formData, contact_person: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Phone Number"
+              value={formData.phone_number}
+              onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+            />
+            <button type="submit">Place Order</button>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default Artisans;
-
-
-
