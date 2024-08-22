@@ -226,9 +226,8 @@ const Artisans = () => {
 
 export default Artisans;*/}
 
-
 import React, { useEffect, useState } from 'react';
-import api from '../../api.js'; // Ensure this path is correct
+import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const Artisans = () => {
@@ -247,11 +246,9 @@ const Artisans = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch artisans by service title
     const fetchArtisans = async () => {
       try {
-        const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
-        console.log("Fetched Artisans:", response.data);
+        const response = await axios.get(`${process.env.VITE_API_URL}/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
       } catch (error) {
         console.error("Error fetching artisans:", error);
@@ -262,99 +259,129 @@ const Artisans = () => {
   }, [service_title]);
 
   const handleOrderClick = (artisan) => {
-    console.log("Selected Artisan:", artisan);
     setSelectedArtisan(artisan);
   };
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-
-    const employerId = localStorage.getItem('employerId');
-    if (!employerId || !selectedArtisan) {
-      console.error("Employer ID or Selected Artisan is missing");
+  
+    const employerId = localStorage.getItem('employer_id');
+    const accessToken = localStorage.getItem('access_token');
+    console.log("access details:", accessToken);
+  
+    if (!accessToken) {
+      alert('You need to be logged in to place an order.');
       return;
     }
-
-    const orderData = {
-      ...formData,
-      employer: employerId,
-      artisan: selectedArtisan.id
-    };
-
+  
     try {
-      console.log("Order Data:", orderData);
-      await api.post('https://i-wanwok-backend.up.railway.app/employers/order-request/', orderData);
-      navigate('/order-confirmation');
+      const response = await axios.post(
+        `${process.env.VITE_API_URL}/artisans/order/${selectedArtisan.user}/`,
+        {
+          ...formData,
+          artisan: selectedArtisan.user,
+          employer: employerId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+  
+      alert('Order successfully placed!');
+      navigate('/order-history');
     } catch (error) {
-      console.error("Error creating order:", error);
+      console.error("Error submitting order:", error);
     }
+  };
+  
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
     <div>
       <h1>Artisans Offering {service_title}</h1>
-      <div>
-        {Array.isArray(artisans) && artisans.length > 0 ? (
-          artisans.map(artisan => (
-            <div key={artisan.id}>
-              <h3>{artisan.user?.first_name || "Unknown"} {artisan.user?.last_name || "Unknown"}</h3>
-              <p>Experience: {artisan.experience || "N/A"}</p>
-              <p>Location: {artisan.location || "N/A"}</p>
-              <button onClick={() => handleOrderClick(artisan)}>Order Service</button>
-            </div>
-          ))
-        ) : (
-          <p>No artisans found for this service.</p>
-        )}
-      </div>
-
+      {artisans.map((artisan) => (
+        <div key={artisan.user.id}>
+          <h2>{artisan.user.first_name} {artisan.user.last_name}</h2>
+          <button onClick={() => handleOrderClick(artisan)}>Place Order</button>
+        </div>
+      ))}
       {selectedArtisan && (
-        <div>
-          <h2>Order Service from {selectedArtisan.user?.first_name || "this artisan"}</h2>
-          <form onSubmit={handleOrderSubmit}>
+        <form onSubmit={handleOrderSubmit}>
+          <h3>Place Order with {selectedArtisan.user.first_name} {selectedArtisan.user.last_name}</h3>
+          <div>
+            <label>Description:</label>
             <input
               type="text"
-              placeholder="Description"
+              name="description"
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={handleInputChange}
             />
+          </div>
+          <div>
+            <label>Address:</label>
             <input
               type="text"
-              placeholder="Address"
+              name="address"
               value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              onChange={handleInputChange}
             />
+          </div>
+          <div>
+            <label>Area:</label>
             <input
               type="text"
-              placeholder="Area"
+              name="area"
               value={formData.area}
-              onChange={(e) => setFormData({ ...formData, area: e.target.value })}
+              onChange={handleInputChange}
             />
+          </div>
+          <div>
+            <label>Job Date:</label>
             <input
               type="date"
+              name="job_date"
               value={formData.job_date}
-              onChange={(e) => setFormData({ ...formData, job_date: e.target.value })}
+              onChange={handleInputChange}
             />
+          </div>
+          <div>
+            <label>Preferred Time:</label>
             <input
               type="time"
+              name="preferred_time"
               value={formData.preferred_time}
-              onChange={(e) => setFormData({ ...formData, preferred_time: e.target.value })}
+              onChange={handleInputChange}
             />
+          </div>
+          <div>
+            <label>Contact Person:</label>
             <input
               type="text"
-              placeholder="Contact Person"
+              name="contact_person"
               value={formData.contact_person}
-              onChange={(e) => setFormData({ ...formData, contact_person: e.target.value })}
+              onChange={handleInputChange}
             />
+          </div>
+          <div>
+            <label>Phone Number:</label>
             <input
               type="text"
-              placeholder="Phone Number"
+              name="phone_number"
               value={formData.phone_number}
-              onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+              onChange={handleInputChange}
             />
-            <button type="submit">Place Order</button>
-          </form>
-        </div>
+          </div>
+          <button type="submit">Submit Order</button>
+        </form>
       )}
     </div>
   );

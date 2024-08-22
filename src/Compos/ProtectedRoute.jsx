@@ -60,15 +60,13 @@ export default ProtectedRoute;
 */}
 
 
-
-
-
-
 import { Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import * as jwtDecodeModule from "jwt-decode";
 import api from "../api";
-import jwt_decode from "jwt-decode";
+import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
+import { useState, useEffect } from "react";
+
+const jwt_decode = jwtDecodeModule.default || jwtDecodeModule;
 
 function ProtectedRoute({ children }) {
     const [isAuthorized, setIsAuthorized] = useState(null);
@@ -79,6 +77,7 @@ function ProtectedRoute({ children }) {
 
     const refreshToken = async () => {
         const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+
         try {
             const res = await api.post("/api/token/refresh/", { refresh: refreshToken });
             if (res.status === 200) {
@@ -88,7 +87,7 @@ function ProtectedRoute({ children }) {
                 setIsAuthorized(false);
             }
         } catch (error) {
-            console.error(error);
+            console.log(error);
             setIsAuthorized(false);
         }
     };
@@ -111,9 +110,8 @@ function ProtectedRoute({ children }) {
     };
 
     if (isAuthorized === null) {
-        return <div>Loading...</div>;
+        return <div>Loading ....</div>;
     }
-
     return isAuthorized ? children : <Navigate to="/login" />;
 }
 

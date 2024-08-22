@@ -114,7 +114,6 @@ export default Form;*/}
 
 
 
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
@@ -136,7 +135,7 @@ function Form({ route, method }) {
         setLoading(true);
         try {
             const res = await api.post(route, { username, password });
-            console.log("Login Response:", res.data);
+            console.log("Login Response:", res.data); 
             
             if (method === "login") {
                 localStorage.setItem(ACCESS_TOKEN, res.data.access);
@@ -146,7 +145,7 @@ function Form({ route, method }) {
                 navigate("/login");
             }
         } catch (error) {
-            alert(error.response?.data?.detail || error.message);
+            alert(error.message);
         } finally {
             setLoading(false);
         }
@@ -165,7 +164,6 @@ function Form({ route, method }) {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             placeholder="Username"
-                            required
                         />
                     </div>
                     <div className="relative">
@@ -176,7 +174,6 @@ function Form({ route, method }) {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password"
-                            required
                         />
                     </div>
                     <button
