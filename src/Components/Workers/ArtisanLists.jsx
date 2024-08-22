@@ -249,9 +249,11 @@ const Artisans = () => {
     const fetchArtisans = async () => {
       try {
         const response = await axios.get(`${process.env.VITE_API_URL}/artisans/artisans-by-service/${service_title}/`);
-        setArtisans(response.data);
+        console.log("API response:", response.data); // Log the API response for debugging
+        setArtisans(Array.isArray(response.data) ? response.data : []); // Ensure artisans is an array
       } catch (error) {
         console.error("Error fetching artisans:", error);
+        setArtisans([]); // Default to an empty array on error
       }
     };
 
@@ -295,7 +297,6 @@ const Artisans = () => {
       console.error("Error submitting order:", error);
     }
   };
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -308,7 +309,7 @@ const Artisans = () => {
   return (
     <div>
       <h1>Artisans Offering {service_title}</h1>
-      {artisans.map((artisan) => (
+      {Array.isArray(artisans) && artisans.map((artisan) => (  // Safeguard the .map call
         <div key={artisan.user.id}>
           <h2>{artisan.user.first_name} {artisan.user.last_name}</h2>
           <button onClick={() => handleOrderClick(artisan)}>Place Order</button>
