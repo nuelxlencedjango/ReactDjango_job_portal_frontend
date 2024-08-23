@@ -344,86 +344,87 @@ const Artisans = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
             <h2 className="text-2xl font-semibold mb-4">Order Service from {selectedArtisan.user?.first_name} {selectedArtisan.user?.last_name}</h2>
             <form onSubmit={handleOrderSubmit}>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Job Description"
-                className="w-full p-2 mb-2 border rounded-lg"
-                required
-              />
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                placeholder="Address"
-                className="w-full p-2 mb-2 border rounded-lg"
-                required
-              />
-              <input
-                type="text"
-                name="area"
-                value={formData.area}
-                onChange={handleChange}
-                placeholder="Area"
-                className="w-full p-2 mb-2 border rounded-lg"
-                required
-              />
-              <label htmlFor="preferred_time">Select A Date</label>
-              <input
-                type="date"
-                name="job_date"
-                value={formData.job_date}
-                onChange={handleChange}
-                className="w-full p-2 mb-2 border rounded-lg"
-                required
-              />
-              <label htmlFor="preferred_time">Preferred Time</label>
-              <input
-                type="time"
-                name="preferred_time"
-                value={formData.preferred_time}
-                onChange={handleChange}
-                onFocus={() => formData.preferred_time === 'HH:MM' && setFormData({ ...formData, preferred_time: '' })}
-                onBlur={() => formData.preferred_time === '' && setFormData({ ...formData, preferred_time: 'HH:MM' })}
-                className="w-full p-2 mb-2 border rounded-lg"
-                required
-              />
-              <input
-                type="text"
-                name="contact_person"
-                value={formData.contact_person}
-                onChange={handleChange}
-                placeholder="Contact Person"
-                className="w-full p-2 mb-2 border rounded-lg"
-                required
-              />
-              <input
-                type="tel"
-                name="phone_number"
-                value={formData.phone_number}
-                onChange={handleChange}
-                placeholder="Phone Number"
-                className="w-full p-2 mb-2 border rounded-lg"
-                required
-              />
-              <div className="flex justify-end mt-4">
-                <button
-                  type="button"
-                  className="mr-4 px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-400"
-                  onClick={() => setSelectedArtisan(null)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-red-600"
-                >
-                  Submit Order
-                </button>
-              </div>
-            </form>
+  <textarea
+    name="description"
+    value={formData.description}
+    onChange={handleInputChange}  // Use handleInputChange here
+    placeholder="Job Description"
+    className="w-full p-2 mb-2 border rounded-lg"
+    required
+  />
+  <input
+    type="text"
+    name="address"
+    value={formData.address}
+    onChange={handleInputChange}  // Use handleInputChange here
+    placeholder="Address"
+    className="w-full p-2 mb-2 border rounded-lg"
+    required
+  />
+  <input
+    type="text"
+    name="area"
+    value={formData.area}
+    onChange={handleInputChange}  // Use handleInputChange here
+    placeholder="Area"
+    className="w-full p-2 mb-2 border rounded-lg"
+    required
+  />
+  <label htmlFor="preferred_time">Select A Date</label>
+  <input
+    type="date"
+    name="job_date"
+    value={formData.job_date}
+    onChange={handleInputChange}  // Use handleInputChange here
+    className="w-full p-2 mb-2 border rounded-lg"
+    required
+  />
+  <label htmlFor="preferred_time">Preferred Time</label>
+  <input
+    type="time"
+    name="preferred_time"
+    value={formData.preferred_time}
+    onChange={handleInputChange}  // Use handleInputChange here
+    onFocus={() => formData.preferred_time === 'HH:MM' && setFormData({ ...formData, preferred_time: '' })}
+    onBlur={() => formData.preferred_time === '' && setFormData({ ...formData, preferred_time: 'HH:MM' })}
+    className="w-full p-2 mb-2 border rounded-lg"
+    required
+  />
+  <input
+    type="text"
+    name="contact_person"
+    value={formData.contact_person}
+    onChange={handleInputChange}  // Use handleInputChange here
+    placeholder="Contact Person"
+    className="w-full p-2 mb-2 border rounded-lg"
+    required
+  />
+  <input
+    type="tel"
+    name="phone_number"
+    value={formData.phone_number}
+    onChange={handleInputChange}  // Use handleInputChange here
+    placeholder="Phone Number"
+    className="w-full p-2 mb-2 border rounded-lg"
+    required
+  />
+  <div className="flex justify-end mt-4">
+    <button
+      type="button"
+      className="mr-4 px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-400"
+      onClick={() => setSelectedArtisan(null)}
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-red-600"
+    >
+      Submit Order
+    </button>
+  </div>
+</form>
+
           </div>
         </div>
       )}
