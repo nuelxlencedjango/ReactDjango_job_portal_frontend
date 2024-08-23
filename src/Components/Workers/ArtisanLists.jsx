@@ -225,7 +225,6 @@ const Artisans = () => {
 };
 
 export default Artisans;*/}
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -278,10 +277,10 @@ const Artisans = () => {
   
     try {
       const response = await axios.post(
-        `${process.env.VITE_API_URL}/artisans/order/${selectedArtisan.user}/`,
+        `${process.env.VITE_API_URL}/artisans/order/${selectedArtisan.id}/`,
         {
           ...formData,
-          artisan: selectedArtisan.user,
+          artisan: selectedArtisan.id,
           employer: employerId,
         },
         {
@@ -309,15 +308,21 @@ const Artisans = () => {
   return (
     <div>
       <h1>Artisans Offering {service_title}</h1>
-      {Array.isArray(artisans) && artisans.map((artisan) => (  // Safeguard the .map call
-        <div key={artisan.user.id}>
-          <h2>{artisan.user.first_name} {artisan.user.last_name}</h2>
-          <button onClick={() => handleOrderClick(artisan)}>Place Order</button>
-        </div>
-      ))}
+      {artisans.length > 0 ? (
+        artisans.map((artisan) => (
+          <div key={artisan.id}>
+            <h2>{artisan.title}</h2>
+            <p>{artisan.description}</p>
+            <img src={artisan.img} alt={artisan.title} />
+            <button onClick={() => handleOrderClick(artisan)}>Place Order</button>
+          </div>
+        ))
+      ) : (
+        <p>No artisans found for this service.</p>
+      )}
       {selectedArtisan && (
         <form onSubmit={handleOrderSubmit}>
-          <h3>Place Order with {selectedArtisan.user.first_name} {selectedArtisan.user.last_name}</h3>
+          <h3>Place Order with {selectedArtisan.title}</h3>
           <div>
             <label>Description:</label>
             <input
