@@ -247,7 +247,7 @@ const Artisans = () => {
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
-        const response = await axios.get(`${process.env.VITE_API_URL}/artisans/artisans-by-service/${service_title}/`);
+        const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`);
         console.log("API response artisan list:", response.data); // Log the API response for debugging
         setArtisans(Array.isArray(response.data) ? response.data : []); // Ensure artisans is an array
       } catch (error) {
