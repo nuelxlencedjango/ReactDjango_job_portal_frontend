@@ -41,7 +41,7 @@ const Artisans = () => {
 
     const employerId = localStorage.getItem('employer_id');
     const accessToken = localStorage.getItem('access_token');
-    console.log("access details:", accessToken)
+    console.log("access details:", accessToken) 
   
     if (!accessToken) {
       alert('You need to be logged in to place an order.');

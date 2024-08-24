@@ -1,4 +1,4 @@
-import React from 'react'
+{/*import React from 'react'
 import Form from "../Compos/Form";
 
 function Login() {
@@ -11,7 +11,23 @@ function Login() {
   )
 }
 
+export default Login;*/}
+
+
+
+import React from 'react';
+import Form from "../Compos/Form";
+
+function Login() {
+    return (
+        <div>
+            <Form route="/api/token/" method="login" />
+        </div>
+    );
+}
+
 export default Login;
+
 
 
 
