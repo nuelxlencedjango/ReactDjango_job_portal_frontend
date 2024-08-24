@@ -15,7 +15,7 @@ const Artisans = () => {
     contact_person: '',
     phone_number: ''
   });
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     
@@ -242,7 +242,7 @@ const Artisans = () => {
     contact_person: '',
     phone_number: ''
   });
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const fetchArtisans = async () => {
@@ -272,6 +272,7 @@ const Artisans = () => {
   
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
+      navigate('/login');
       return;
     }
   
