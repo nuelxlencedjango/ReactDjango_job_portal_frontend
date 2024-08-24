@@ -225,6 +225,7 @@ const Artisans = () => {
 };
 
 export default Artisans;*/}
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -269,6 +270,7 @@ const Artisans = () => {
     const employerId = localStorage.getItem('employer_id');
     const accessToken = localStorage.getItem('access_token');
     console.log("access details:", accessToken);
+    console.log("username:", employerId, "access token:", accessToken)
   
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
