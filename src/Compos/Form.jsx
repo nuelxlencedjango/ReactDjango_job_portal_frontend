@@ -217,6 +217,7 @@ function Form({ route, method }) {
 export default Form;*/}
 
 
+// src/components/Form.jsx
 
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
@@ -260,6 +261,7 @@ function Form({ route, method }) {
                 navigate("/login"); // Redirect to login page after registration
             }
         } catch (error) {
+            console.error('Error during login:', error);
             alert(error.response?.data?.detail || error.message); // Show a meaningful error message
         } finally {
             setLoading(false);
