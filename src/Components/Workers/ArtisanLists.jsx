@@ -350,7 +350,7 @@ const Artisans = () => {
   <textarea
     name="description"
     value={formData.description}
-    onChange={handleInputChange}  // Use handleInputChange here
+    onChange={handleInputChange}  
     placeholder="Job Description"
     className="w-full p-2 mb-2 border rounded-lg"
     required

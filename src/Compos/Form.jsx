@@ -217,6 +217,7 @@ function Form({ route, method }) {
 export default Form;*/}
 
 
+
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
@@ -225,7 +226,6 @@ import { FaUser } from "react-icons/fa";
 import api from '../api'; 
 import '../Compos/Form.css';
 import { getCSRFToken } from '../Components/CsrfToken/csrf';
-
 
 function Form({ route, method }) {
     const [username, setUsername] = useState("");
@@ -238,23 +238,29 @@ function Form({ route, method }) {
         e.preventDefault();
         setLoading(true);
         try {
-            const csrfToken = getCSRFToken();
+            const csrfToken = getCSRFToken(); // Retrieve the CSRF token
             const res = await api.post(route, { username, password }, {
                 headers: {
                     'X-CSRFToken': csrfToken, // Include CSRF token in the header
                 }
             });
-            console.log("Login Response:", res.data);
+
+            console.log("Response Data:", res.data);
 
             if (method === "login") {
+                // Store tokens in local storage
                 localStorage.setItem(ACCESS_TOKEN, res.data.access);
                 localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-                navigate("/");
+
+                // Optionally store user data
+                // localStorage.setItem('user', JSON.stringify(res.data.user));
+
+                navigate("/"); // Redirect to home page after login
             } else {
-                navigate("/login");
+                navigate("/login"); // Redirect to login page after registration
             }
         } catch (error) {
-            alert(error.message);
+            alert(error.response?.data?.detail || error.message); // Show a meaningful error message
         } finally {
             setLoading(false);
         }
