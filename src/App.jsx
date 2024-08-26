@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from './Components/NavBar/Navbar';
 import SearchResults from './Components/SearchDiv/SearchResults'; 
-import Login  from './pages/Login';
+import Login  from './pages/Login'; 
 import NotFound  from './pages/NotFound';
 import AvailableJobs from './Components/JobDiv/AvailableJobs';
 import Jobs from './Components/JobDiv/Jobs';
@@ -33,7 +33,7 @@ import './index.css';
 
 function Logout(){
   localStorage.clear()
-    return <Navigate to="/login" /> 
+    return <Navigate to="/login" />  
 }
 
 function RegisterAndLogout(){

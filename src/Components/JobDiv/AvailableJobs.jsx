@@ -1,7 +1,7 @@
 import React from 'react'
 import Form from "../../Compos/Form";
 
-function Login() {
+function AvailableJobs() {
  
 
   return (
@@ -11,7 +11,7 @@ function Login() {
   )
 }
 
-export default Login;
+export default AvailableJobs;
 
 
 
