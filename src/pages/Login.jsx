@@ -106,7 +106,10 @@ function Login() {
 
 export default Login;*/}
 
-{/*import React, { useState } from 'react';
+
+
+
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import api from '../api'; 
@@ -185,63 +188,6 @@ const Login = () => {
             </div>
         </div>
     );
-};
-
-export default Login;*/}
-
-
-
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-const Login = () => {
-  const [loginData, setLoginData] = useState({ username: '', password: '' });
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setLoginData({ ...loginData, [e.target.name]: e.target.value });
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(`${process.env.VITE_API_URL}/login/`, loginData);
-      const { access_token, user } = response.data;
-
-      // Store access token and employerId in localStorage
-      localStorage.setItem('access_token', access_token);
-      localStorage.setItem('employer_id', user.id); // Assuming the user object has an `id` field
-
-      console.log("Login successful, user ID:", user.id);
-      navigate('/dashboard'); // Redirect after login
-    } catch (error) {
-      console.error("Login error:", error);
-      alert('Login failed');
-    }
-  };
-
-  return (
-    <form onSubmit={handleLogin}>
-      <input
-        type="text"
-        name="username"
-        value={loginData.username}
-        onChange={handleChange}
-        placeholder="Username"
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        value={loginData.password}
-        onChange={handleChange}
-        placeholder="Password"
-        required
-      />
-      <button type="submit">Login</button>
-    </form>
-  );
 };
 
 export default Login;
