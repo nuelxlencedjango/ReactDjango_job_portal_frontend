@@ -226,7 +226,7 @@ const Artisans = () => {
 
 export default Artisans;*/}
 
-import React, { useEffect, useState } from 'react';
+{/*import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -436,4 +436,102 @@ const Artisans = () => {
 };
 
 
-export default Artisans;
+export default Artisans;*/}
+
+
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const ArtisanList = () => {
+  const [artisans, setArtisans] = useState([]);
+  const [selectedArtisan, setSelectedArtisan] = useState(null);
+  const [formData, setFormData] = useState({
+    orderDetails: '', // Adjust based on your form data structure
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchArtisans = async () => {
+      try {
+        const response = await axios.get(`${process.env.VITE_API_URL}/artisans/`);
+        setArtisans(response.data);
+      } catch (error) {
+        console.error("Error fetching artisans:", error);
+      }
+    };
+    fetchArtisans();
+  }, []);
+
+  const handleSelectArtisan = (artisan) => {
+    setSelectedArtisan(artisan);
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleOrderSubmit = async (e) => {
+    e.preventDefault();
+
+    const employerId = localStorage.getItem('employer_id');
+    const accessToken = localStorage.getItem('access_token');
+
+    if (!accessToken || !employerId) {
+      alert('You need to be logged in to place an order.');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${process.env.VITE_API_URL}/artisans/order/${selectedArtisan.id}/`,
+        {
+          ...formData,
+          artisan: selectedArtisan.id,
+          employer: employerId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      alert('Order successfully placed!');
+      navigate('/order-history');
+    } catch (error) {
+      console.error("Error submitting order:", error);
+      alert('There was an issue placing your order.');
+    }
+  };
+
+  return (
+    <div>
+      <h1>Artisan List</h1>
+      <ul>
+        {artisans.map((artisan) => (
+          <li key={artisan.id} onClick={() => handleSelectArtisan(artisan)}>
+            {artisan.name}
+          </li>
+        ))}
+      </ul>
+      {selectedArtisan && (
+        <form onSubmit={handleOrderSubmit}>
+          <input
+            type="text"
+            name="orderDetails"
+            value={formData.orderDetails}
+            onChange={handleChange}
+            placeholder="Order details"
+            required
+          />
+          <button type="submit">Place Order</button>
+        </form>
+      )}
+    </div>
+  );
+};
+
+export default ArtisanList;
