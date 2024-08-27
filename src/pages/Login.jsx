@@ -49,7 +49,7 @@ export default Login;
             localStorage.setItem('username', username);
     
             // Fetch the employer_id after successful login
-            const employerRes = await api.get("/api/get-employer-id/", {
+            const employerRes = await api.get("https://i-wanwok-backend.up.railway.app/api/get-employer-id/", {
                 headers: {
                     Authorization: `Bearer ${res.data.access}`,
                 }
