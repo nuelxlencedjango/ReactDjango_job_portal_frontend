@@ -452,6 +452,11 @@ const Artisans = () => {
   const navigate = useNavigate(); 
   const username = localStorage.getItem('username'); // Retrieve username from localStorage 
 
+  const employerId = localStorage.getItem('employer_id');
+  const accessToken = localStorage.getItem('access_token');
+  console.log('employer id:', employerId);
+  console.log('access token:',accessToken)
+
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
