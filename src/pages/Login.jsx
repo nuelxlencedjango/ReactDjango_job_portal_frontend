@@ -31,33 +31,46 @@ export default Login;
       const [loading, setLoading] = useState(false);
       const navigate = useNavigate();
   
+
       const handleSubmit = async (e) => {
-          e.preventDefault();
-          setLoading(true);
-          try {
-              const csrfToken = getCSRFToken(); 
-              const res = await api.post("/api/token/", { username, password }, {
-                  headers: {
-                      'X-CSRFToken': csrfToken, 
-                  }
-              });
-  
-             
-              a = localStorage.setItem(ACCESS_TOKEN, res.data.access);
-              b = localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-              c = localStorage.setItem('username', username); 
-              console.log('access token:', a);
-              console.log('refresh token:', b);
-              console.log('username:',c);
-  
-              navigate("/"); 
-          } catch (error) {
-              console.error('Error during login:', error);
-              alert(error.response?.data?.detail || error.message); 
-          } finally {
-              setLoading(false);
-          }
-      };
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const csrfToken = getCSRFToken();
+            const res = await api.post("/api/token/", { username, password }, {
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                }
+            });
+    
+            // Store the access and refresh tokens
+            localStorage.setItem(ACCESS_TOKEN, res.data.access);
+            localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+            localStorage.setItem('username', username);
+    
+            // Fetch the employer_id after successful login
+            const employerRes = await api.get("/api/get-employer-id/", {
+                headers: {
+                    Authorization: `Bearer ${res.data.access}`,
+                }
+            });
+    
+            // Store the employer_id in localStorage
+            if (employerRes.data.employer_id) {
+                localStorage.setItem('employer_id', employerRes.data.employer_id);
+            } else {
+                localStorage.setItem('employer_id', null);
+            }
+    
+            navigate("/"); 
+        } catch (error) {
+            console.error('Error during login:', error);
+            alert(error.response?.data?.detail || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
   
       return (
           <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-6">
