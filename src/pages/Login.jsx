@@ -108,7 +108,6 @@ export default Login;*/}
 
 
 
-
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
@@ -127,26 +126,26 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const csrfToken = getCSRFToken(); // Retrieve the CSRF token
+            const csrfToken = getCSRFToken(); 
             const res = await api.post("/api/token/", { username, password }, {
                 headers: {
-                    'X-CSRFToken': csrfToken, // Include CSRF token in the header
+                    'X-CSRFToken': csrfToken, 
                 }
             });
 
             if (res.data && res.data.access && res.data.refresh) {
+                // Store tokens and username in localStorage
                 localStorage.setItem(ACCESS_TOKEN, res.data.access);
                 localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
                 localStorage.setItem('username', username); // Store the username
 
-                console.log(`username: ${username} access token: ${res.data.access}`);
-                navigate("/"); // Redirect to home page after login
+                navigate("/artisan-list"); // Redirect to the ArtisanList page after login
             } else {
                 throw new Error("Invalid response from server");
             }
         } catch (error) {
             console.error('Error during login:', error);
-            alert(error.response?.data?.detail || error.message); // Show a meaningful error message
+            alert(error.response?.data?.detail || error.message); 
         } finally {
             setLoading(false);
         }
@@ -191,6 +190,5 @@ const Login = () => {
 };
 
 export default Login;
-
 
 
