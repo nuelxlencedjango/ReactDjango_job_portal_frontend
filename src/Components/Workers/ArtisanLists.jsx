@@ -455,7 +455,8 @@ const Artisans = () => {
   const employerId = localStorage.getItem('employer_id');
   const accessToken = localStorage.getItem('access_token');
   console.log('employer id:', employerId);
-  console.log('access token:',accessToken)
+  console.log('access token:',accessToken);
+  console.log('username:', username);
 
   useEffect(() => {
     const fetchArtisans = async () => {
