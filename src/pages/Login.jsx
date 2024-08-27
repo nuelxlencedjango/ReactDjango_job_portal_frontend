@@ -35,22 +35,25 @@ export default Login;
           e.preventDefault();
           setLoading(true);
           try {
-              const csrfToken = getCSRFToken(); // Retrieve the CSRF token
+              const csrfToken = getCSRFToken(); 
               const res = await api.post("/api/token/", { username, password }, {
                   headers: {
-                      'X-CSRFToken': csrfToken, // Include CSRF token in the header
+                      'X-CSRFToken': csrfToken, 
                   }
               });
   
-              // Store tokens and username in local storage
-              localStorage.setItem(ACCESS_TOKEN, res.data.access);
-              localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-              localStorage.setItem('username', username); // Save username in localStorage
+             
+              a = localStorage.setItem(ACCESS_TOKEN, res.data.access);
+              b = localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+              c = localStorage.setItem('username', username); 
+              console.log('access token:', a);
+              console.log('refresh token:', b);
+              console.log('username:',c);
   
-              navigate("/"); // Redirect to home page after login
+              navigate("/"); 
           } catch (error) {
               console.error('Error during login:', error);
-              alert(error.response?.data?.detail || error.message); // Show a meaningful error message
+              alert(error.response?.data?.detail || error.message); 
           } finally {
               setLoading(false);
           }
