@@ -641,8 +641,6 @@ const Artisans = () => {
 };
 
 export default Artisans;*/}
-
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -661,9 +659,6 @@ function ArtisanList() {
         phone_number: ''
     });
     const navigate = useNavigate();
-    const username = localStorage.getItem('username'); // Retrieve username from localStorage
-    const employerId = localStorage.getItem('employer_id');
-    const accessToken = localStorage.getItem('access_token');
 
     useEffect(() => {
         const fetchArtisans = async () => {
@@ -687,24 +682,15 @@ function ArtisanList() {
     const handleOrderSubmit = async (e) => {
         e.preventDefault();
 
-        if (!accessToken) {
-            alert('You need to be logged in to place an order.');
-            navigate('/login');
-            return;
-        }
-
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/artisans/order/${selectedArtisan.id}/`,
                 {
                     ...formData,
                     artisan: selectedArtisan.id,
-                    employer: employerId,
                 },
                 {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
+                    withCredentials: true 
                 }
             );
 
@@ -727,7 +713,6 @@ function ArtisanList() {
     return (
         <div className="container mx-auto px-4 mt-32">
             <h1 className="text-2xl font-semibold mb-4 artisanlist-heading">Available {service_title} for your service</h1>
-            {username && <h2 className="text-xl font-medium mb-4">Hi, {username}</h2>}
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
                 {artisans.map(artisan => (
                     <div
@@ -843,8 +828,6 @@ function ArtisanList() {
 }
 
 export default ArtisanList;
-
-
 
 
 
