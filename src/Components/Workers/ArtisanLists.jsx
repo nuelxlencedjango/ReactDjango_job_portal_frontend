@@ -1276,7 +1276,7 @@ const Artisans = () => {
 export default Artisans;*/}
 
 
-{/*import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -1427,7 +1427,7 @@ const Artisans = () => {
                 />
               </div>
               {/* Add other fields here with similar structure */}
-              {/*<div className="mb-4">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Preferred Time</label>
                 <input
                   type="time"
@@ -1451,9 +1451,9 @@ const Artisans = () => {
   );
 };
 
-export default Artisans;*/}
+export default Artisans;
 
-import React, { useEffect, useState } from 'react';
+{/*import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -1604,7 +1604,7 @@ const Artisans = () => {
                 />
               </div>
               {/* Include other fields similarly... */}
-              <button
+              {/*<button
                 type="submit"
                 className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700"
               >
@@ -1624,4 +1624,4 @@ const Artisans = () => {
   );
 };
 
-export default Artisans;
+export default Artisans;*/}
