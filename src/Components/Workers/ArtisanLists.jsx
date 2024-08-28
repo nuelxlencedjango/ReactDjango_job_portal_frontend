@@ -832,7 +832,7 @@ export default ArtisanList;*/}
 
 
 
-import React, { useEffect, useState } from 'react';
+{/*import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Import the Cookies library
@@ -920,7 +920,7 @@ const ArtisanList = () => {
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
       <h1 className="text-2xl font-semibold mb-4 artisanlist-heading display-center">Available {service_title} for your service</h1>
       {username && <h2 className="text-xl font-medium mb-4">Hi, {username}</h2>} {/* Display username here */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
+      {/*<div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
         {artisans.map(artisan => (
           <div
             key={artisan.id}
@@ -1034,4 +1034,243 @@ const ArtisanList = () => {
   );
 };
 
-export default ArtisanList;
+export default ArtisanList;*/}
+
+
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+
+const Artisans = () => {
+  const { service_title } = useParams();
+  const [artisans, setArtisans] = useState([]);
+  const [selectedArtisan, setSelectedArtisan] = useState(null);
+  const [formData, setFormData] = useState({
+    description: '',
+    address: '',
+    area: '',
+    job_date: '',
+    preferred_time: 'HH:mm',
+    contact_person: '',
+    phone_number: ''
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchArtisans = async () => {
+      try {
+        const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`);
+        setArtisans(response.data);
+      } catch (error) {
+        console.error("Error fetching artisans:", error);
+      }
+    };
+
+    fetchArtisans();
+  }, [service_title]);
+
+  const handleOrderClick = (artisan) => {
+    setSelectedArtisan(artisan);
+  };
+
+  const handleOrderSubmit = async (e) => {
+    e.preventDefault();
+
+    const employerId = Cookies.get('employer_id');
+    const accessToken = Cookies.get('access_token');
+    console.log("Access details:", accessToken);
+
+    if (!accessToken) {
+      alert('You need to be logged in to place an order.');
+      navigate('/login');
+      return;
+    }
+
+    const payload = {
+      employer: employerId,
+      artisan: selectedArtisan.id,
+      service: service_title,
+      description: formData.description,
+      address: formData.address,
+      area: formData.area,
+      job_date: formData.job_date,
+      preferred_time: formData.preferred_time,
+      contact_person: formData.contact_person,
+      phone_number: formData.phone_number,
+    };
+
+    try {
+      const response = await axios.post(
+        'https://i-wanwok-backend.up.railway.app/employers/order-request/',
+        payload,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        alert('Order placed successfully!');
+        setSelectedArtisan(null);
+        setFormData({
+          description: '',
+          address: '',
+          area: '',
+          job_date: '',
+          preferred_time: 'HH:mm',
+          contact_person: '',
+          phone_number: ''
+        });
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert('You need to be logged in to place an order.');
+        navigate('/login');
+      } else {
+        console.error('Error placing order:', error);
+      }
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  return (
+    <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
+      <h1 className="text-2xl font-semibold mb-4 artisanlist-heading text-center">Available {service_title} for your service</h1>
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
+        {artisans.map(artisan => (
+          <div
+            key={artisan.id}
+            className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center"
+          >
+            {artisan.profile_img ? (
+              <img 
+                src={artisan.profile_img} 
+                alt={`${artisan.user?.first_name}'s profile`} 
+                className="w-32 h-32 object-cover rounded-full mb-4"
+              />
+            ) : (
+              <div className="w-32 h-32 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
+                <span className="text-gray-500">No Image</span>
+              </div>
+            )}
+            <h2 className="text-lg font-semibold mb-2">{artisan.user?.first_name} {artisan.user?.last_name}</h2>
+            <p className="text-gray-600 mb-4">{artisan.bio}</p>
+            <button 
+              onClick={() => handleOrderClick(artisan)}
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            >
+              Order
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {selectedArtisan && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4">Order Form for {selectedArtisan.user?.first_name}</h2>
+            <form onSubmit={handleOrderSubmit} className="space-y-4">
+              <div>
+                <label className="block text-gray-700 mb-1">Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  rows="4"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-1">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-1">Area</label>
+                <input
+                  type="text"
+                  name="area"
+                  value={formData.area}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-1">Job Date</label>
+                <input
+                  type="date"
+                  name="job_date"
+                  value={formData.job_date}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-1">Preferred Time</label>
+                <input
+                  type="time"
+                  name="preferred_time"
+                  value={formData.preferred_time}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-1">Contact Person</label>
+                <input
+                  type="text"
+                  name="contact_person"
+                  value={formData.contact_person}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-1">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone_number"
+                  value={formData.phone_number}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setSelectedArtisan(null)}
+                  className="bg-gray-500 text-white py-2 px-4 rounded mr-2 hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                >
+                  Submit Order
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Artisans;
