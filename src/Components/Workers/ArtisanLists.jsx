@@ -860,7 +860,8 @@ const ArtisanList = () => {
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
-        const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`);
+        const response = await axios.get(`${process.env.VITE_APP_URL}/artisans/artisans-by-service/${service_title}/`);
+                                         
         setArtisans(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error("Error fetching artisans:", error);
