@@ -663,7 +663,7 @@ function ArtisanList() {
     useEffect(() => {
         const fetchArtisans = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/artisans/artisans-by-service/${service_title}/`);
+                const response = await axios.get(`${process.env.VITE_API_URL}/artisans/artisans-by-service/${service_title}/`);
                 console.log("API response artisan list:", response.data);
                 setArtisans(Array.isArray(response.data) ? response.data : []);
             } catch (error) {
