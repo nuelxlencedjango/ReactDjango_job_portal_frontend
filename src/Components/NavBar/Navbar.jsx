@@ -27,7 +27,7 @@ const Navbar = () => {
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/'}>About</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/'}>Contact</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/'}>Blog</Link></li>
-                        <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/login'}>Login</Link></li> 
+                        <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/login'}>Login</Link></li>  
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/signup'}>Register</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/dashboard'}>Dashboard</Link></li>
                     </div>

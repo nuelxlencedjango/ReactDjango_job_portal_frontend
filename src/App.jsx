@@ -5,7 +5,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from './Components/NavBar/Navbar';
 import SearchResults from './Components/SearchDiv/SearchResults'; 
-import Login  from './pages/Login'; 
+//import Login  from './pages/Login'; 
+import Login  from './Components/Login'; 
 import NotFound  from './pages/NotFound';
 import AvailableJobs from './Components/JobDiv/AvailableJobs';
 import Jobs from './Components/JobDiv/Jobs';
@@ -33,7 +34,7 @@ import './index.css';
 
 function Logout(){
   localStorage.clear()
-    return <Navigate to="/login" />  
+    return <Navigate to="/login" />   
 }
 
 function RegisterAndLogout(){
@@ -60,7 +61,7 @@ const App = () => {
         <Route path="/" element={<Jobs />} />
 
         <Route path="/artisans/artisans-by-service/:service_title" element={<ArtisanList />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} /> 
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<NotFound />}></Route>
           <Route path="/available-jobs" element={<AvailableJobs />} />

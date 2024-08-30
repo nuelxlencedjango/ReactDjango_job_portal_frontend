@@ -73,7 +73,7 @@ const Register = () => {
             });
 
             alert("Registration successful! Please log in.");
-            // Redirect to login page or clear form, depending on UX flow
+            // Redirect to login page or clear form, depending on UX flow 
         } catch (error) {
             console.error('Error during registration:', error);
             alert(error.response?.data?.detail || error.message); // Show a meaningful error message

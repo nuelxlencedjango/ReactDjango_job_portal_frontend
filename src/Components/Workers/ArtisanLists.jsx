@@ -45,7 +45,7 @@ const Artisans = () => {
   
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
-      navigate('/login');
+      navigate('/login'); 
       return;
     }
   
@@ -82,7 +82,7 @@ const Artisans = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert('You need to be logged in to place an order.');
-        navigate('/login');
+        navigate('/login'); 
       } else {
         console.error('Error placing order:', error);
       }
@@ -275,7 +275,7 @@ const Artisans = () => {
   
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
-      navigate('/login');
+      navigate('/login'); 
       return;
     }
   
@@ -487,7 +487,7 @@ const Artisans = () => {
   
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
-      navigate('/login');
+      navigate('/login'); 
       return;
     }
   
@@ -881,7 +881,7 @@ const ArtisanList = () => {
   
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
-      navigate('/login');
+      navigate('/login'); 
       return;
     }
   
@@ -1083,7 +1083,7 @@ const Artisans = () => {
 
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
-      navigate('/login');
+      navigate('/login'); 
       return;
     }
 
@@ -1129,7 +1129,7 @@ const Artisans = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert('You need to be logged in to place an order.');
-        navigate('/login');
+        navigate('/login'); 
       } else {
         console.error('Error placing order:', error);
       }
@@ -1322,7 +1322,7 @@ const Artisans = () => {
 
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
-      navigate('/login');
+      navigate('/login'); 
       return;
     }
 
@@ -1359,7 +1359,7 @@ const Artisans = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert('You need to be logged in to place an order.');
-        navigate('/login');
+        navigate('/login'); 
       } else {
         console.error('Error placing order:', error);
       }
@@ -1499,7 +1499,7 @@ const Artisans = () => {
 
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
-      navigate('/login');
+      navigate('/login'); 
       return;
     }
 
