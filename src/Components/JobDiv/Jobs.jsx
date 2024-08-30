@@ -12,7 +12,7 @@ const Jobs = () => {
       const token = localStorage.getItem('token');  //localStorage
 
       try {
-        const response = await axios.get('https://i-wanwok-backend.up.railway.app', {
+        const response = await axios.get('https://i-wanwok-backend.up.railway.app/api/', {
           headers: {
             Authorization: `Token ${token}`
           }
