@@ -1950,39 +1950,45 @@ const Artisans = () => {
   }, [service_title]);
 
   const handleOrderClick = (artisan) => {
-    setSelectedArtisan(artisan);
-    setFormData(prevData => ({
-      ...prevData,
-      address: artisan.address || '',
-      // Initialize other fields if necessary
-    }));
+    console.log('Selected Artisan on Click:', artisan);
+    if (artisan && artisan.id) {
+      setSelectedArtisan(artisan);
+      setFormData(prevData => ({
+        ...prevData,
+        address: artisan.address || '',
+        // Initialize other fields if necessary
+      }));
+    } else {
+      alert('Invalid artisan selected.');
+    }
   };
+
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-  
+
     console.log('Selected Artisan:', selectedArtisan);
     console.log('Selected Artisan ID:', selectedArtisan ? selectedArtisan.id : 'No artisan selected');
-  
+
     if (!selectedArtisan || !selectedArtisan.id) {
       alert('Please select a valid artisan.');
       return;
     }
-  
+
     const accessToken = Cookies.get('access_token');
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
       return;
     }
-  
+
     const serviceId = parseInt(service_title, 10);
     if (isNaN(serviceId)) {
       alert('Invalid service ID.');
       return;
     }
-  
+
     const payload = {
-      artisan: String(selectedArtisan.id), // Ensure ID is in the expected format
+      artisan: String(selectedArtisan.id),
       service: serviceId,
       description: formData.description || '',
       address: formData.address || '',
@@ -1992,9 +1998,9 @@ const Artisans = () => {
       contact_person: formData.contact_person || '',
       phone_number: formData.phone_number || '',
     };
-  
+
     console.log('Payload:', payload);
-  
+
     try {
       const response = await axios.post(
         'https://i-wanwok-backend.up.railway.app/employers/order-request/',
@@ -2026,14 +2032,6 @@ const Artisans = () => {
     }
   };
   
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
       <h1 className="text-2xl font-semibold mb-4 artisanlist-heading display-center">Available {service_title} for your service</h1>
