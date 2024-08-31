@@ -47,8 +47,6 @@ function Login() {
 export default Login;*/}
 
 
-
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -67,16 +65,19 @@ const Login = () => {
         password,
       });
 
-      // Store tokens in cookies or localStorage (Cookies example shown)
+      // Store tokens in cookies
       document.cookie = `access_token=${response.data.access}; path=/;`;
-      console.log("Access token:", document.cookie);
+      console.log("token:",document.cookie);
+
       document.cookie = `refresh_token=${response.data.refresh}; path=/;`;
-      console.log("logged in successfully")
+      console.log("Logged in successfully");
       
+
       // Navigate to the homepage or another route on successful login
       navigate('/'); // Change '/home' to the route you want to navigate to
     } catch (error) {
-      setError('Login failed');
+      setError('Login failed. Please check your credentials.');
+      console.error('Login error:', error);
     }
   };
 
