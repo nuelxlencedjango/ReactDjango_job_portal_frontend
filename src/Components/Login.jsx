@@ -49,15 +49,15 @@ export default Login;*/}
 
 
 
-
-
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Hook for navigation
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,8 +70,9 @@ const Login = () => {
       // Store tokens in cookies or localStorage (Cookies example shown)
       document.cookie = `access_token=${response.data.access}; path=/;`;
       document.cookie = `refresh_token=${response.data.refresh}; path=/;`;
-
-      // Redirect or update UI based on successful login
+      console.log("logged in successfully")
+      // Navigate to the homepage or another route on successful login
+      navigate('/home'); // Change '/home' to the route you want to navigate to
     } catch (error) {
       setError('Login failed');
     }
