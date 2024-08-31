@@ -4,7 +4,7 @@
 
 // src/components/Login.js
 
-import React, { useState } from 'react';
+{/*import React, { useState } from 'react';
 import axios from '../api/axios';  // axios instance is set up with cookies
 import { useNavigate, Link } from "react-router-dom";
 
@@ -43,5 +43,76 @@ function Login() {
     </form>
   );
 }
+
+export default Login;*/}
+
+
+
+
+
+
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('https://i-wanwok-backend.up.railway.app/api/token/', {
+        username,
+        password,
+      });
+
+      // Store tokens in cookies or localStorage (Cookies example shown)
+      document.cookie = `access_token=${response.data.access}; path=/;`;
+      document.cookie = `refresh_token=${response.data.refresh}; path=/;`;
+
+      // Redirect or update UI based on successful login
+    } catch (error) {
+      setError('Login failed');
+    }
+  };
+
+  return (
+    <div className="p-6 max-w-md mx-auto">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold mb-4">Login</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <div className="mb-4">
+          <label htmlFor="username" className="block text-gray-700">Username</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-gray-700">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+        >
+          Login
+        </button>
+      </form>
+    </div>
+  );
+};
 
 export default Login;
