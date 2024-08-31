@@ -1996,7 +1996,7 @@ const Artisans = () => {
           },
         }
       );
-      console.log('Responses:', response);
+      console.log('Responses detailed info:', response);
       if (response.status === 201) {
         alert('Order placed successfully!');
         setSelectedArtisan(null);
