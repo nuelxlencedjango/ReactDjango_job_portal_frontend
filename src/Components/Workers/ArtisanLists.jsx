@@ -1961,24 +1961,27 @@ const Artisans = () => {
     e.preventDefault();
   
     const accessToken = Cookies.get('access_token');
-    console.log('Access token:', accessToken);
-  
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
       return;
     }
   
-    if (!selectedArtisan) {
-      alert('Please select an artisan.');
+    if (!selectedArtisan || !selectedArtisan.id) {
+      alert('Please select a valid artisan.');
       return;
     }
   
-    // Ensure that all required fields are included in the payload
+    const serviceId = parseInt(service_title, 10);
+    if (isNaN(serviceId)) {
+      alert('Invalid service ID.');
+      return;
+    }
+  
     const payload = {
       artisan: selectedArtisan.id,
-      service: parseInt(service_title, 10),
-      description: formData.description || '', // Default to empty string if undefined
+      service: serviceId,
+      description: formData.description || '',
       address: formData.address || '',
       area: formData.area || '',
       job_date: formData.job_date || '',
@@ -1987,7 +1990,7 @@ const Artisans = () => {
       phone_number: formData.phone_number || '',
     };
   
-    console.log('Payload:', payload);
+    console.log('Payload:', payload); // Check the payload structure
   
     try {
       const response = await axios.post(
@@ -2019,6 +2022,7 @@ const Artisans = () => {
       }
     }
   };
+  
   
 
   const handleChange = (e) => {
