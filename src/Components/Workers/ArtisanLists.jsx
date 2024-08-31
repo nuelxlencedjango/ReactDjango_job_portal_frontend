@@ -1672,10 +1672,14 @@ const Artisans = () => {
   useEffect(() => {
     const fetchEmployerUsername = async () => {
       const employerId = Cookies.get('employer_id');
+      console.log("employer info:",employerId);
+
       if (employerId) {
         try {
           const response = await axios.get(`https://i-wanwok-backend.up.railway.app/employers/${employerId}/`);
           setEmployerUsername(response.data.username);
+          console.log("employer details:",employerId);
+
         } catch (error) {
           console.error("Error fetching employer username:", error);
         }
@@ -1689,7 +1693,7 @@ const Artisans = () => {
     setSelectedArtisan(artisan);
     setFormData(prevData => ({
       ...prevData,
-      address: artisan.address || '', // Example of how you might pre-fill data
+      address: artisan.address || '',
       // Add other fields as necessary
     }));
   };
@@ -1699,6 +1703,8 @@ const Artisans = () => {
 
     const employerId = Cookies.get('employer_id');
     const accessToken = Cookies.get('access_token');
+    console.log("employer info-details:",employerId);
+    console.log("employer cookies:",accessToken);
 
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
@@ -1712,14 +1718,14 @@ const Artisans = () => {
     }
 
     const payload = {
-      employer: parseInt(employerId, 10), // Ensure employerId is an integer
-      artisan: selectedArtisan.id, // Ensure this is an integer
-      service: parseInt(service_title, 10), // Ensure service_title is an integer
+      employer: parseInt(employerId, 10), //  employerId is an integer
+      artisan: selectedArtisan.id, //this is an integer
+      service: parseInt(service_title, 10), // service_title is an integer
       description: formData.description,
       address: formData.address,
       area: formData.area,
-      job_date: formData.job_date, // Ensure this is in the format YYYY-MM-DD
-      preferred_time: formData.preferred_time, // Ensure this is in the format HH:MM
+      job_date: formData.job_date, //  this is in the format YYYY-MM-DD
+      preferred_time: formData.preferred_time, // this is in the format HH:MM
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
