@@ -69,8 +69,10 @@ const Login = () => {
 
       // Store tokens in cookies or localStorage (Cookies example shown)
       document.cookie = `access_token=${response.data.access}; path=/;`;
+      console.log("Access token:", document.cookie);
       document.cookie = `refresh_token=${response.data.refresh}; path=/;`;
       console.log("logged in successfully")
+      
       // Navigate to the homepage or another route on successful login
       navigate('/'); // Change '/home' to the route you want to navigate to
     } catch (error) {
