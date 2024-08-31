@@ -1915,6 +1915,7 @@ const Artisans = () => {
 
 export default Artisans;*/}
 
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -1936,13 +1937,6 @@ const Artisans = () => {
   const [employerUsername, setEmployerUsername] = useState('');
   const navigate = useNavigate();
 
-  // Helper function to get cookie values
-  const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  };
-
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
@@ -1958,14 +1952,11 @@ const Artisans = () => {
 
   useEffect(() => {
     const fetchEmployerUsername = async () => {
-      const employerId = getCookie('employer_id');
-      console.log("Employer ID:", employerId);
-
+      const employerId = Cookies.get('employer_id');
       if (employerId) {
         try {
           const response = await axios.get(`https://i-wanwok-backend.up.railway.app/employers/${employerId}/`);
           setEmployerUsername(response.data.username);
-          console.log("Employer details:", response.data);
         } catch (error) {
           console.error("Error fetching employer username:", error);
         }
@@ -1979,19 +1970,14 @@ const Artisans = () => {
     setSelectedArtisan(artisan);
     setFormData(prevData => ({
       ...prevData,
-      address: artisan.address || '',
-      // Add other fields as necessary
+      address: artisan.address || ''
     }));
   };
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
 
-    const employerId = getCookie('employer_id');
-    const accessToken = getCookie('access_token');
-    console.log("Employer ID:", employerId);
-    console.log("Access Token:", accessToken);
-
+    const accessToken = Cookies.get('access_token');
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
@@ -2004,14 +1990,14 @@ const Artisans = () => {
     }
 
     const payload = {
-      employer: parseInt(employerId, 10), // Employer ID as an integer
-      artisan: selectedArtisan.id, // Artisan ID as an integer
-      service: parseInt(service_title, 10), // Service title as an integer
+      employer: parseInt(Cookies.get('employer_id'), 10), // Ensure employerId is an integer
+      artisan: selectedArtisan.id, // Ensure this is an integer
+      service: parseInt(service_title, 10), // Ensure service_title is an integer
       description: formData.description,
       address: formData.address,
       area: formData.area,
-      job_date: formData.job_date, // Format YYYY-MM-DD
-      preferred_time: formData.preferred_time, // Format HH:MM
+      job_date: formData.job_date, // Ensure this is in the format YYYY-MM-DD
+      preferred_time: formData.preferred_time, // Ensure this is in the format HH:MM
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
@@ -2090,17 +2076,101 @@ const Artisans = () => {
             <h2 className="text-xl font-semibold mb-4">Place Order for {selectedArtisan.user?.first_name}</h2>
             <form onSubmit={handleOrderSubmit}>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Employer: {employerUsername}</label>
+                <label className="block text-sm font-medium text-gray-700">Employer</label>
                 <input
                   type="text"
+                  value={employerUsername}
+                  readOnly
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Artisan</label>
+                <input
+                  type="text"
+                  value={`${selectedArtisan.user?.first_name} ${selectedArtisan.user?.last_name}`}
+                  readOnly
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Service</label>
+                <input
+                  type="text"
+                  value={service_title}
+                  readOnly
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                  placeholder="Description"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              {/* Add more form fields as required */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Area</label>
+                <input
+                  type="text"
+                  name="area"
+                  value={formData.area}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Job Date</label>
+                <input
+                  type="date"
+                  name="job_date"
+                  value={formData.job_date}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Preferred Time</label>
+                <input
+                  type="time"
+                  name="preferred_time"
+                  value={formData.preferred_time}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Contact Person</label>
+                <input
+                  type="text"
+                  name="contact_person"
+                  value={formData.contact_person}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone_number"
+                  value={formData.phone_number}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg"
@@ -2108,12 +2178,6 @@ const Artisans = () => {
                 Submit Order
               </button>
             </form>
-            <button
-              onClick={() => setSelectedArtisan(null)}
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
