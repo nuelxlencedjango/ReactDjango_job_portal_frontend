@@ -1960,7 +1960,8 @@ const Artisans = () => {
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
   
-    console.log('Selected Artisan:', selectedArtisan); // Check the selected artisan
+    console.log('Selected Artisan:', selectedArtisan);
+    console.log('Selected Artisan ID:', selectedArtisan ? selectedArtisan.id : 'No artisan selected');
   
     if (!selectedArtisan || !selectedArtisan.id) {
       alert('Please select a valid artisan.');
@@ -1981,7 +1982,7 @@ const Artisans = () => {
     }
   
     const payload = {
-      artisan: selectedArtisan.id,
+      artisan: String(selectedArtisan.id), // Ensure ID is in the expected format
       service: serviceId,
       description: formData.description || '',
       address: formData.address || '',
@@ -1992,7 +1993,7 @@ const Artisans = () => {
       phone_number: formData.phone_number || '',
     };
   
-    console.log('Payload:', payload); // Check the payload structure
+    console.log('Payload:', payload);
   
     try {
       const response = await axios.post(
@@ -2024,7 +2025,6 @@ const Artisans = () => {
       }
     }
   };
-  
   
 
   const handleChange = (e) => {
