@@ -1915,7 +1915,6 @@ const Artisans = () => {
 
 export default Artisans;*/}
 
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -1934,7 +1933,6 @@ const Artisans = () => {
     contact_person: '',
     phone_number: ''
   });
-  const [employerUsername, setEmployerUsername] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -1950,27 +1948,12 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title]);
 
-  useEffect(() => {
-    const fetchEmployerUsername = async () => {
-      const employerId = Cookies.get('employer_id');
-      if (employerId) {
-        try {
-          const response = await axios.get(`https://i-wanwok-backend.up.railway.app/employers/${employerId}/`);
-          setEmployerUsername(response.data.username);
-        } catch (error) {
-          console.error("Error fetching employer username:", error);
-        }
-      }
-    };
-
-    fetchEmployerUsername();
-  }, []);
-
   const handleOrderClick = (artisan) => {
     setSelectedArtisan(artisan);
     setFormData(prevData => ({
       ...prevData,
-      address: artisan.address || ''
+      address: artisan.address || '',
+      // Initialize other fields if necessary
     }));
   };
 
@@ -1978,6 +1961,7 @@ const Artisans = () => {
     e.preventDefault();
 
     const accessToken = Cookies.get('access_token');
+    console.log('access token:', accessToken)
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
@@ -1990,14 +1974,13 @@ const Artisans = () => {
     }
 
     const payload = {
-      employer: parseInt(Cookies.get('employer_id'), 10), // Ensure employerId is an integer
-      artisan: selectedArtisan.id, // Ensure this is an integer
-      service: parseInt(service_title, 10), // Ensure service_title is an integer
+      artisan: selectedArtisan.id,
+      service: parseInt(service_title, 10),
       description: formData.description,
       address: formData.address,
       area: formData.area,
-      job_date: formData.job_date, // Ensure this is in the format YYYY-MM-DD
-      preferred_time: formData.preferred_time, // Ensure this is in the format HH:MM
+      job_date: formData.job_date,
+      preferred_time: formData.preferred_time,
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
@@ -2073,35 +2056,8 @@ const Artisans = () => {
       {selectedArtisan && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">Place Order for {selectedArtisan.user?.first_name}</h2>
+            <h2 className="text-xl font-semibold mb-4">Request Service from {selectedArtisan.user?.first_name}</h2>
             <form onSubmit={handleOrderSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Employer</label>
-                <input
-                  type="text"
-                  value={employerUsername}
-                  readOnly
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Artisan</label>
-                <input
-                  type="text"
-                  value={`${selectedArtisan.user?.first_name} ${selectedArtisan.user?.last_name}`}
-                  readOnly
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Service</label>
-                <input
-                  type="text"
-                  value={service_title}
-                  readOnly
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Description</label>
                 <textarea
