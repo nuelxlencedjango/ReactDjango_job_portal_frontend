@@ -62,7 +62,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('api/token/', {
+      const response = await axios.post('accounts/login/', {
         username,
         password,
       });
