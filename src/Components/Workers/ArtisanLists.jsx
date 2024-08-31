@@ -2002,6 +2002,7 @@ const Artisans = () => {
         setSelectedArtisan(null);
         navigate('/dashboard');
       }
+      console.log('RESPONSE DATA:', response);  
     } catch (error) {
       if (error.response) {
         console.error('Error placing order:', error.response.data);
