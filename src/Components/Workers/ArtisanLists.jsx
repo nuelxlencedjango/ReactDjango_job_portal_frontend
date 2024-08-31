@@ -1960,15 +1960,17 @@ const Artisans = () => {
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
   
+    console.log('Selected Artisan:', selectedArtisan); // Check the selected artisan
+  
+    if (!selectedArtisan || !selectedArtisan.id) {
+      alert('Please select a valid artisan.');
+      return;
+    }
+  
     const accessToken = Cookies.get('access_token');
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
-      return;
-    }
-  
-    if (!selectedArtisan || !selectedArtisan.id) {
-      alert('Please select a valid artisan.');
       return;
     }
   
