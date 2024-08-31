@@ -1959,7 +1959,7 @@ const Artisans = () => {
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-
+  
     const accessToken = Cookies.get('access_token');
     console.log('access token:', accessToken)
     if (!accessToken) {
@@ -1967,12 +1967,12 @@ const Artisans = () => {
       navigate('/login');
       return;
     }
-
+  
     if (!selectedArtisan) {
       alert('Please select an artisan.');
       return;
     }
-
+  
     const payload = {
       artisan: selectedArtisan.id,
       service: parseInt(service_title, 10),
@@ -1984,7 +1984,7 @@ const Artisans = () => {
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
-
+  
     try {
       const response = await axios.post(
         'https://i-wanwok-backend.up.railway.app/employers/order-request/',
@@ -1996,7 +1996,7 @@ const Artisans = () => {
           },
         }
       );
-      console.log('Responses detailed info:', response);
+      console.log('RESPONSE DATA:', response);
       if (response.status === 201) {
         alert('Order placed successfully!');
         setSelectedArtisan(null);
@@ -2016,6 +2016,7 @@ const Artisans = () => {
       }
     }
   };
+  
 
   const handleChange = (e) => {
     setFormData({
@@ -2142,3 +2143,7 @@ const Artisans = () => {
 };
 
 export default Artisans;
+
+
+
+
