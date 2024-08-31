@@ -1319,6 +1319,7 @@ const Artisans = () => {
     const employerId = Cookies.get('employer_id');
     const accessToken = Cookies.get('access_token');
     console.log("Access details:", accessToken);
+    console.log('employer details:',employerId);
 
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
