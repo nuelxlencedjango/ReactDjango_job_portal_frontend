@@ -1290,7 +1290,7 @@ const Artisans = () => {
     address: '',
     area: '',
     job_date: '',
-    preferred_time: 'HH:mm',
+    preferred_time: '',
     contact_person: '',
     phone_number: ''
   });
