@@ -1914,7 +1914,6 @@ const Artisans = () => {
 };
 
 export default Artisans;*/}
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -1961,7 +1960,7 @@ const Artisans = () => {
     e.preventDefault();
   
     const accessToken = Cookies.get('access_token');
-    console.log('access token:', accessToken)
+    console.log('Access token:', accessToken);
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
@@ -1996,13 +1995,11 @@ const Artisans = () => {
           },
         }
       );
-      console.log('RESPONSE DATA:', response);
       if (response.status === 201) {
         alert('Order placed successfully!');
         setSelectedArtisan(null);
         navigate('/dashboard');
       }
-      console.log('RESPONSE DATA:', response);  
     } catch (error) {
       if (error.response) {
         console.error('Error placing order:', error.response.data);
@@ -2017,7 +2014,6 @@ const Artisans = () => {
       }
     }
   };
-  
 
   const handleChange = (e) => {
     setFormData({
@@ -2144,7 +2140,3 @@ const Artisans = () => {
 };
 
 export default Artisans;
-
-
-
-
