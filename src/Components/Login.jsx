@@ -72,7 +72,7 @@ const Login = () => {
       document.cookie = `refresh_token=${response.data.refresh}; path=/;`;
       console.log("logged in successfully")
       // Navigate to the homepage or another route on successful login
-      navigate('/home'); // Change '/home' to the route you want to navigate to
+      navigate('/'); // Change '/home' to the route you want to navigate to
     } catch (error) {
       setError('Login failed');
     }
