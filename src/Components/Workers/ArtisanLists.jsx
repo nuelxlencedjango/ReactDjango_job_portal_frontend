@@ -1673,37 +1673,34 @@ const Artisans = () => {
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-
+  
     const employerId = Cookies.get('employer_id');
     const accessToken = Cookies.get('access_token');
-    
-    console.log('empoyers id:',employerId);
-    console.log('access token:', accessToken);
-
+  
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
       return;
     }
-
+  
     if (!selectedArtisan) {
       alert('Please select an artisan.');
       return;
     }
-
+  
     const payload = {
-      employer: employerId,  // Ensure this is a valid ID
-      artisan: selectedArtisan.id,  // Ensure this is a valid ID
-      service: service_title,  // Ensure this matches the backend expectations (could be a string or integer)
+      employer: parseInt(employerId, 10), // Ensure employerId is an integer
+      artisan: selectedArtisan.id, // Ensure this is an integer
+      service: parseInt(service_title, 10), // Ensure service_title is an integer
       description: formData.description,
       address: formData.address,
       area: formData.area,
-      job_date: formData.job_date,  // Format should be YYYY-MM-DD
-      preferred_time: formData.preferred_time,  // Format should be HH:MM
+      job_date: formData.job_date, // Ensure this is in the format YYYY-MM-DD
+      preferred_time: formData.preferred_time, // Ensure this is in the format HH:MM
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
-
+  
     try {
       const response = await axios.post(
         'https://i-wanwok-backend.up.railway.app/employers/order-request/',
@@ -1715,7 +1712,7 @@ const Artisans = () => {
           },
         }
       );
-
+  
       if (response.status === 201) {
         alert('Order placed successfully!');
         setSelectedArtisan(null);
@@ -1726,7 +1723,7 @@ const Artisans = () => {
         console.error('Error placing order:', error.response.data);
         if (error.response.status === 401) {
           alert('You need to be logged in to place an order.');
-          navigate('/login'); 
+          navigate('/login');
         } else {
           alert(`Error: ${error.response.data.message || 'An error occurred'}`);
         }
@@ -1735,6 +1732,7 @@ const Artisans = () => {
       }
     }
   };
+  
 
   const handleChange = (e) => {
     setFormData({
