@@ -44,7 +44,7 @@ const JobSearch = ({ messages }) => {
 
     const fetchIndustries = async () => {
         try {
-            const response = await axios.get('https://i-wanwok-backend.up.railway.app/industry-list/');
+            const response = await axios.get('https://i-wanwok-backend.up.railway.app/api/industry-list/');
             setIndustries(response.data);
             
         } catch (error) {
