@@ -62,7 +62,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://i-wanwok-backend.up.railway.app/api/token/', {
+      const response = await axios.post('api/token/', {
         username,
         password,
       });
