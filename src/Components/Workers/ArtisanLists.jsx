@@ -1312,21 +1312,18 @@ const Artisans = () => {
   const handleOrderClick = (artisan) => {
     setSelectedArtisan(artisan);
   };
-
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-
+  
     const employerId = Cookies.get('employer_id');
     const accessToken = Cookies.get('access_token');
-    console.log("Access details:", accessToken);
-    console.log('employer details:',employerId);
-
+  
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login'); 
       return;
     }
-
+  
     const payload = {
       employer: employerId,
       artisan: selectedArtisan.id,
@@ -1335,11 +1332,11 @@ const Artisans = () => {
       address: formData.address,
       area: formData.area,
       job_date: formData.job_date,
-      preferred_time: formData.preferred_time,
+      preferred_time: formData.preferred_time, // Make sure this is in the correct format
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
-
+  
     try {
       const response = await axios.post(
         'https://i-wanwok-backend.up.railway.app/employers/order-request/',
@@ -1351,28 +1348,36 @@ const Artisans = () => {
           },
         }
       );
-
+  
       if (response.status === 201) {
         alert('Order placed successfully!');
         setSelectedArtisan(null);
         navigate('/dashboard');
       }
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        alert('You need to be logged in to place an order.');
-        navigate('/login'); 
+      if (error.response) {
+        console.error('Error placing order:', error.response.data);
+        if (error.response.status === 401) {
+          alert('You need to be logged in to place an order.');
+          navigate('/login'); 
+        } else {
+          alert(`Error: ${error.response.data.message || 'An error occurred'}`);
+        }
       } else {
         console.error('Error placing order:', error);
       }
     }
   };
-
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
+
+
+  
 
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
