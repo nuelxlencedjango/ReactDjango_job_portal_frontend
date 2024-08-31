@@ -1914,6 +1914,8 @@ const Artisans = () => {
 };
 
 export default Artisans;*/}
+
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -1955,12 +1957,12 @@ const Artisans = () => {
       // Initialize other fields if necessary
     }));
   };
-
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
   
     const accessToken = Cookies.get('access_token');
     console.log('Access token:', accessToken);
+  
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
@@ -1972,17 +1974,20 @@ const Artisans = () => {
       return;
     }
   
+    // Ensure that all required fields are included in the payload
     const payload = {
       artisan: selectedArtisan.id,
       service: parseInt(service_title, 10),
-      description: formData.description,
-      address: formData.address,
-      area: formData.area,
-      job_date: formData.job_date,
-      preferred_time: formData.preferred_time,
-      contact_person: formData.contact_person,
-      phone_number: formData.phone_number,
+      description: formData.description || '', // Default to empty string if undefined
+      address: formData.address || '',
+      area: formData.area || '',
+      job_date: formData.job_date || '',
+      preferred_time: formData.preferred_time || '',
+      contact_person: formData.contact_person || '',
+      phone_number: formData.phone_number || '',
     };
+  
+    console.log('Payload:', payload);
   
     try {
       const response = await axios.post(
@@ -2014,6 +2019,7 @@ const Artisans = () => {
       }
     }
   };
+  
 
   const handleChange = (e) => {
     setFormData({
