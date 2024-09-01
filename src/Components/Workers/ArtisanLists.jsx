@@ -2096,7 +2096,7 @@ const Artisans = () => {
                 <label className="block text-sm font-medium text-gray-700">Artisan</label>
                 <input
                   type="text"
-                  value={`${selectedArtisan.user}`}
+                  value={`${selectedArtisan.user?.username}`}
                   readOnly
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
