@@ -1951,14 +1951,7 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title]);
 
-  // Handle artisan selection
-  const handleOrderClick = (artisan) => {
-    if (artisan && artisan.id) {
-      setSelectedArtisan(artisan);
-    } else {
-      alert('Invalid artisan selected.');
-    }
-  };
+ 
 
   // Handle form submission
   const handleOrderSubmit = async (e) => {
