@@ -1917,12 +1917,10 @@ export default Artisans;*/}
 
 
 
-
-
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import axiosInstance from '../../api/axios';
 
 const Artisans = () => {
   const { service_title } = useParams();
@@ -1943,7 +1941,9 @@ const Artisans = () => {
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
-        const response = await axiosInstance.get(`/artisans/artisans-by-service/${service_title}/`);
+        const response = await axios.get(
+          `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`
+        );
         setArtisans(response.data);
       } catch (error) {
         console.error("Error fetching artisans:", error);
@@ -1959,7 +1959,9 @@ const Artisans = () => {
 
       if (employerId) {
         try {
-          const response = await axiosInstance.get(`/employers/${employerId}/`);
+          const response = await axios.get(
+            `https://i-wanwok-backend.up.railway.app/employers/${employerId}/`
+          );
           setEmployerUsername(response.data.username);
         } catch (error) {
           console.error("Error fetching employer username:", error);
@@ -1988,6 +1990,7 @@ const Artisans = () => {
     e.preventDefault();
 
     const employerId = Cookies.get('employer_id');
+    const accessToken = Cookies.get('access_token');
 
     if (!selectedArtisan) {
       alert('Please select an artisan.');
@@ -1995,7 +1998,6 @@ const Artisans = () => {
     }
 
     const payload = {
-      employer: parseInt(employerId, 10),
       artisan: selectedArtisan.id,
       service: parseInt(service_title, 10),
       description: formData.description,
@@ -2008,26 +2010,29 @@ const Artisans = () => {
     };
 
     try {
-      const response = await axiosInstance.post('/employers/order-request/', payload);
+      const response = await fetch('https://i-wanwok-backend.up.railway.app/employers/order-request/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
-      if (response.status === 201) {
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Order placed successfully:", result);
         alert('Order placed successfully!');
         setSelectedArtisan(null);
         navigate('/dashboard');
+      } else {
+        const errorData = await response.json();
+        console.error('Error placing order:', errorData);
+        alert(`Error: ${errorData.message || 'An error occurred'}`);
       }
     } catch (error) {
-      if (error.response) {
-        console.error('Error placing order:', error.response.data);
-        if (error.response.status === 401) {
-          alert('You need to be logged in to place an order.');
-          navigate('/login');
-        } else {
-          alert(`Error: ${error.response.data.detail || 'An error occurred'}`);
-        }
-      } else {
-        console.error('Error placing order:', error);
-        alert('An unexpected error occurred. Please try again later.');
-      }
+      console.error('Error placing order:', error);
+      alert('An unexpected error occurred. Please try again later.');
     }
   };
 
@@ -2147,7 +2152,7 @@ const Artisans = () => {
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Preferred Time</label>
                 <input
-                  type="text"
+                  type="time"
                   name="preferred_time"
                   value={formData.preferred_time}
                   onChange={handleChange}
@@ -2175,21 +2180,17 @@ const Artisans = () => {
                 />
               </div>
               <div className="flex justify-end">
-                <button 
-                  type="button" 
-                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md mr-2"
-                  onClick={() => setSelectedArtisan(null)}
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit" 
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
-                >
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">
                   Submit Order
                 </button>
               </div>
             </form>
+            <button
+              onClick={() => setSelectedArtisan(null)}
+              className="mt-4 text-blue-500"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}
