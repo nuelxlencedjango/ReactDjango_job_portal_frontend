@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
-  const [selectedArtisan, setSelectedArtisan] = useState(null);
+  const [selectedArtisan, setSelectedArtisan] = useState(null); 
   const [formData, setFormData] = useState({
     description: '',
     address: '',
@@ -648,7 +648,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 function ArtisanList() {
     const { service_title } = useParams(); // Fetch service title from URL params
     const [artisans, setArtisans] = useState([]);
-    const [selectedArtisan, setSelectedArtisan] = useState(null);
+    const [selectedArtisan, setSelectedArtisan] = useState(null); 
     const [formData, setFormData] = useState({
         description: '',
         address: '',
@@ -1922,7 +1922,7 @@ import Cookies from 'js-cookie';
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
-  const [selectedArtisan, setSelectedArtisan] = useState(null);
+  const [selectedArtisan, setSelectedArtisan] = useState(null); 
   const [formData, setFormData] = useState({
     description: '',
     address: '',
@@ -1967,6 +1967,7 @@ const Artisans = () => {
     }
 
     const accessToken = Cookies.get('access_token');
+    console.log('Access Token:', accessToken); // Debugging line
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
@@ -1980,7 +1981,7 @@ const Artisans = () => {
     }
 
     const payload = {
-      artisan: String(selectedArtisan.id),
+      artisan: String(selectedArtisan.id), 
       service: serviceId,
       description: formData.description || '',
       address: formData.address || '',
