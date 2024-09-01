@@ -1916,7 +1916,6 @@ const Artisans = () => {
 export default Artisans;*/}
 
 
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -1951,7 +1950,14 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title]);
 
- 
+  // Handle artisan selection
+  const handleOrderClick = (artisan) => {
+    if (artisan && artisan.id) {
+      setSelectedArtisan(artisan);
+    } else {
+      alert('Invalid artisan selected.');
+    }
+  };
 
   // Handle form submission
   const handleOrderSubmit = async (e) => {
