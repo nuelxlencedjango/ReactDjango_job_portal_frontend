@@ -1917,7 +1917,7 @@ export default Artisans;*/}
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const Artisans = () => {
@@ -1933,13 +1933,15 @@ const Artisans = () => {
     contact_person: '',
     phone_number: ''
   });
+  const [employerUsername, setEmployerUsername] = useState('');
   const navigate = useNavigate();
 
-  // Fetch artisans based on service title
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
-        const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`);
+        const response = await axios.get(
+          `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`
+        );
         setArtisans(response.data);
       } catch (error) {
         console.error("Error fetching artisans:", error);
@@ -1949,36 +1951,54 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title]);
 
-  // Handle artisan selection
+  useEffect(() => {
+    const fetchEmployerUsername = async () => {
+      const employerId = Cookies.get('employer_id');
+
+      if (employerId) {
+        try {
+          const response = await axios.get(
+            `https://i-wanwok-backend.up.railway.app/employers/${employerId}/`
+          );
+          setEmployerUsername(response.data.username);
+        } catch (error) {
+          console.error("Error fetching employer username:", error);
+        }
+      }
+    };
+
+    fetchEmployerUsername();
+  }, []);
+
   const handleOrderClick = (artisan) => {
-    setSelectedArtisan(artisan);
-  };
-
-  // Handle form submission
-  const handleOrderSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!selectedArtisan) {
-      alert('Please select a valid artisan.');
-      return;
-    }
-
-    const accessToken = Cookies.get('access_token');
-    if (!accessToken) {
+    if (!Cookies.get('access_token')) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
       return;
     }
 
-    const serviceId = parseInt(service_title, 10);
-    if (isNaN(serviceId)) {
-      alert('Invalid service ID.');
+    setSelectedArtisan(artisan);
+    setFormData(prevData => ({
+      ...prevData,
+      address: artisan.address || '',
+    }));
+  };
+
+  const handleOrderSubmit = async (e) => {
+    e.preventDefault();
+
+    const employerId = Cookies.get('employer_id');
+    const accessToken = Cookies.get('access_token');
+
+    if (!selectedArtisan) {
+      alert('Please select an artisan.');
       return;
     }
 
     const payload = {
-      artisan: String(selectedArtisan.id),
-      service: serviceId,
+      employer: parseInt(employerId, 10),
+      artisan: selectedArtisan.id,
+      service: parseInt(service_title, 10),
       description: formData.description,
       address: formData.address,
       area: formData.area,
@@ -1999,6 +2019,7 @@ const Artisans = () => {
           },
         }
       );
+
       if (response.status === 201) {
         alert('Order placed successfully!');
         setSelectedArtisan(null);
@@ -2006,6 +2027,7 @@ const Artisans = () => {
       }
     } catch (error) {
       if (error.response) {
+        console.error('Error placing order:', error.response.data);
         if (error.response.status === 401) {
           alert('You need to be logged in to place an order.');
           navigate('/login');
@@ -2014,11 +2036,11 @@ const Artisans = () => {
         }
       } else {
         console.error('Error placing order:', error);
+        alert('An unexpected error occurred. Please try again later.');
       }
     }
   };
 
-  // Handle form input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -2038,9 +2060,9 @@ const Artisans = () => {
             className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center"
           >
             {artisan.profile_img ? (
-              <img
-                src={artisan.profile_img}
-                alt={`${artisan.user?.first_name}'s profile`}
+              <img 
+                src={artisan.profile_img} 
+                alt={`${artisan.user?.first_name}'s profile`} 
                 className="w-24 h-24 rounded-full object-cover mb-4"
               />
             ) : (
@@ -2049,105 +2071,136 @@ const Artisans = () => {
             <h2 className="text-lg font-semibold mb-2">
               {artisan.user?.first_name} {artisan.user?.last_name}
             </h2>
-            <button
+            <button 
               onClick={() => handleOrderClick(artisan)}
-              className={`mt-auto bg-blue-500 text-white px-4 py-2 rounded ${selectedArtisan?.id === artisan.id ? 'bg-green-500' : ''}`}
+              className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
             >
-              {selectedArtisan?.id === artisan.id ? 'Selected' : 'Select'}
+              Order Service
             </button>
           </div>
         ))}
       </div>
 
-      {/* Ensure the form displays when an artisan is selected */}
       {selectedArtisan && (
-        <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4">Order Details</h2>
-          <form onSubmit={handleOrderSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-              <input
-                id="description"
-                name="description"
-                type="text"
-                value={formData.description}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
-              <input
-                id="address"
-                name="address"
-                type="text"
-                value={formData.address}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="area" className="block text-sm font-medium text-gray-700">Area</label>
-              <input
-                id="area"
-                name="area"
-                type="text"
-                value={formData.area}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="job_date" className="block text-sm font-medium text-gray-700">Job Date</label>
-              <input
-                id="job_date"
-                name="job_date"
-                type="date"
-                value={formData.job_date}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="preferred_time" className="block text-sm font-medium text-gray-700">Preferred Time</label>
-              <input
-                id="preferred_time"
-                name="preferred_time"
-                type="time"
-                value={formData.preferred_time}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="contact_person" className="block text-sm font-medium text-gray-700">Contact Person</label>
-              <input
-                id="contact_person"
-                name="contact_person"
-                type="text"
-                value={formData.contact_person}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700">Phone Number</label>
-              <input
-                id="phone_number"
-                name="phone_number"
-                type="text"
-                value={formData.phone_number}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Submit Order
-            </button>
-          </form>
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4">
+              Place Order for {selectedArtisan.user?.first_name}
+            </h2>
+            <form onSubmit={handleOrderSubmit}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Employer</label>
+                <input
+                  type="text"
+                  value={employerUsername}
+                  readOnly
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Artisan</label>
+                <input
+                  type="text"
+                  value={`${selectedArtisan.user?.first_name} ${selectedArtisan.user?.last_name}`}
+                  readOnly
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Service</label>
+                <input
+                  type="text"
+                  value={service_title}
+                  readOnly
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Area</label>
+                <input
+                  type="text"
+                  name="area"
+                  value={formData.area}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Job Date</label>
+                <input
+                  type="date"
+                  name="job_date"
+                  value={formData.job_date}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Preferred Time</label>
+                <input
+                  type="time"
+                  name="preferred_time"
+                  value={formData.preferred_time}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Contact Person</label>
+                <input
+                  type="text"
+                  name="contact_person"
+                  value={formData.contact_person}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone_number"
+                  value={formData.phone_number}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Submit Order
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedArtisan(null)}
+                  className="ml-2 bg-gray-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
