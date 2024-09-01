@@ -1916,7 +1916,6 @@ const Artisans = () => {
 export default Artisans;*/}
 
 
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -2179,18 +2178,17 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="flex justify-end">
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">
-                  Submit Order
-                </button>
-              </div>
+              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+                Submit Order
+              </button>
+              <button 
+                type="button" 
+                onClick={() => setSelectedArtisan(null)}
+                className="ml-4 bg-gray-500 text-white px-4 py-2 rounded-md"
+              >
+                Cancel
+              </button>
             </form>
-            <button
-              onClick={() => setSelectedArtisan(null)}
-              className="mt-4 text-blue-500"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
