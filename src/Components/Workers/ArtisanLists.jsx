@@ -1916,7 +1916,6 @@ const Artisans = () => {
 export default Artisans;*/}
 
 
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -1942,7 +1941,12 @@ const Artisans = () => {
     const fetchArtisans = async () => {
       try {
         const response = await axios.get(
-          `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`
+          `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`,
+          {
+            headers: {
+              'Authorization': `Bearer ${Cookies.get('access_token')}` // Add token for authorization
+            }
+          }
         );
         setArtisans(response.data);
       } catch (error) {
@@ -1960,7 +1964,12 @@ const Artisans = () => {
       if (employerId) {
         try {
           const response = await axios.get(
-            `https://i-wanwok-backend.up.railway.app/employers/${employerId}/`
+            `https://i-wanwok-backend.up.railway.app/employers/${employerId}/`,
+            {
+              headers: {
+                'Authorization': `Bearer ${Cookies.get('access_token')}` // Add token for authorization
+              }
+            }
           );
           setEmployerUsername(response.data.username);
         } catch (error) {
@@ -1989,7 +1998,6 @@ const Artisans = () => {
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
   
-    const employerId = Cookies.get('employer_id');
     const accessToken = Cookies.get('access_token');
   
     if (!selectedArtisan) {
@@ -2179,25 +2187,27 @@ const Artisans = () => {
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Phone Number</label>
                 <input
-                  type="tel"
+                  type="text"
                   name="phone_number"
                   value={formData.phone_number}
                   onChange={handleChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="flex justify-end">
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">
-                  Submit Order
-                </button>
-              </div>
+              <button 
+                type="submit" 
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+              >
+                Submit Order
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedArtisan(null)}
+                className="ml-4 bg-gray-300 text-gray-800 px-4 py-2 rounded-lg"
+              >
+                Cancel
+              </button>
             </form>
-            <button
-              onClick={() => setSelectedArtisan(null)}
-              className="mt-4 text-blue-500"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
