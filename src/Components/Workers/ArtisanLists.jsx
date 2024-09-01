@@ -1914,6 +1914,9 @@ const Artisans = () => {
 };
 
 export default Artisans;*/}
+
+
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -1922,7 +1925,7 @@ import Cookies from 'js-cookie';
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
-  const [selectedArtisan, setSelectedArtisan] = useState(null); 
+  const [selectedArtisan, setSelectedArtisan] = useState(null);
   const [formData, setFormData] = useState({
     description: '',
     address: '',
@@ -1934,11 +1937,11 @@ const Artisans = () => {
   });
   const navigate = useNavigate();
 
+  // Fetch artisans based on service title
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
         const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`);
-        console.log('Fetched Artisans:', response.data); // Debugging line
         setArtisans(response.data);
       } catch (error) {
         console.error("Error fetching artisans:", error);
@@ -1948,8 +1951,8 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title]);
 
+  // Handle artisan selection
   const handleOrderClick = (artisan) => {
-    console.log('Selected Artisan on Click:', artisan); // Debugging line
     if (artisan && artisan.id) {
       setSelectedArtisan(artisan);
     } else {
@@ -1957,17 +1960,16 @@ const Artisans = () => {
     }
   };
 
+  // Handle form submission
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('Selected Artisan on Submit:', selectedArtisan); // Debugging line
     if (!selectedArtisan || !selectedArtisan.id) {
       alert('Please select a valid artisan.');
       return;
     }
 
     const accessToken = Cookies.get('access_token');
-    console.log('Access Token:', accessToken); // Debugging line
     if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
@@ -1981,18 +1983,16 @@ const Artisans = () => {
     }
 
     const payload = {
-      artisan: String(selectedArtisan.id), 
+      artisan: String(selectedArtisan.id),
       service: serviceId,
-      description: formData.description || '',
-      address: formData.address || '',
-      area: formData.area || '',
-      job_date: formData.job_date || '',
-      preferred_time: formData.preferred_time || '',
-      contact_person: formData.contact_person || '',
-      phone_number: formData.phone_number || '',
+      description: formData.description,
+      address: formData.address,
+      area: formData.area,
+      job_date: formData.job_date,
+      preferred_time: formData.preferred_time,
+      contact_person: formData.contact_person,
+      phone_number: formData.phone_number,
     };
-
-    console.log('Payload:', payload); // Debugging line
 
     try {
       const response = await axios.post(
@@ -2012,7 +2012,6 @@ const Artisans = () => {
       }
     } catch (error) {
       if (error.response) {
-        console.error('Error placing order:', error.response.data);
         if (error.response.status === 401) {
           alert('You need to be logged in to place an order.');
           navigate('/login');
@@ -2025,6 +2024,7 @@ const Artisans = () => {
     }
   };
 
+  // Handle form input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
