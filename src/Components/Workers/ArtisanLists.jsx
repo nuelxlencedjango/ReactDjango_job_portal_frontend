@@ -1916,6 +1916,7 @@ const Artisans = () => {
 export default Artisans;*/}
 
 
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -1987,15 +1988,21 @@ const Artisans = () => {
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-
+  
     const employerId = Cookies.get('employer_id');
     const accessToken = Cookies.get('access_token');
-
+  
     if (!selectedArtisan) {
       alert('Please select an artisan.');
       return;
     }
-
+  
+    if (!accessToken) {
+      alert('You need to be logged in to place an order.');
+      navigate('/login');
+      return;
+    }
+  
     const payload = {
       artisan: selectedArtisan.id, // Ensure this is the artisan's ID
       service: parseInt(service_title, 10),
@@ -2007,7 +2014,7 @@ const Artisans = () => {
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
-
+  
     try {
       const response = await fetch('https://i-wanwok-backend.up.railway.app/employers/order-request/', {
         method: 'POST',
@@ -2017,7 +2024,7 @@ const Artisans = () => {
         },
         body: JSON.stringify(payload),
       });
-
+  
       if (response.ok) {
         const result = await response.json();
         console.log("Order placed successfully:", result);
@@ -2034,6 +2041,7 @@ const Artisans = () => {
       alert('An unexpected error occurred. Please try again later.');
     }
   };
+  
 
   const handleChange = (e) => {
     setFormData({
@@ -2077,12 +2085,12 @@ const Artisans = () => {
 
       {selectedArtisan && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4">
               Place Order for {selectedArtisan.user?.first_name}
             </h2>
             <form onSubmit={handleOrderSubmit}>
-              <div className="mb-2">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Employer</label>
                 <input
                   type="text"
@@ -2091,7 +2099,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-2">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Artisan</label>
                 <input
                   type="text"
@@ -2100,7 +2108,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-2">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Service</label>
                 <input
                   type="text"
@@ -2109,7 +2117,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-2">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Description</label>
                 <textarea
                   name="description"
@@ -2118,7 +2126,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-2">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Address</label>
                 <input
                   type="text"
@@ -2128,7 +2136,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-2">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Area</label>
                 <input
                   type="text"
@@ -2138,7 +2146,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-2">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Job Date</label>
                 <input
                   type="date"
@@ -2148,7 +2156,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-2">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Preferred Time</label>
                 <input
                   type="time"
@@ -2158,7 +2166,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-2">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Contact Person</label>
                 <input
                   type="text"
@@ -2168,10 +2176,10 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-2">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Phone Number</label>
                 <input
-                  type="text"
+                  type="tel"
                   name="phone_number"
                   value={formData.phone_number}
                   onChange={handleChange}
@@ -2179,18 +2187,17 @@ const Artisans = () => {
                 />
               </div>
               <div className="flex justify-end">
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">
                   Submit Order
-                </button>
-                <button 
-                  type="button" 
-                  onClick={() => setSelectedArtisan(null)}
-                  className="ml-2 bg-gray-500 text-white px-4 py-2 rounded-md"
-                >
-                  Cancel
                 </button>
               </div>
             </form>
+            <button
+              onClick={() => setSelectedArtisan(null)}
+              className="mt-4 text-blue-500"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}
