@@ -1,28 +1,55 @@
 
 
-import axios from 'axios';
+/*import axios from 'axios';
 import { refreshToken } from './refreshToken';
 
-// Create an Axios instance
+//Axios instance
 const instance = axios.create({
-  baseURL: 'https://i-wanwok-backend.up.railway.app/',  // Adjust according to your Django server URL
-  withCredentials: true,  // Ensure cookies are sent with requests
-});
+  baseURL: 'https://i-wanwok-backend.up.railway.app/', 
+  withCredentials: true,  
 
-// Add an interceptor to handle token refresh on 401 errors
+// interceptor to handle token refresh on 401 errors
 instance.interceptors.response.use(
-  response => response,  // Pass through successful responses
+  response => response,  
   async error => {
-    if (error.response && error.response.status === 401) {  // Check for unauthorized status
+    if (error.response && error.response.status === 401) {  
       try {
-        await refreshToken();  // Attempt to refresh the token
-        return instance.request(error.config);  // Retry the original request
+        await refreshToken(); 
+        return instance.request(error.config);  
       } catch (e) {
-        console.error('Failed to refresh token', e);  // Handle token refresh failure
+        console.error('Failed to refresh token', e);  
       }
     }
-    return Promise.reject(error);  // Pass through other errors
+    return Promise.reject(error);  
   }
 );
 
-export default instance;
+export default instance;*/
+
+
+
+
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
+const axiosInstance = axios.create({
+  baseURL: 'https://i-wanwok-backend.up.railway.app',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+axiosInstance.interceptors.request.use(
+  config => {
+    const token = Cookies.get('access_token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
+export default axiosInstance;

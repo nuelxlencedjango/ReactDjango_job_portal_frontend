@@ -1915,10 +1915,14 @@ const Artisans = () => {
 
 export default Artisans;*/}
 
+
+
+
+
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import axiosInstance from '../../api/axios';
 
 const Artisans = () => {
   const { service_title } = useParams();
@@ -1939,9 +1943,7 @@ const Artisans = () => {
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
-        const response = await axios.get(
-          `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`
-        );
+        const response = await axiosInstance.get(`/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
       } catch (error) {
         console.error("Error fetching artisans:", error);
@@ -1957,9 +1959,7 @@ const Artisans = () => {
 
       if (employerId) {
         try {
-          const response = await axios.get(
-            `https://i-wanwok-backend.up.railway.app/employers/${employerId}/`
-          );
+          const response = await axiosInstance.get(`/employers/${employerId}/`);
           setEmployerUsername(response.data.username);
         } catch (error) {
           console.error("Error fetching employer username:", error);
@@ -1988,7 +1988,6 @@ const Artisans = () => {
     e.preventDefault();
 
     const employerId = Cookies.get('employer_id');
-    const accessToken = Cookies.get('access_token');
 
     if (!selectedArtisan) {
       alert('Please select an artisan.');
@@ -2009,16 +2008,7 @@ const Artisans = () => {
     };
 
     try {
-      const response = await axios.post(
-        'https://i-wanwok-backend.up.railway.app/employers/order-request/',
-        payload,
-        {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await axiosInstance.post('/employers/order-request/', payload);
 
       if (response.status === 201) {
         alert('Order placed successfully!');
@@ -2032,7 +2022,7 @@ const Artisans = () => {
           alert('You need to be logged in to place an order.');
           navigate('/login');
         } else {
-          alert(`Error: ${error.response.data.message || 'An error occurred'}`);
+          alert(`Error: ${error.response.data.detail || 'An error occurred'}`);
         }
       } else {
         console.error('Error placing order:', error);
@@ -2157,7 +2147,7 @@ const Artisans = () => {
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Preferred Time</label>
                 <input
-                  type="time"
+                  type="text"
                   name="preferred_time"
                   value={formData.preferred_time}
                   onChange={handleChange}
@@ -2185,18 +2175,18 @@ const Artisans = () => {
                 />
               </div>
               <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                >
-                  Submit Order
-                </button>
-                <button
-                  type="button"
+                <button 
+                  type="button" 
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md mr-2"
                   onClick={() => setSelectedArtisan(null)}
-                  className="ml-2 bg-gray-500 text-white px-4 py-2 rounded-lg"
                 >
                   Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                >
+                  Submit Order
                 </button>
               </div>
             </form>
