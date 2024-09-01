@@ -1939,12 +1939,15 @@ const Artisans = () => {
 
   useEffect(() => {
     const fetchArtisans = async () => {
+      const token = Cookies.get('access_token');
+      console.log("Fetching artisans with token:", token);
+
       try {
         const response = await axios.get(
           `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`,
           {
             headers: {
-              'Authorization': `Bearer ${Cookies.get('access_token')}` // Add token for authorization
+              'Authorization': `Bearer ${token}`
             }
           }
         );
@@ -1960,14 +1963,15 @@ const Artisans = () => {
   useEffect(() => {
     const fetchEmployerUsername = async () => {
       const employerId = Cookies.get('employer_id');
+      const token = Cookies.get('access_token');
 
-      if (employerId) {
+      if (employerId && token) {
         try {
           const response = await axios.get(
             `https://i-wanwok-backend.up.railway.app/employers/${employerId}/`,
             {
               headers: {
-                'Authorization': `Bearer ${Cookies.get('access_token')}` // Add token for authorization
+                'Authorization': `Bearer ${token}`
               }
             }
           );
@@ -1997,22 +2001,21 @@ const Artisans = () => {
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-  
-    const accessToken = Cookies.get('access_token');
-  
+
     if (!selectedArtisan) {
       alert('Please select an artisan.');
       return;
     }
-  
-    if (!accessToken) {
+
+    const token = Cookies.get('access_token');
+    if (!token) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
       return;
     }
-  
+
     const payload = {
-      artisan: selectedArtisan.id, // Ensure this is the artisan's ID
+      artisan: selectedArtisan.id,
       service: parseInt(service_title, 10),
       description: formData.description,
       address: formData.address,
@@ -2022,17 +2025,17 @@ const Artisans = () => {
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
-  
+
     try {
       const response = await fetch('https://i-wanwok-backend.up.railway.app/employers/order-request/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
-  
+
       if (response.ok) {
         const result = await response.json();
         console.log("Order placed successfully:", result);
@@ -2042,14 +2045,13 @@ const Artisans = () => {
       } else {
         const errorData = await response.json();
         console.error('Error placing order:', errorData);
-        alert(`Error: ${errorData.message || 'An error occurred'}`);
+        alert(`Error: ${errorData.detail || 'An error occurred'}`);
       }
     } catch (error) {
       console.error('Error placing order:', error);
       alert('An unexpected error occurred. Please try again later.');
     }
   };
-  
 
   const handleChange = (e) => {
     setFormData({
@@ -2195,17 +2197,10 @@ const Artisans = () => {
                 />
               </div>
               <button 
-                type="submit" 
+                type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg"
               >
                 Submit Order
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedArtisan(null)}
-                className="ml-4 bg-gray-300 text-gray-800 px-4 py-2 rounded-lg"
-              >
-                Cancel
               </button>
             </form>
           </div>
