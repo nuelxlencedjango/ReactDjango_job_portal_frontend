@@ -1915,7 +1915,6 @@ const Artisans = () => {
 
 export default Artisans;*/}
 
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -1952,18 +1951,14 @@ const Artisans = () => {
 
   // Handle artisan selection
   const handleOrderClick = (artisan) => {
-    if (artisan && artisan.id) {
-      setSelectedArtisan(artisan);
-    } else {
-      alert('Invalid artisan selected.');
-    }
+    setSelectedArtisan(artisan);
   };
 
   // Handle form submission
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
 
-    if (!selectedArtisan || !selectedArtisan.id) {
+    if (!selectedArtisan) {
       alert('Please select a valid artisan.');
       return;
     }
@@ -2064,38 +2059,96 @@ const Artisans = () => {
         ))}
       </div>
 
+      {/* Ensure the form displays when an artisan is selected */}
       {selectedArtisan && (
-        <form onSubmit={handleOrderSubmit} className="space-y-4 mt-8">
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-            <input
-              id="description"
-              name="description"
-              type="text"
-              value={formData.description}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
-            <input
-              id="address"
-              name="address"
-              type="text"
-              value={formData.address}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          {/* Include other form fields similarly */}
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Submit Order
-          </button>
-        </form>
+        <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
+          <h2 className="text-xl font-bold mb-4">Order Details</h2>
+          <form onSubmit={handleOrderSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+              <input
+                id="description"
+                name="description"
+                type="text"
+                value={formData.description}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
+              <input
+                id="address"
+                name="address"
+                type="text"
+                value={formData.address}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label htmlFor="area" className="block text-sm font-medium text-gray-700">Area</label>
+              <input
+                id="area"
+                name="area"
+                type="text"
+                value={formData.area}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label htmlFor="job_date" className="block text-sm font-medium text-gray-700">Job Date</label>
+              <input
+                id="job_date"
+                name="job_date"
+                type="date"
+                value={formData.job_date}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label htmlFor="preferred_time" className="block text-sm font-medium text-gray-700">Preferred Time</label>
+              <input
+                id="preferred_time"
+                name="preferred_time"
+                type="time"
+                value={formData.preferred_time}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label htmlFor="contact_person" className="block text-sm font-medium text-gray-700">Contact Person</label>
+              <input
+                id="contact_person"
+                name="contact_person"
+                type="text"
+                value={formData.contact_person}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700">Phone Number</label>
+              <input
+                id="phone_number"
+                name="phone_number"
+                type="text"
+                value={formData.phone_number}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Submit Order
+            </button>
+          </form>
+        </div>
       )}
     </div>
   );
