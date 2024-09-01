@@ -1916,6 +1916,7 @@ const Artisans = () => {
 export default Artisans;*/}
 
 
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -1939,17 +1940,9 @@ const Artisans = () => {
 
   useEffect(() => {
     const fetchArtisans = async () => {
-      const token = Cookies.get('access_token');
-      console.log("Fetching artisans with token:", token);
-
       try {
         const response = await axios.get(
-          `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`,
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          }
+          `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`
         );
         setArtisans(response.data);
       } catch (error) {
@@ -1963,17 +1956,11 @@ const Artisans = () => {
   useEffect(() => {
     const fetchEmployerUsername = async () => {
       const employerId = Cookies.get('employer_id');
-      const token = Cookies.get('access_token');
 
-      if (employerId && token) {
+      if (employerId) {
         try {
           const response = await axios.get(
-            `https://i-wanwok-backend.up.railway.app/employers/${employerId}/`,
-            {
-              headers: {
-                'Authorization': `Bearer ${token}`
-              }
-            }
+            `https://i-wanwok-backend.up.railway.app/employers/${employerId}/`
           );
           setEmployerUsername(response.data.username);
         } catch (error) {
@@ -2001,21 +1988,22 @@ const Artisans = () => {
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-
+  
+    const accessToken = Cookies.get('access_token');
+  
     if (!selectedArtisan) {
       alert('Please select an artisan.');
       return;
     }
-
-    const token = Cookies.get('access_token');
-    if (!token) {
+  
+    if (!accessToken) {
       alert('You need to be logged in to place an order.');
       navigate('/login');
       return;
     }
-
+  
     const payload = {
-      artisan: selectedArtisan.id,
+      artisan: selectedArtisan.id, // Ensure this is the artisan's ID
       service: parseInt(service_title, 10),
       description: formData.description,
       address: formData.address,
@@ -2025,17 +2013,17 @@ const Artisans = () => {
       contact_person: formData.contact_person,
       phone_number: formData.phone_number,
     };
-
+  
     try {
       const response = await fetch('https://i-wanwok-backend.up.railway.app/employers/order-request/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify(payload),
       });
-
+  
       if (response.ok) {
         const result = await response.json();
         console.log("Order placed successfully:", result);
@@ -2045,13 +2033,14 @@ const Artisans = () => {
       } else {
         const errorData = await response.json();
         console.error('Error placing order:', errorData);
-        alert(`Error: ${errorData.detail || 'An error occurred'}`);
+        alert(`Error: ${errorData.message || 'An error occurred'}`);
       }
     } catch (error) {
       console.error('Error placing order:', error);
       alert('An unexpected error occurred. Please try again later.');
     }
   };
+  
 
   const handleChange = (e) => {
     setFormData({
@@ -2197,10 +2186,17 @@ const Artisans = () => {
                 />
               </div>
               <button 
-                type="submit"
+                type="submit" 
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg"
               >
-                Submit Order
+                Place Order
+              </button>
+              <button 
+                type="button" 
+                onClick={() => setSelectedArtisan(null)}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
+              >
+                Cancel
               </button>
             </form>
           </div>
