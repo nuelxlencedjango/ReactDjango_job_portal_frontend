@@ -1997,7 +1997,7 @@ const Artisans = () => {
     }
 
     const payload = {
-      artisan: selectedArtisan.id,
+      artisan: selectedArtisan.id, // Ensure this is the artisan's ID
       service: parseInt(service_title, 10),
       description: formData.description,
       address: formData.address,
@@ -2077,12 +2077,12 @@ const Artisans = () => {
 
       {selectedArtisan && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
             <h2 className="text-xl font-semibold mb-4">
               Place Order for {selectedArtisan.user?.first_name}
             </h2>
             <form onSubmit={handleOrderSubmit}>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">Employer</label>
                 <input
                   type="text"
@@ -2091,7 +2091,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">Artisan</label>
                 <input
                   type="text"
@@ -2100,7 +2100,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">Service</label>
                 <input
                   type="text"
@@ -2109,7 +2109,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">Description</label>
                 <textarea
                   name="description"
@@ -2118,7 +2118,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">Address</label>
                 <input
                   type="text"
@@ -2128,7 +2128,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">Area</label>
                 <input
                   type="text"
@@ -2138,7 +2138,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">Job Date</label>
                 <input
                   type="date"
@@ -2148,7 +2148,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">Preferred Time</label>
                 <input
                   type="time"
@@ -2158,7 +2158,7 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">Contact Person</label>
                 <input
                   type="text"
@@ -2168,26 +2168,28 @@ const Artisans = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">Phone Number</label>
                 <input
-                  type="tel"
+                  type="text"
                   name="phone_number"
                   value={formData.phone_number}
                   onChange={handleChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
-                Submit Order
-              </button>
-              <button 
-                type="button" 
-                onClick={() => setSelectedArtisan(null)}
-                className="ml-4 bg-gray-500 text-white px-4 py-2 rounded-md"
-              >
-                Cancel
-              </button>
+              <div className="flex justify-end">
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+                  Submit Order
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => setSelectedArtisan(null)}
+                  className="ml-2 bg-gray-500 text-white px-4 py-2 rounded-md"
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         </div>
