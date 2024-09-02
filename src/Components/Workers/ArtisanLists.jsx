@@ -1921,6 +1921,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { placeOrder } from '../../api/order'; 
 
 const Artisans = () => {
   const { service_title } = useParams();
@@ -1989,59 +1990,35 @@ const Artisans = () => {
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
   
-    const accessToken = Cookies.get('access_token');
-  
     if (!selectedArtisan) {
       alert('Please select an artisan.');
       return;
     }
-  
-    if (!accessToken) {
-      alert('You need to be logged in to place an order.');
-      navigate('/login');
-      return;
-    }
-  
-    const payload = {
-      artisan: selectedArtisan.id, // Ensure this is the artisan's ID
-      service: parseInt(service_title, 10),
-      description: formData.description,
-      address: formData.address,
-      area: formData.area,
-      job_date: formData.job_date,
-      preferred_time: formData.preferred_time,
-      contact_person: formData.contact_person,
-      phone_number: formData.phone_number,
-    };
-  
+
     try {
-      const response = await fetch('https://i-wanwok-backend.up.railway.app/employers/order-request/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Order placed successfully:", result);
-        alert('Order placed successfully!');
-        setSelectedArtisan(null);
-        navigate('/dashboard');
-      } else {
-        const errorData = await response.json();
-        console.error('Error placing order:', errorData);
-        alert(`Error: ${errorData.message || 'An error occurred'}`);
-      }
+      const payload = {
+        artisan: selectedArtisan.id, // Ensure this is the artisan's ID
+        service: parseInt(service_title, 10),
+        description: formData.description,
+        address: formData.address,
+        area: formData.area,
+        job_date: formData.job_date,
+        preferred_time: formData.preferred_time,
+        contact_person: formData.contact_person,
+        phone_number: formData.phone_number,
+      };
+
+      const result = await placeOrder(payload); // Use the placeOrder function
+      console.log("Order placed successfully:", result);
+      alert('Order placed successfully!');
+      setSelectedArtisan(null);
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error placing order:', error);
-      alert('An unexpected error occurred. Please try again later.');
+      alert(`Error: ${error.message || 'An error occurred'}`);
     }
   };
   
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
