@@ -1,5 +1,7 @@
 // Artisans.js
 
+
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -57,6 +59,10 @@ const Artisans = () => {
             <h2 className="text-lg font-semibold mb-2">
               {artisan.user?.first_name} {artisan.user?.last_name}
             </h2>
+            <p className="text-gray-600 mb-2">Location: {artisan.location?.location}</p>
+            <p className="text-gray-600 mb-2">Service: {artisan.service?.title}</p>
+            <p className="text-gray-600 mb-2">Experience: {artisan.experience} years</p>
+            <p className="text-gray-600 mb-2">Pay: ${artisan.pay}</p>
             <button
               onClick={() => handleOrderClick(artisan.id)}
               className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
