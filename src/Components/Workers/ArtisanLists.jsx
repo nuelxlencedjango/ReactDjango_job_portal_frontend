@@ -1916,11 +1916,11 @@ const Artisans = () => {
 export default Artisans;*/}
 
 
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import api from '../../api/axios'; 
 import { placeOrder } from '../../api/order'; 
 
 const Artisans = () => {
@@ -2027,37 +2027,24 @@ const Artisans = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
-      <h1 className="text-2xl font-semibold mb-4 artisanlist-heading display-center">
-        Available {service_title} for your service
-      </h1>
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
-        {artisans.map(artisan => (
-          <div
-            key={artisan.id}
-            className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center"
-          >
-            {artisan.profile_img ? (
-              <img 
-                src={artisan.profile_img} 
-                alt={`${artisan.user?.first_name}'s profile`} 
-                className="w-24 h-24 rounded-full object-cover mb-4"
-              />
-            ) : (
-              <div className="w-24 h-24 rounded-full bg-gray-300 mb-4"></div>
-            )}
-            <h2 className="text-lg font-semibold mb-2">
-              {artisan.user?.first_name} {artisan.user?.last_name}
-            </h2>
-            <button 
-              onClick={() => handleOrderClick(artisan)}
-              className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-              Order Service
-            </button>
-          </div>
+    <div>
+      <h2 className="text-xl font-semibold mb-4">Available Artisans</h2>
+      <ul>
+        {artisans.map((artisan) => (
+          <li key={artisan.id} className="mb-4">
+            <div className="p-4 bg-gray-100 rounded-lg">
+              <h3 className="text-lg font-medium">{artisan.user.first_name} {artisan.user.last_name}</h3>
+              <p>Location: {artisan.location}</p>
+              <button
+                onClick={() => handleOrderClick(artisan)}
+                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+              >
+                Place Order
+              </button>
+            </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
       {selectedArtisan && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
