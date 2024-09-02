@@ -1,18 +1,14 @@
-
-
+// Artisans.js
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { Link } from 'react-router-dom';
 
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
-  
-  const [employerUsername, setEmployerUsername] = useState('');
- 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchArtisans = async () => {
@@ -29,27 +25,14 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title]);
 
-  useEffect(() => {
-    const fetchEmployerUsername = async () => {
-      const employerId = Cookies.get('employer_id');
-
-      if (employerId) {
-        try {
-          const response = await axios.get(
-            `https://i-wanwok-backend.up.railway.app/employers/${employerId}/`
-          );
-          setEmployerUsername(response.data.username);
-        } catch (error) {
-          console.error("Error fetching employer username:", error);
-        }
-      }
-    };
-
-    fetchEmployerUsername();
-  }, []);
-
-
- 
+  const handleOrderClick = (artisanId) => {
+    const isAuthenticated = !!Cookies.get('token'); // Check if the user is authenticated
+    if (isAuthenticated) {
+      navigate(`/order/${artisanId}`);
+    } else {
+      navigate('/login'); // Redirect to login page if not authenticated
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
@@ -74,17 +57,15 @@ const Artisans = () => {
             <h2 className="text-lg font-semibold mb-2">
               {artisan.user?.first_name} {artisan.user?.last_name}
             </h2>
-            <Link
-              
+            <button
+              onClick={() => handleOrderClick(artisan.id)}
               className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
             >
               Order Service
-            </Link>
+            </button>
           </div>
         ))}
       </div>
-
-
     </div>
   );
 };
