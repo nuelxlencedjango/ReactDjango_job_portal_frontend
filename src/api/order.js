@@ -25,3 +25,32 @@ export const placeOrder = async (payload) => {
     throw error;
   }
 };
+
+
+
+
+
+
+
+{/*import axios from 'axios';
+import Cookies from 'js-cookie';
+
+export const placeOrder = async (payload) => {
+  const token = Cookies.get('access_token'); // Get the token from cookies
+  
+  try {
+    const response = await axios.post(
+      'https://i-wanwok-backend.up.railway.app/orders/',
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Attach the token
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};*/}
+
