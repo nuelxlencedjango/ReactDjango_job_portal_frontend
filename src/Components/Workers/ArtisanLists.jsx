@@ -1920,21 +1920,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { placeOrder } from '../../api/order'; // Ensure this file path is correct
 
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
   const [selectedArtisan, setSelectedArtisan] = useState(null);
-  const [formData, setFormData] = useState({
-    description: '',
-    address: '',
-    area: '',
-    job_date: '',
-    preferred_time: '',
-    contact_person: '',
-    phone_number: ''
-  });
+  
   const [employerUsername, setEmployerUsername] = useState('');
   const navigate = useNavigate();
 
@@ -1986,44 +1977,7 @@ const Artisans = () => {
     }));
   };
 
-  const handleOrderSubmit = async (e) => {
-    e.preventDefault();
-  
-    if (!selectedArtisan) {
-      alert('Please select an artisan.');
-      return;
-    }
-
-    try {
-      const payload = {
-        artisan: selectedArtisan.id, // Ensure this is the artisan's ID
-        service: parseInt(service_title, 10),
-        description: formData.description,
-        address: formData.address,
-        area: formData.area,
-        job_date: formData.job_date,
-        preferred_time: formData.preferred_time,
-        contact_person: formData.contact_person,
-        phone_number: formData.phone_number,
-      };
-
-      const result = await placeOrder(payload); // Use the updated placeOrder function
-      console.log("Order placed successfully:", result);
-      alert('Order placed successfully!');
-      setSelectedArtisan(null);
-      navigate('/dashboard');
-    } catch (error) {
-      console.error('Error placing order:', error);
-      alert(`Error: ${error.message || 'An error occurred'}`);
-    }
-  };
-  
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+ 
 
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
@@ -2058,126 +2012,7 @@ const Artisans = () => {
         ))}
       </div>
 
-      {selectedArtisan && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">
-              Place Order for {selectedArtisan.user?.first_name}
-            </h2>
-            <form onSubmit={handleOrderSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Employer</label>
-                <input
-                  type="text"
-                  value={employerUsername}
-                  readOnly
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Artisan</label>
-                <input
-                  type="text"
-                  value={`${selectedArtisan.user?.username}`}
-                  readOnly
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Service</label>
-                <input
-                  type="text"
-                  value={service_title}
-                  readOnly
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Description</label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Address</label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Area</label>
-                <input
-                  type="text"
-                  name="area"
-                  value={formData.area}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Job Date</label>
-                <input
-                  type="date"
-                  name="job_date"
-                  value={formData.job_date}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Preferred Time</label>
-                <input
-                  type="time"
-                  name="preferred_time"
-                  value={formData.preferred_time}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Contact Person</label>
-                <input
-                  type="text"
-                  name="contact_person"
-                  value={formData.contact_person}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-                <input
-                  type="text"
-                  name="phone_number"
-                  value={formData.phone_number}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-              </div>
-              <button 
-                type="submit" 
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-              >
-                Place Order
-              </button>
-              <button 
-                type="button" 
-                onClick={() => setSelectedArtisan(null)}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg ml-4"
-              >
-                Cancel
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 };
