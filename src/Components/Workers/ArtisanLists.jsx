@@ -30,7 +30,7 @@ const Artisans = () => {
 
     if (token) {
       // Optionally, you could validate the token by making a request to the backend
-      axios.post('https://i-wanwok-backend.up.railway.app/auth/verify-token/', { token })
+      axios.post('https://i-wanwok-backend.up.railway.app/employers/auth/verify-token/', { token })
         .then(response => {
           if (response.data.valid) {
             navigate(`/order/${artisanId}`); // Token is valid, navigate to order form
