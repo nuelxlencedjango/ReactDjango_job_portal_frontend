@@ -1,7 +1,5 @@
 // Artisans.js
 
-
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -28,11 +26,23 @@ const Artisans = () => {
   }, [service_title]);
 
   const handleOrderClick = (artisanId) => {
-    const isAuthenticated = !!Cookies.get('token'); // Check if the user is authenticated
-    if (isAuthenticated) {
-      navigate(`/order/${artisanId}`);
+    const token = Cookies.get('token'); // Get the token from cookies
+
+    if (token) {
+      // Optionally, you could validate the token by making a request to the backend
+      axios.post('https://i-wanwok-backend.up.railway.app/auth/verify-token/', { token })
+        .then(response => {
+          if (response.data.valid) {
+            navigate(`/order/${artisanId}`); // Token is valid, navigate to order form
+          } else {
+            navigate('/login'); // Token is not valid, navigate to login
+          }
+        })
+        .catch(() => {
+          navigate('/login'); // On error, navigate to login
+        });
     } else {
-      navigate('/login'); // Redirect to login page if not authenticated
+      navigate('/login'); // No token, navigate to login
     }
   };
 
