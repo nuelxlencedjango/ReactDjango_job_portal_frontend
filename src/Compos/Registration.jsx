@@ -38,7 +38,9 @@ export default RegistrationToggle;*/}
 import React, { useState } from 'react';
 import api from '../api'; 
 import { getCSRFToken } from '../Components/CsrfToken/csrf';
-import '../Compos/Form.css'; // Assuming this contains your form styling
+import '../Compos/Form.css';
+import { Link } from 'react-router-dom';
+
 
 const Register = () => {
     const [isArtisan, setIsArtisan] = useState(true);
