@@ -2,9 +2,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 export const placeOrder = async (payload) => {
-  const accessToken = Cookies.get('access_token');
-
-  if (!accessToken) {
+  const token = Cookies.get('access_token');
+  if (!token) {
     throw new Error('Authentication credentials were not provided.');
   }
 
@@ -15,7 +14,8 @@ export const placeOrder = async (payload) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${token}`,
+          
         },
       }
     );
