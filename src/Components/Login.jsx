@@ -207,6 +207,8 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -215,9 +217,11 @@ const Login = () => {
       Cookies.set('refresh_token', response.data.refresh, { path: '/', secure: true, sameSite: 'Lax' });
       navigate('/');
     } catch (error) {
+      console.error('Login error:', error);
       setError('Login failed. Please check your credentials.');
     }
   };
+  
 
   return (
     <div className="p-6 max-w-md mx-auto">
