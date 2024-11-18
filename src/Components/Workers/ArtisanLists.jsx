@@ -89,8 +89,11 @@ const Artisans = () => {
 export default Artisans;*/}
 
 
+
+
+
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axiosInstance from '../../api/axios';
 
@@ -114,30 +117,23 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title]);
 
-  // Helper function to check token validity
-  const checkTokenValidity = async (token) => {
-    try {
-      const response = await axiosInstance.post('employers/auth/verify-token/', { token });
-      return response.data.valid;
-    } catch (error) {
-      console.error("Token verification failed:", error);
-      return false;
-    }
-  };
-
-  // Handle "Order Now" button click
-  const handleOrderClick = async (artisanId) => {
+  const handleOrderClick = (artisanId) => {
     const token = Cookies.get('access_token'); // Get the token from cookies
 
     if (token) {
-      const isValid = await checkTokenValidity(token);
-      if (isValid) {
-        navigate(`/order/${artisanId}`); 
-      } else {
-        navigate('/login'); 
-      }
+      axiosInstance.post('employers/auth/verify-token/', { token })
+        .then(response => {
+          if (response.data.valid) {
+            navigate(`/order/${artisanId}`); // Token is valid, navigate to order form
+          } else {
+            navigate('/login'); // Token is not valid, navigate to login
+          }
+        })
+        .catch(() => {
+          navigate('/login'); // On error, navigate to login
+        });
     } else {
-      navigate('/login'); 
+      navigate('/login'); // No token, navigate to login
     }
   };
 
