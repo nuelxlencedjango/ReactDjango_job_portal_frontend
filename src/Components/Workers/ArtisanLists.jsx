@@ -83,6 +83,7 @@ export default Artisans;*/}
 
 
 
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -91,20 +92,20 @@ import Cookies from 'js-cookie';
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
-        setLoading(true); 
+        setLoading(true); // Set loading to true while fetching
         const response = await axios.get(
           `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`
         );
         setArtisans(response.data); // Set fetched artisans to state
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          
+          // If 401 Unauthorized, clear the token and redirect to login
           Cookies.remove('access_token');
           navigate('/login');
         } else {
@@ -188,7 +189,7 @@ const Artisans = () => {
               onClick={() => handleOrderClick(artisan.id)}
               className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
             >
-              Order Service
+              Order Now
             </button>
           </div>
         ))}
