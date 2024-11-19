@@ -120,7 +120,7 @@ const Artisans = () => {
   }, [service_title]); // Dependency on service_title so it refetches if it changes
 
 
-  const handleOrderClick = async (artisanId, serviceId) => {
+  const handleOrderClick = async (artisanId) => {
     const token = Cookies.get('access_token'); // Get token from cookies
   
     if (!artisanId) {
