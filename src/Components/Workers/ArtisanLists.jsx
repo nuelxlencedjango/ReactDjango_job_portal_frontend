@@ -126,7 +126,7 @@ const Artisans = () => {
       try {
         // Attempt to add to cart
         const response = await axios.post(
-          'https://i-wanwok-backend.up.railway.app/cart/add/',
+          'https://i-wanwok-backend.up.railway.app/employers/add_to_cart/',
           { artisan_id: artisanId }, // Payload
           {
             headers: {

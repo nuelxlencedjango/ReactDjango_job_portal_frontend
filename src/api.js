@@ -44,20 +44,3 @@ const axiosInstance = axios.create({
 
 export default axiosInstance;*/
 
-
-// authUtils.js
-import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
-
-export const useAuthCheck = () => {
-  const navigate = useNavigate();
-
-  return () => {
-    const token = Cookies.get('access_token');
-    if (!token) {
-      navigate('/login'); 
-      return false;
-    }
-    return token; 
-  };
-};
