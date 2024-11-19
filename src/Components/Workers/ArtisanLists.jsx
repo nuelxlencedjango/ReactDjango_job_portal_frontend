@@ -119,40 +119,39 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title]); // Dependency on service_title so it refetches if it changes
 
-  const handleOrderClick = async (artisanId) => {
+
+  const handleOrderClick = async (artisanId, serviceId) => {
     const token = Cookies.get('access_token'); // Get token from cookies
 
     if (token) {
-      try {
-        // Attempt to add to cart
-        const response = await axios.post(
-          'https://i-wanwok-backend.up.railway.app/employers/add_to_cart/',
-          { artisan_id: artisanId }, // Payload
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Pass token in headers
-            },
-          }
-        );
+        try {
+            const response = await axios.post(
+                'https://i-wanwok-backend.up.railway.app/employers/add_to_cart/',
+                { artisan: artisanId }, // Fix keys here
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Pass token in headers
+                    },
+                }
+            );
 
-        if (response.status === 200) {
-          // Successfully added to cart
-          alert('Service added to your cart!');
+            if (response.status === 201) {
+                alert('Service added to your cart!');
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                Cookies.remove('access_token');
+                navigate('/login');
+            } else {
+                console.error("Error adding to cart:", error);
+            }
         }
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          // If token is invalid, redirect to login
-          Cookies.remove('access_token');
-          navigate('/login');
-        } else {
-          console.error("Error adding to cart:", error);
-        }
-      }
     } else {
-      // No token, redirect to login
-      navigate('/login');
+        navigate('/login');
     }
-  };
+};
+
+
 
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
