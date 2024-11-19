@@ -206,7 +206,7 @@ const Artisans = () => {
             </button>*/}
 
              <button
-    onClick={() => handleOrderClick(artisan.email)}
+    onClick={() => handleOrderClick(artisan.user.email)}
     className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
 >
     Add to cart
