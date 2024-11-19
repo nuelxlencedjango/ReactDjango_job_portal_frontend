@@ -92,46 +92,62 @@ export default Artisans;*/}
 
 
 
+
 import React, { useEffect, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axiosInstance from '../../api/axios';
 
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
+  const [loading, setLoading] = useState(false);  // Loading state for API calls
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
+        setLoading(true);  // Start loading
         const response = await axiosInstance.get(
           `artisans/artisans-by-service/${service_title}/`
         );
         setArtisans(response.data);
       } catch (error) {
         console.error("Error fetching artisans:", error);
+      } finally {
+        setLoading(false);  // End loading
       }
     };
 
     fetchArtisans();
   }, [service_title]);
 
-  const handleOrderClick = (artisanId) => {
+  // Helper function to check token validity
+  const checkTokenValidity = async (token) => {
+    try {
+      const response = await axiosInstance.post('employers/auth/verify-token/', { token });
+      return response.data.valid;
+    } catch (error) {
+      console.error("Token verification failed:", error);
+      return false;
+    }
+  };
+
+  // Handle "Order Now" button click
+  const handleOrderClick = async (artisanId) => {
     const token = Cookies.get('access_token'); // Get the token from cookies
 
     if (token) {
-      axiosInstance.post('employers/auth/verify-token/', { token })
-        .then(response => {
-          if (response.data.valid) {
-            navigate(`/order/${artisanId}`); // Token is valid, navigate to order form
-          } else {
-            navigate('/login'); // Token is not valid, navigate to login
-          }
-        })
-        .catch(() => {
-          navigate('/login'); // On error, navigate to login
-        });
+      setLoading(true);  // Start loading while checking token validity
+      const isValid = await checkTokenValidity(token);
+      setLoading(false); // End loading after checking token
+
+      if (isValid) {
+        navigate(`/order/${artisanId}`); 
+      } else {
+        Cookies.remove('access_token'); // Clear invalid token
+        navigate('/login'); // Token is not valid, navigate to login
+      }
     } else {
       navigate('/login'); // No token, navigate to login
     }
@@ -142,6 +158,12 @@ const Artisans = () => {
       <h1 className="text-2xl font-semibold mb-4 artisanlist-heading display-center">
         Available {service_title} for your service
       </h1>
+
+      {/* Loading indicator */}
+      {loading && (
+        <div className="loading-indicator">Loading...</div> // Custom loading indicator
+      )}
+
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
         {artisans.map(artisan => (
           <div
