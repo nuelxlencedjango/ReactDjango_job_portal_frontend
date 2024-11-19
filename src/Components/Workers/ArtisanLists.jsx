@@ -123,7 +123,7 @@ const Artisans = () => {
 
   const handleOrderClick = async (artisanId) => {
     const token = Cookies.get('access_token'); // Get token from cookies
-    console.log('artisanId:', artisanId);
+    console.log('artisanId:', artisanId, 'user token:', token);
     if (!artisanId) {
       console.error('Missing artisanId or serviceId');
       return;
