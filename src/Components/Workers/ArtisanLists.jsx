@@ -103,6 +103,7 @@ const Artisans = () => {
           `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`
         );
         setArtisans(response.data); // Set fetched artisans to state
+        console.log('list of artisans:',response.data)
       } catch (error) {
         if (error.response && error.response.status === 401) {
           // If 401 Unauthorized, clear the token and redirect to login
