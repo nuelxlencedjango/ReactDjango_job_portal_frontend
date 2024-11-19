@@ -1,56 +1,47 @@
-// Artisans.js
 
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
+  const [loading, setLoading] = useState(false);  // Loading state
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
+        setLoading(true);  // Set loading to true while fetching
         const response = await axios.get(
           `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`
         );
-        setArtisans(response.data);
+        setArtisans(response.data);  // Set fetched artisans to state
       } catch (error) {
-        console.error("Error fetching artisans:", error);
+        if (error.response && error.response.status === 401) {
+          // If 401 Unauthorized, clear the token and redirect to login
+          Cookies.remove('access_token');
+          navigate('/login');
+        } else {
+          console.error("Error fetching artisans:", error);
+        }
+      } finally {
+        setLoading(false);  // End loading
       }
     };
 
     fetchArtisans();
-  }, [service_title]);
-
-  const handleOrderClick = (artisanId) => {
-    const token = Cookies.get('token'); // Get the token from cookies
-
-    if (token) {
-      
-      axios.post('https://i-wanwok-backend.up.railway.app/employers/auth/verify-token/', { token })
-        .then(response => {
-          if (response.data.valid) {
-            navigate(`/order/${artisanId}`); // Token is valid, navigate to order form
-          } else {
-            navigate('/login'); // Token is not valid, navigate to login
-          }
-        })
-        .catch(() => {
-          navigate('/login'); // On error, navigate to login
-        });
-    } else {
-      navigate('/login'); // No token, navigate to login
-    }
-  };
+  }, [service_title]);  // Dependency on service_title so it refetches if it changes
 
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
       <h1 className="text-2xl font-semibold mb-4 artisanlist-heading display-center">
         Available {service_title} for your service
       </h1>
+
+      {/* Loading indicator */}
+      {loading && <div className="loading-indicator">Loading...</div>}
+
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
         {artisans.map(artisan => (
           <div
