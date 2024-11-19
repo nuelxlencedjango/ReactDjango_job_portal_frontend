@@ -122,34 +122,47 @@ const Artisans = () => {
 
   const handleOrderClick = async (artisanId, serviceId) => {
     const token = Cookies.get('access_token'); // Get token from cookies
-
-    if (token) {
-        try {
-            const response = await axios.post(
-                'https://i-wanwok-backend.up.railway.app/employers/add_to_cart/',
-                { artisan: artisanId }, // Fix keys here
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`, // Pass token in headers
-                    },
-                }
-            );
-
-            if (response.status === 201) {
-                alert('Service added to your cart!');
-            }
-        } catch (error) {
-            if (error.response && error.response.status === 401) {
-                Cookies.remove('access_token');
-                navigate('/login');
-            } else {
-                console.error("Error adding to cart:", error);
-            }
-        }
-    } else {
-        navigate('/login');
+  
+    if (!artisanId) {
+      console.error('Missing artisanId or serviceId');
+      return;
     }
-};
+  
+    console.log('artisanId:', artisanId);
+   // console.log('serviceId:', serviceId);
+  
+    if (token) {
+      try {
+        // Attempt to add to cart
+        const response = await axios.post(
+          'https://i-wanwok-backend.up.railway.app/employers/add_to_cart/',
+          { artisan_id: artisanId }, // Correct payload keys
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Pass token in headers
+            },
+          }
+        );
+  
+        if (response.status === 200) {
+          // Successfully added to cart
+          alert('Service added to your cart!');
+        }
+      } catch (error) {
+        if (error.response) {
+          // Log more details of the error
+          console.error("Error adding to cart:", error.response.data);  // Log response data
+          console.error("Status code:", error.response.status);         // Log status code
+        } else {
+          console.error("Error adding to cart:", error);
+        }
+      }
+    } else {
+      // No token, redirect to login
+      navigate('/login');
+    }
+  };
+  
 
 
 
