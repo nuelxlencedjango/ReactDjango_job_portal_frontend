@@ -32,3 +32,32 @@ const api = axios.create({
 
 export default api;
 
+
+/*import axios from 'axios';
+
+const axiosInstance = axios.create({
+    baseURL: 'https://your-backend-url/api/',
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+    },
+});
+
+export default axiosInstance;*/
+
+
+// authUtils.js
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+
+export const useAuthCheck = () => {
+  const navigate = useNavigate();
+
+  return () => {
+    const token = Cookies.get('access_token');
+    if (!token) {
+      navigate('/login'); 
+      return false;
+    }
+    return token; 
+  };
+};

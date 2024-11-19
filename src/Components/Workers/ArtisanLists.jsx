@@ -185,12 +185,20 @@ const Artisans = () => {
             <p className="text-gray-600 mb-2">Service: {artisan.service?.title}</p>
             <p className="text-gray-600 mb-2">Experience: {artisan.experience} years</p>
             <p className="text-gray-600 mb-2">Pay: ${artisan.pay}</p>
-            <button
+            {/*<button
               onClick={() => handleOrderClick(artisan.id)}
               className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
             >
               Order Now
-            </button>
+            </button>*/}
+
+             <button
+    onClick={() => handleOrderClick(artisan.id, artisan.service.id)}
+    className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
+>
+    Order Now
+</button>
+
           </div>
         ))}
       </div>
@@ -199,3 +207,5 @@ const Artisans = () => {
 };
 
 export default Artisans;
+
+
