@@ -120,7 +120,7 @@ const Artisans = () => {
       console.error('Missing artisan email.');
       return;
     }
-
+  
     if (token) {
       try {
         const response = await api.post(
@@ -132,9 +132,11 @@ const Artisans = () => {
             },
           }
         );
-
+  
         if (response.status === 201) {
           alert('Service added to your cart!');
+          navigate('/cart'); 
+         
         }
       } catch (error) {
         if (error.response) {
@@ -147,6 +149,7 @@ const Artisans = () => {
       navigate('/login');
     }
   };
+  
 
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">

@@ -29,19 +29,17 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Jobs />} />
           <Route path="/artisans/artisans-by-service/:service_title" element={<ArtisanList />} />
+          <Route path="/cart" element={<Cart />} />
+
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUP />} />
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
           <Route path="/available-jobs" element={<AvailableJobs />} />
           <Route path="*" element={<NotFound />} />
-          <Route
-            path="/order-service"
-            element={
-              <ProtectedRoute>
-                <OrderForm />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/order-service" element={<ProtectedRoute>
+            <OrderForm />
+            </ProtectedRoute>}/>
+
         </Routes>
         <Footer />
       </Router>
@@ -50,4 +48,6 @@ const App = () => {
 };
 
 export default App;
+
+
 
