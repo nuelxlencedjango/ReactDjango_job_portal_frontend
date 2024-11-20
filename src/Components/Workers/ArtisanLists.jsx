@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import api from '../../api';
 
+
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
@@ -50,6 +51,7 @@ const Artisans = () => {
             },
           }
         );
+        
   
         if (response.status === 201) {
           alert('Service added to your cart!');
