@@ -12,10 +12,12 @@ import ArtisanProfessionDetails from './Components/Workers/ArtisansProfessionDet
 import Footer from './Components/FooterDiv/Footer';
 import OrderForm from './Components/OrdersRequest/OderForm';
 import ProtectedRoute from './api/ProtectedRoute';
+import Cart from './Components/CartContent/Cart';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './index.css';
+
 
 const App = () => {
   useEffect(() => {
