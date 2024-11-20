@@ -11,6 +11,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       const token = Cookies.get('access_token');
+      
       if (!token) {
         navigate('/login'); 
         return;
@@ -18,7 +19,7 @@ const Cart = () => {
 
       try {
         setLoading(true);
-        const response = await api.get('/employers/cart/', {
+        const response = await api.get('/employers/cart-items/', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
