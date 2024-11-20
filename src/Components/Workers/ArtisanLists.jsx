@@ -80,12 +80,10 @@ const Artisans = () => {
 export default Artisans;*/}
 
 
-
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import Cookies from 'js-cookie';
+import api from '../api'; 
 
 const Artisans = () => {
   const { service_title } = useParams();
@@ -97,11 +95,9 @@ const Artisans = () => {
     const fetchArtisans = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`
-        );
+        const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
-        console.log('List of artisans:', response.data);
+        console.log('List of artisans:', response.data, 'artisan email:',response.email);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           Cookies.remove('access_token');
@@ -119,6 +115,7 @@ const Artisans = () => {
 
   const handleOrderClick = async (email) => {
     const token = Cookies.get('access_token');
+    console.log('user token:', token);
     if (!email) {
       console.error('Missing artisan email.');
       return;
@@ -126,8 +123,8 @@ const Artisans = () => {
 
     if (token) {
       try {
-        const response = await axios.post(
-          'https://i-wanwok-backend.up.railway.app/employers/add_to_cart/',
+        const response = await api.post(
+          '/employers/add_to_cart/',
           { artisan_email: email },
           {
             headers: {
