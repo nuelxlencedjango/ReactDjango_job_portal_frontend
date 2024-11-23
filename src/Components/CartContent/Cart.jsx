@@ -62,14 +62,14 @@ const Cart = () => {
     cartItems.reduce((total, item) => total + item.artisan.pay, 0);
 
   return (
-    <div className="container mx-auto px-4 mt-20 mb-10">
+    <div className="container mx-auto px-4 mt-10 mb-20">
       {/* Welcome User */}
       <p className="text-lg font-medium text-gray-700 mb-2">
         Welcome, {userName || "User"}!
       </p>
 
       {/* Header */}
-      <h1 className="text-2xl font-bold text-center mb-8">Your Cart</h1>
+      <h1 className="text-2xl font-bold text-center mb-10">Your Cart</h1>
 
       {loading && <div>Loading...</div>}
 
@@ -83,13 +83,13 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-200"
+              className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-200 cursor-pointer"
             >
               {/* Image */}
               {item.artisan.profile_img ? (
                 <img
                   src={item.artisan.profile_img}
-                  alt={`${item.artisan.user?.first_name}'s profile`}
+                  alt={`${item.artisan.first_name}'s profile`}
                   className="w-16 h-16 rounded-full object-cover"
                 />
               ) : (
@@ -99,9 +99,9 @@ const Cart = () => {
               {/* Details */}
               <div className="flex flex-col sm:flex-row items-center flex-grow px-4 space-y-2 sm:space-y-0 sm:space-x-4">
                 <span className="text-lg font-medium">
-                  {item.artisan.user?.first_name} {item.artisan.user?.last_name}
+                  {item.artisan.first_name} {item.artisan.last_name}
                 </span>
-                <span className="text-gray-600">Service: {item.artisan.service?.title}</span>
+                <span className="text-gray-600">Service: {item.artisan.service}</span>
                 <span className="text-gray-600">Pay: ${item.artisan.pay}</span>
               </div>
 
