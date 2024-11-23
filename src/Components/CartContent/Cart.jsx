@@ -104,10 +104,10 @@ const Cart = () => {
 
               {/* Details */}
               <div className="flex flex-col flex-grow px-4 space-y-2">
-                <div className="flex justify-between items-center space-x-8">
-                  <span className="text-gray-600">Service: {item.artisan.service}</span>
-                  <span className="text-gray-600">Pay: ${item.artisan.pay}</span>
-                </div>
+                  <div className="flex flex-grow justify-between px-4 items-center">
+                <span className="text-gray-600 ml-4">Service: {item.artisan.service}</span>
+                <span className="text-gray-600 mr-4">Pay: ${item.artisan.pay}</span>
+              </div>
               </div>
 
               {/* Remove Button */}
@@ -153,3 +153,13 @@ const Cart = () => {
 };
 
 export default Cart;
+
+
+
+
+
+
+
+
+
+
