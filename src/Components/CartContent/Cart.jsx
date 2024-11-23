@@ -104,7 +104,7 @@ const Cart = () => {
 
               {/* Details */}
               <div className="flex flex-col flex-grow px-4 space-y-2">
-                <div className="flex justify-between items-center space-x-4">
+                <div className="flex justify-between items-center space-x-8">
                   <span className="text-gray-600">Service: {item.artisan.service}</span>
                   <span className="text-gray-600">Pay: ${item.artisan.pay}</span>
                 </div>
