@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 import Cookies from "js-cookie";
@@ -148,3 +146,5 @@ const Cart = () => {
 };
 
 export default Cart;
+
+
