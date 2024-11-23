@@ -130,7 +130,8 @@ const Cart = () => {
         {/* Right Section: Total Box */}
         {cartItems.length > 0 && (
           <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 h-auto flex flex-col justify-between">
-            <h2 className="text-xl font-semibold mb-1">Order Summary</h2>
+            <h2 className="text-xl font-semibold mb-2">Order Summary</h2>
+            <div className="cart-summary">
             <p className="text-gray-700 text-lg">Total Items: {cartItems.length}</p>
             <p className="text-gray-700 text-lg">
               Total Amount: <span className="font-bold">${calculateTotal()}</span>
@@ -138,6 +139,7 @@ const Cart = () => {
             <button className="bg-green-500 text-white px-4 py-2 mt-4 rounded-lg hover:bg-green-600">
               Pay Now
             </button>
+          </div>
           </div>
         )}
       </div>
