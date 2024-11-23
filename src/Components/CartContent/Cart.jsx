@@ -91,12 +91,12 @@ const Cart = () => {
                   <img
                     src={item.artisan.profile_img}
                     alt={`${item.artisan.first_name}'s profile`}
-                    className="w-16 h-16 rounded-full object-cover"
+                    className="w-14 h-14 rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-gray-300"></div>
                 )}
-                <span className="mt-2 text-lg font-medium text-gray-800">
+                <span className="mt-1 text-lg font-medium text-gray-800">
                   {item.artisan.first_name} {item.artisan.last_name}
                 </span>
               </div>
