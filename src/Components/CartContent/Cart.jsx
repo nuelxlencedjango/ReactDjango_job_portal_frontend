@@ -26,6 +26,7 @@ const Cart = () => {
           },
         });
         setCartItems(response.data);
+        console.log("responses:", response.data)
 
         const userResponse = await api.get("/auth/user/", {
           headers: {
