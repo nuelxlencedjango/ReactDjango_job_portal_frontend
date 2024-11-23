@@ -77,36 +77,33 @@ const Cart = () => {
         <p className="text-gray-600 text-center">Your cart is empty.</p>
       )}
 
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col lg:flex-row gap-8">
         {/* Left Section: Cart Items */}
         <div className="flex-grow">
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="p-4 bg-white rounded-lg shadow-md mb-2 hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4"
+              className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-200 cursor-pointer"
             >
-              {/* Image and Name */}
-              <div className="flex flex-col items-center">
-                {item.artisan.profile_img ? (
-                  <img
-                    src={item.artisan.profile_img}
-                    alt={`${item.artisan.first_name}'s profile`}
-                    className="w-14 h-14 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-16 h-16 rounded-full bg-gray-300"></div>
-                )}
-                <span className="mt-1 text-lg font-medium text-gray-800">
-                  {item.artisan.first_name} {item.artisan.last_name}
-                </span>
-              </div>
+              {/* Image */}
+              {item.artisan.profile_img ? (
+                <img
+                  src={item.artisan.profile_img}
+                  alt={`${item.artisan.first_name}'s profile`}
+                  className="w-16 h-16 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-gray-300"></div>
+              )}
+
+              {/* Artisan Name */}
+              <p className="text-lg font-medium text-center mt-2 sm:mt-0">
+                {item.artisan.first_name} {item.artisan.last_name}
+              </p>
 
               {/* Details */}
-              <div className="flex flex-col flex-grow">
-                <span className="text-gray-600">
-                  Service: {item.artisan.service}
-                  <span className="text-gray-600">Pay: ${item.artisan.pay}</span>
-                </span>
+              <div className="flex flex-col flex-grow sm:items-start px-4 mt-4 sm:mt-0 space-y-2">
+                <span className="text-gray-600">Service: {item.artisan.service}</span>
                 <span className="text-gray-600">Pay: ${item.artisan.pay}</span>
               </div>
 
@@ -130,17 +127,21 @@ const Cart = () => {
 
         {/* Right Section: Total Box */}
         {cartItems.length > 0 && (
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 h-auto flex flex-col justify-between">
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 flex flex-col">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-            <div className="cart-summary">
-            <p className="text-gray-700 text-lg">Total Items: {cartItems.length}</p>
-            <p className="text-gray-700 text-lg">
-              Total Amount: <span className="font-bold">${calculateTotal()}</span>
-            </p>
-            <button className="bg-green-500 text-white px-4 py-2 mt-4 rounded-lg hover:bg-green-600">
+            {/* Total Items and Total Amount */}
+            <div className="flex justify-between items-center mb-4">
+              <p className="text-gray-700 text-lg">Total Items:</p>
+              <p className="font-bold text-lg">{cartItems.length}</p>
+            </div>
+            <div className="flex justify-between items-center mb-4">
+              <p className="text-gray-700 text-lg">Total Amount:</p>
+              <p className="font-bold text-lg">${calculateTotal()}</p>
+            </div>
+            {/* Pay Now Button */}
+            <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
               Pay Now
             </button>
-          </div>
           </div>
         )}
       </div>
@@ -149,5 +150,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-
