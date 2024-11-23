@@ -130,7 +130,7 @@ const Cart = () => {
         {/* Right Section: Total Box */}
         {cartItems.length > 0 && (
           <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 h-auto flex flex-col justify-between">
-            <h2 className="text-xl font-semibold mb-2">Order Summary</h2>
+            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <div className="cart-summary">
             <p className="text-gray-700 text-lg">Total Items: {cartItems.length}</p>
             <p className="text-gray-700 text-lg">
