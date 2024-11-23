@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 import Cookies from "js-cookie";
@@ -10,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,8 +26,15 @@ const Cart = () => {
           },
         });
         setCartItems(response.data);
+
+        const userResponse = await api.get("/auth/user/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUserName(userResponse.data.first_name);
       } catch (error) {
-        console.error("Error fetching cart items:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -58,13 +62,19 @@ const Cart = () => {
     cartItems.reduce((total, item) => total + item.artisan.pay, 0);
 
   return (
-    <div className="container mx-auto px-4 mt-32">
-      <h1 className="text-2xl font-semibold mb-4">Your Cart</h1>
+    <div className="container mx-auto px-4 mt-20 mb-10">
+      {/* Welcome User */}
+      <p className="text-lg font-medium text-gray-700 mb-2">
+        Welcome, {userName || "User"}!
+      </p>
+
+      {/* Header */}
+      <h1 className="text-2xl font-bold text-center mb-8">Your Cart</h1>
 
       {loading && <div>Loading...</div>}
 
       {cartItems.length === 0 && !loading && (
-        <p className="text-gray-600">Your cart is empty.</p>
+        <p className="text-gray-600 text-center">Your cart is empty.</p>
       )}
 
       <div className="flex flex-col lg:flex-row gap-8">
@@ -73,7 +83,7 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4"
+              className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-200"
             >
               {/* Image */}
               {item.artisan.profile_img ? (
@@ -87,20 +97,18 @@ const Cart = () => {
               )}
 
               {/* Details */}
-              <div className="flex-grow px-4">
-                <h2 className="text-lg font-semibold">
+              <div className="flex flex-col sm:flex-row items-center flex-grow px-4 space-y-2 sm:space-y-0 sm:space-x-4">
+                <span className="text-lg font-medium">
                   {item.artisan.user?.first_name} {item.artisan.user?.last_name}
-                </h2>
-                <p className="text-gray-600">
-                  Service: {item.artisan.service?.title}
-                </p>
-                <p className="text-gray-600">Pay: ${item.artisan.pay}</p>
+                </span>
+                <span className="text-gray-600">Service: {item.artisan.service?.title}</span>
+                <span className="text-gray-600">Pay: ${item.artisan.pay}</span>
               </div>
 
               {/* Remove Button */}
               <button
                 onClick={() => handleRemoveFromCart(item.id)}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
               >
                 Remove
               </button>
@@ -117,12 +125,15 @@ const Cart = () => {
 
         {/* Right Section: Total Box */}
         {cartItems.length > 0 && (
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3">
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 h-auto flex flex-col justify-between">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <p className="text-gray-700 text-lg">Total Items: {cartItems.length}</p>
             <p className="text-gray-700 text-lg">
               Total Amount: <span className="font-bold">${calculateTotal()}</span>
             </p>
+            <button className="bg-green-500 text-white px-4 py-2 mt-4 rounded-lg hover:bg-green-600">
+              Pay Now
+            </button>
           </div>
         )}
       </div>
