@@ -92,9 +92,13 @@ const Cart = () => {
                   alt={`${item.artisan.first_name}'s profile`}
                   className="w-16 h-16 rounded-full object-cover"
                 />
+                
               ) : (
                 <div className="w-16 h-16 rounded-full bg-gray-300"></div>
               )}
+               <span className="text-lg font-medium">
+                  {item.artisan.first_name} {item.artisan.last_name}
+                </span>
 
               {/* Details */}
               <div className="flex flex-col sm:flex-row items-center flex-grow px-4 space-y-2 sm:space-y-0 sm:space-x-4">
