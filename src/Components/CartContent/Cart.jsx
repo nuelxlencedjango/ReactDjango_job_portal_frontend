@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [userName, setUserName] = useState("");
+  const [userData, setUserData] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCartItems = async () => {
+    const fetchCartData = async () => {
       const token = Cookies.get("access_token");
 
       if (!token) {
@@ -25,22 +25,17 @@ const Cart = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setCartItems(response.data);
 
-        const userResponse = await api.get("/auth/user/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserName(userResponse.data.first_name);
+        setCartItems(response.data.cart_items || []); // Set cart items if available
+        setUserData(response.data.user_data || {}); // Set user details
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching cart data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCartItems();
+    fetchCartData();
   }, [navigate]);
 
   const handleRemoveFromCart = async (itemId) => {
@@ -65,7 +60,7 @@ const Cart = () => {
     <div className="container mx-auto px-4 mt-10 mb-20">
       {/* Welcome User */}
       <p className="text-lg font-medium text-gray-700 mb-2">
-        Welcome, {userName || "User"}!
+        Welcome, {userData.first_name || "User"}!
       </p>
 
       {/* Header */}
@@ -73,7 +68,7 @@ const Cart = () => {
 
       {loading && <div>Loading...</div>}
 
-      {cartItems.length === 0 && !loading && (
+      {!loading && cartItems.length === 0 && (
         <p className="text-gray-600 text-center">Your cart is empty.</p>
       )}
 
@@ -96,7 +91,6 @@ const Cart = () => {
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-gray-300"></div>
                 )}
-                {/* Artisan Name */}
                 <p className="text-center sm:text-left text-lg font-medium mt-2">
                   {item.artisan.first_name} {item.artisan.last_name}
                 </p>
@@ -104,8 +98,12 @@ const Cart = () => {
 
               {/* Details */}
               <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-4 sm:mt-0">
-                <span className="text-gray-600 sm:ml-4">Service: {item.artisan.service}</span>
-                <span className="text-gray-600 sm:mr-4">Pay: ${item.artisan.pay}</span>
+                <span className="text-gray-600 sm:ml-4">
+                  Service: {item.artisan.service}
+                </span>
+                <span className="text-gray-600 sm:mr-4">
+                  Pay: ${item.artisan.pay}
+                </span>
               </div>
 
               {/* Remove Button */}
@@ -130,7 +128,6 @@ const Cart = () => {
         {cartItems.length > 0 && (
           <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 mt-8 lg:mt-4">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-            {/* Total Items and Total Amount */}
             <div className="flex justify-between items-center mb-4">
               <p className="text-gray-700 text-lg">Total Items:</p>
               <p className="font-bold text-lg">{cartItems.length}</p>
@@ -139,7 +136,6 @@ const Cart = () => {
               <p className="text-gray-700 text-lg">Total Amount:</p>
               <p className="font-bold text-lg">${calculateTotal()}</p>
             </div>
-            {/* Pay Now Button */}
             <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
               Pay Now
             </button>
