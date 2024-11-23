@@ -77,13 +77,13 @@ const Cart = () => {
         <p className="text-gray-600 text-center">Your cart is empty.</p>
       )}
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Left Section: Cart Items */}
         <div className="flex-grow">
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4"
+              className="p-4 bg-white rounded-lg shadow-md mb-2 hover:shadow-lg transition-shadow duration-200 cursor-pointer flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4"
             >
               {/* Image and Name */}
               <div className="flex flex-col items-center">
@@ -105,6 +105,7 @@ const Cart = () => {
               <div className="flex flex-col flex-grow">
                 <span className="text-gray-600">
                   Service: {item.artisan.service}
+                  <span className="text-gray-600">Pay: ${item.artisan.pay}</span>
                 </span>
                 <span className="text-gray-600">Pay: ${item.artisan.pay}</span>
               </div>
@@ -130,7 +131,7 @@ const Cart = () => {
         {/* Right Section: Total Box */}
         {cartItems.length > 0 && (
           <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 h-auto flex flex-col justify-between">
-            <h2 className="text-xl font-semibold">Order Summary</h2>
+            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <div className="cart-summary">
             <p className="text-gray-700 text-lg">Total Items: {cartItems.length}</p>
             <p className="text-gray-700 text-lg">
