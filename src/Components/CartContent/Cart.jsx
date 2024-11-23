@@ -50,6 +50,10 @@ const Cart = () => {
     }
   };
 
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => total + item.artisan.pay, 0);
+  };
+
   return (
     <div className="container mx-auto px-4 mt-32">
       <h1 className="text-2xl font-semibold mb-4">Your Cart</h1>
@@ -60,36 +64,57 @@ const Cart = () => {
         <p className="text-gray-600">Your cart is empty.</p>
       )}
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-        {cartItems.map((item) => (
-          <div
-            key={item.id}
-            className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center"
-          >
-            {item.artisan.profile_img ? (
-              <img
-                src={item.artisan.profile_img}
-                alt={`${item.artisan.user?.first_name}'s profile`}
-                className="w-24 h-24 rounded-full object-cover mb-4"
-              />
-            ) : (
-              <div className="w-24 h-24 rounded-full bg-gray-300 mb-4"></div>
-            )}
-            <h2 className="text-lg font-semibold mb-2">
-              {item.artisan.user?.first_name} {item.artisan.user?.last_name}
-            </h2>
-            <p className="text-gray-600 mb-2">Location: {item.artisan.location?.location}</p>
-            <p className="text-gray-600 mb-2">Service: {item.artisan.service?.title}</p>
-            <p className="text-gray-600 mb-2">Pay: ${item.artisan.pay}</p>
-
-            <button
-              onClick={() => handleRemoveFromCart(item.id)}
-              className="mt-auto bg-red-500 text-white px-4 py-2 rounded-lg"
+      <div className="flex gap-4">
+        {/* Cart Items Section */}
+        <div className="w-3/4">
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              className="p-4 bg-white rounded-lg shadow-lg flex items-center mb-4"
             >
-              Remove from Cart
-            </button>
+              <button
+                onClick={() => handleRemoveFromCart(item.id)}
+                className="mr-4 bg-red-500 text-white px-4 py-2 rounded-lg"
+              >
+                Remove
+              </button>
+
+              {item.artisan.profile_img ? (
+                <img
+                  src={item.artisan.profile_img}
+                  alt={`${item.artisan.user?.first_name}'s profile`}
+                  className="w-16 h-16 rounded-full object-cover mr-4"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-gray-300 mr-4"></div>
+              )}
+
+              <div className="flex-grow">
+                <h2 className="text-lg font-semibold">
+                  {item.artisan.user?.first_name} {item.artisan.user?.last_name}
+                </h2>
+                <p className="text-gray-600">Location: {item.artisan.location?.location}</p>
+                <p className="text-gray-600">Service: {item.artisan.service?.title}</p>
+                <p className="text-gray-600">Pay: ${item.artisan.pay}</p>
+              </div>
+            </div>
+          ))}
+          
+          {/* Total Amount under Items */}
+          <div className="bg-gray-200 p-4 rounded-lg mt-6">
+            <p className="font-semibold text-lg">Total Amount:</p>
+            <p className="text-xl font-bold">${calculateTotal().toFixed(2)}</p>
           </div>
-        ))}
+        </div>
+
+        {/* Total Box on the Right */}
+        <div className="w-1/4">
+          <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+            <p className="text-lg">Total Amount</p>
+            <p className="text-3xl font-bold">${calculateTotal().toFixed(2)}</p>
+          </div>
+        </div>
       </div>
     </div>
   );
