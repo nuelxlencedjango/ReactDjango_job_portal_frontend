@@ -73,12 +73,12 @@ const Cart = () => {
       )}
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Left Section: Cart Items */}
+        {/* Left Section */}
         <div className="flex-grow">
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-200"
+              className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-200"
             >
               {/* Image and Name */}
               <div className="flex flex-col items-center sm:items-start">
@@ -86,12 +86,12 @@ const Cart = () => {
                   <img
                     src={item.artisan.profile_img}
                     alt={`${item.artisan.first_name}'s profile`}
-                    className="w-16 h-16 rounded-full object-cover"
+                    className="w-14 h-14 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-gray-300"></div>
+                  <div className="w-14 h-14 rounded-full bg-gray-300"></div>
                 )}
-                <p className="text-center sm:text-left text-lg font-medium mt-2">
+                <p className="text-center sm:text-left text-lg font-medium mt-1">
                   {item.artisan.first_name} {item.artisan.last_name}
                 </p>
               </div>
@@ -99,7 +99,7 @@ const Cart = () => {
               {/* Details */}
               <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-4 sm:mt-0">
                 <span className="text-gray-600 sm:ml-4">
-                  Service: {item.artisan.service}
+                   {item.artisan.service}
                 </span>
                 <span className="text-gray-600 sm:mr-4">
                   Pay: ${item.artisan.pay}
