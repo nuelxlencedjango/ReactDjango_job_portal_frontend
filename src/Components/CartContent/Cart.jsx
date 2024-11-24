@@ -125,9 +125,10 @@ const Cart = () => {
 
               <Link 
                   to={`/artisans/artisans-by-service/${encodeURIComponent(item.artisan.service)}`} 
-                  className="mt-4 border-2 border-green-500 rounded-lg py-2 px-4 w-full text-center text-gray-800 font-semibold hover:bg-green-500 hover:text-white transition duration-300 block"
+                  
+                  className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mt-4 sm:mt-0"
                 >
-                See Workers
+                Add A {item.artisan.service}
                 </Link>
             </div>
           ))}
