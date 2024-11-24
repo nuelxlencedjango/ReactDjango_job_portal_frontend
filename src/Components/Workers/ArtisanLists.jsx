@@ -16,9 +16,6 @@ const Artisans = () => {
         setLoading(true);
         const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
-        console.log('List of artisans:', response.data, 'artisan email:',response.data.user?.email, 
-          'cart_items:',response.data.user?.cart_items,'all artisans:', response.data.user?.artisans);
-          
       } catch (error) {
         if (error.response && error.response.status === 401) {
           Cookies.remove('access_token');
@@ -38,7 +35,7 @@ const Artisans = () => {
     const token = Cookies.get('access_token');
     if (token) {
       try {
-        const response = await api.get(`/employers/check-artisan/${email}/`, {
+        const response = await api.get(`/cart/check-artisan/${email}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -74,13 +71,11 @@ const Artisans = () => {
         if (response.status === 201) {
           alert('Service added to your cart!');
           navigate('/cart');
+        } else {
+          alert(response.data.detail);  // Handle already in cart case
         }
       } catch (error) {
-        if (error.response) {
-          console.error("Error adding to cart:", error.response.data);
-        } else {
-          console.error("Error adding to cart:", error);
-        }
+        console.error("Error adding to cart:", error.response.data);
       }
     } else {
       navigate('/login');
