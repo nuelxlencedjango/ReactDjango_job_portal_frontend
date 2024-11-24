@@ -16,8 +16,8 @@ const Artisans = () => {
         setLoading(true);
         const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
-        console.log('List of artisans:', response.data, 'artisan email:',response.data.user.email, 
-          'cart_items:',response.data.user.cart_items,'all artisans:', response.data.user.artisans);
+        console.log('List of artisans:', response.data, 'artisan email:',response.data.user?.email, 
+          'cart_items:',response.data.user?.cart_items,'all artisans:', response.data.user?.artisans);
 
       } catch (error) {
         if (error.response && error.response.status === 401) {
