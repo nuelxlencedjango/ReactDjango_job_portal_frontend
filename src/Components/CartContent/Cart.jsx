@@ -78,7 +78,7 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-200 cusor-pointer"
+              className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-50 cusor-pointer"
             >
               {/* Image and Name */}
               <div className="flex flex-col items-center sm:items-start">
@@ -126,7 +126,7 @@ const Cart = () => {
 
         {/* Right Section: Total Box */}
         {cartItems.length > 0 && (
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 mt-8 lg:mt-4"  style={{ maxWidth: "350px" }}>
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 mt-8 lg:mt-4"  style={{ maxHeight: "350px" }}>
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <div className="flex justify-between items-center mb-4">
               <p className="text-gray-700 text-lg">Total Items:</p>
