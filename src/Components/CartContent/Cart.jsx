@@ -78,7 +78,7 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-200"
+              className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-200 cusor-pointer"
             >
               {/* Image and Name */}
               <div className="flex flex-col items-center sm:items-start">
