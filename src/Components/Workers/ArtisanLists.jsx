@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import api from '../../api';
 
-
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
@@ -16,7 +15,6 @@ const Artisans = () => {
         setLoading(true);
         const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
-        console.log('List of artisans:', response.data, 'artisan email:',response.email);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           Cookies.remove('access_token');
@@ -34,12 +32,11 @@ const Artisans = () => {
 
   const handleOrderClick = async (email) => {
     const token = Cookies.get('access_token');
-    console.log('user token:', token);
     if (!email) {
       console.error('Missing artisan email.');
       return;
     }
-  
+
     if (token) {
       try {
         const response = await api.post(
@@ -51,12 +48,17 @@ const Artisans = () => {
             },
           }
         );
-        
-  
+
         if (response.status === 201) {
           alert('Service added to your cart!');
-          navigate('/cart'); 
-         
+          // Update the UI to reflect the change
+          setArtisans((prevArtisans) =>
+            prevArtisans.map((artisan) =>
+              artisan.user?.email === email
+                ? { ...artisan, already_in_cart: true }
+                : artisan
+            )
+          );
         }
       } catch (error) {
         if (error.response) {
@@ -69,7 +71,6 @@ const Artisans = () => {
       navigate('/login');
     }
   };
-  
 
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
@@ -104,9 +105,14 @@ const Artisans = () => {
 
             <button
               onClick={() => handleOrderClick(artisan.user?.email)}
-              className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
+              className={`mt-auto px-4 py-2 rounded-lg ${
+                artisan.already_in_cart
+                  ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                  : 'bg-blue-500 text-white'
+              }`}
+              disabled={artisan.already_in_cart}
             >
-              Add to cart
+              {artisan.already_in_cart ? 'Already in Cart' : 'Add to Cart'}
             </button>
           </div>
         ))}
