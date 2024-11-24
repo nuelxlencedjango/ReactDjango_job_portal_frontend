@@ -104,14 +104,15 @@ const Artisans = () => {
       <p className="text-gray-600 mb-2">Pay: ${artisan.pay}</p>
 
       <button
-        onClick={() => handleOrderClick(artisan.user?.email)}
-        className={`mt-auto px-4 py-2 rounded-lg ${
-          artisan.in_cart ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 text-white'
-        }`}
-        disabled={artisan.user?.email}
-      >
-        {artisan.user?.email ? 'Already in the cart' : 'Add to cart'}
-      </button>
+  onClick={() => handleOrderClick(artisan.user?.email)}
+  className={`mt-auto px-4 py-2 rounded-lg ${
+    artisan.in_cart ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 text-white'
+  }`}
+  disabled={artisan.in_cart}
+>
+  {artisan.in_cart ? 'Already in the cart' : 'Add to cart'}
+</button>
+
     </div>
   ))}
 </div>
@@ -121,7 +122,6 @@ const Artisans = () => {
 };
 
 export default Artisans;
-
 
 
 
