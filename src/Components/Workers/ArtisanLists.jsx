@@ -3,11 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import api from '../../api';
 
+
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [cartArtisans, setCartArtisans] = useState([]); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const Artisans = () => {
         setLoading(true);
         const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
-        console.log('List of artisans:', response.data);
+        console.log('List of artisans:', response.data, 'artisan email:',response.email);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           Cookies.remove('access_token');
@@ -29,24 +29,7 @@ const Artisans = () => {
       }
     };
 
-    const fetchCartArtisans = async () => {
-      const token = Cookies.get('access_token');
-      if (token) {
-        try {
-          const response = await api.get('/cart/', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setCartArtisans(response.data.artisans); // Assuming the cart response contains artisans
-        } catch (error) {
-          console.error("Error fetching cart:", error);
-        }
-      }
-    };
-
     fetchArtisans();
-    fetchCartArtisans(); // Fetch the user's cart when the component mounts
   }, [service_title]);
 
   const handleOrderClick = async (email) => {
@@ -56,7 +39,7 @@ const Artisans = () => {
       console.error('Missing artisan email.');
       return;
     }
-
+  
     if (token) {
       try {
         const response = await api.post(
@@ -68,10 +51,12 @@ const Artisans = () => {
             },
           }
         );
-
+        
+  
         if (response.status === 201) {
           alert('Service added to your cart!');
-          navigate('/cart');
+          navigate('/cart'); 
+         
         }
       } catch (error) {
         if (error.response) {
@@ -84,11 +69,7 @@ const Artisans = () => {
       navigate('/login');
     }
   };
-
-  const isArtisanInCart = (artisanEmail) => {
-    // Check if the artisan is already in the cart by matching email
-    return cartArtisans.some((cartItem) => cartItem.email === artisanEmail);
-  };
+  
 
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
@@ -124,9 +105,8 @@ const Artisans = () => {
             <button
               onClick={() => handleOrderClick(artisan.user?.email)}
               className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
-              disabled={isArtisanInCart(artisan.user?.email)} // Disable button if already in cart
             >
-              {isArtisanInCart(artisan.user?.email) ? "Already in Cart" : "Add to Cart"}
+              Add to cart
             </button>
           </div>
         ))}
