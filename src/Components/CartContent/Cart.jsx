@@ -86,7 +86,7 @@ const Cart = () => {
                   <img
                     src={item.artisan.profile_img}
                     alt={`${item.artisan.first_name}'s profile`}
-                    className="w-16 h-16 rounded-full object-cover"
+                    className="w-14 h-14 rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-gray-300"></div>
@@ -126,7 +126,7 @@ const Cart = () => {
 
         {/* Right Section: Total Box */}
         {cartItems.length > 0 && (
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 mt-8 lg:mt-4"  style={{ maxWidth: "500px" }}>
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 mt-8 lg:mt-4"  style={{ maxWidth: "400px" }}>
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <div className="flex justify-between items-center mb-4">
               <p className="text-gray-700 text-lg">Total Items:</p>
