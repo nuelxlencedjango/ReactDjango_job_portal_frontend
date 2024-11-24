@@ -16,7 +16,9 @@ const Artisans = () => {
         setLoading(true);
         const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
-        console.log('List of artisans:', response.data, 'artisan email:',response.email);
+        console.log('List of artisans:', response.data, 'artisan email:',response.email, 
+          'cart_items:',response.cart_items,'all artisans:', response.artisans);
+          
       } catch (error) {
         if (error.response && error.response.status === 401) {
           Cookies.remove('access_token');
