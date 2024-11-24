@@ -31,6 +31,7 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title]);
 
+  // Check if artisan is in the cart
   const checkIfArtisanInCart = async (email) => {
     const token = Cookies.get('access_token');
     if (token) {
@@ -49,6 +50,7 @@ const Artisans = () => {
     return false;
   };
 
+  // Handle the button click (add to cart)
   const handleOrderClick = async (email) => {
     const token = Cookies.get('access_token');
     if (!email) {
@@ -82,15 +84,24 @@ const Artisans = () => {
     }
   };
 
-  const getButtonText = async (email) => {
-    if (!cartStatus[email]) {
-      const inCart = await checkIfArtisanInCart(email);
-      setCartStatus((prevStatus) => ({
-        ...prevStatus,
-        [email]: inCart,
-      }));
-    }
+  // Update cart status when an artisan is rendered
+  useEffect(() => {
+    const updateCartStatus = async () => {
+      const status = {};
+      for (const artisan of artisans) {
+        const inCart = await checkIfArtisanInCart(artisan.user?.email);
+        status[artisan.user?.email] = inCart;
+      }
+      setCartStatus(status);
+    };
 
+    if (artisans.length > 0) {
+      updateCartStatus();
+    }
+  }, [artisans]);
+
+  // Determine button text based on the cart status
+  const getButtonText = (email) => {
     return cartStatus[email] ? 'Already in the cart' : 'Add to cart';
   };
 
