@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../api";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -121,6 +122,13 @@ const Cart = () => {
               >
                 Remove
               </button>
+
+              <Link 
+                  to={`/artisans/artisans-by-service/${encodeURIComponent(item.artisan.service)}`} 
+                  className="mt-4 border-2 border-green-500 rounded-lg py-2 px-4 w-full text-center text-gray-800 font-semibold hover:bg-green-500 hover:text-white transition duration-300 block"
+                >
+                See Workers
+                </Link>
             </div>
           ))}
 
