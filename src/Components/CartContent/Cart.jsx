@@ -40,6 +40,13 @@ const Cart = () => {
 
   const handleRemoveFromCart = async (itemId) => {
     const token = Cookies.get("access_token");
+  
+    if (!token) {
+      console.error("No access token found. Redirecting to login...");
+      navigate("/login"); // Redirect to login if no token
+      return;
+    }
+  
     try {
       await api.delete(`/employers/cart/${itemId}/`, {
         headers: {
@@ -50,9 +57,10 @@ const Cart = () => {
       alert("Item removed from cart!");
     } catch (error) {
       console.error("Error removing item from cart:", error);
+      // Handle error (e.g., show message to user)
     }
   };
-
+  
   const calculateTotal = () =>
     cartItems.reduce((total, item) => total + item.artisan.pay, 0);
 
