@@ -35,7 +35,7 @@ const Artisans = () => {
     const token = Cookies.get('access_token');
     if (token) {
       try {
-        const response = await api.get(`/cart/check-artisan/${email}/`, {
+        const response = await api.get(`/employers/check-artisan/${email}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
