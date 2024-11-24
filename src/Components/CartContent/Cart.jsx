@@ -128,7 +128,7 @@ const Cart = () => {
                   
                   className="bg-green-500 text-white px-8 py-2 rounded-lg hover:bg-red-600 mt-4 sm:mt-0"
                 >
-                Add {item.artisan.service}
+                Add
                 </Link>
             </div>
           ))}
