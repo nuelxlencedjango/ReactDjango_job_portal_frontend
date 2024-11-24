@@ -100,9 +100,13 @@ const Artisans = () => {
     }
   }, [artisans]);
 
-  // Determine button text based on the cart status
-  const getButtonText = (email) => {
-    return cartStatus[email] ? 'Already in the cart' : 'Add to cart';
+  // Determine button text and disabled state based on the cart status
+  const getButtonTextAndDisabled = (email) => {
+    const isInCart = cartStatus[email];
+    return {
+      text: isInCart ? 'Already in the cart' : 'Add to cart',
+      disabled: isInCart,  // Disable button if artisan is in the cart
+    };
   };
 
   return (
@@ -114,36 +118,41 @@ const Artisans = () => {
       {loading && <div className="loading-indicator">Loading...</div>}
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
-        {artisans.map((artisan) => (
-          <div
-            key={artisan.id}
-            className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center"
-          >
-            {artisan.profile_img ? (
-              <img
-                src={artisan.profile_img}
-                alt={`${artisan.user?.first_name}'s profile`}
-                className="w-24 h-24 rounded-full object-cover mb-4"
-              />
-            ) : (
-              <div className="w-24 h-24 rounded-full bg-gray-300 mb-4"></div>
-            )}
-            <h2 className="text-lg font-semibold mb-2">
-              {artisan.user?.first_name} {artisan.user?.last_name}
-            </h2>
-            <p className="text-gray-600 mb-2">Location: {artisan.location?.location}</p>
-            <p className="text-gray-600 mb-2">Service: {artisan.service?.title}</p>
-            <p className="text-gray-600 mb-2">Experience: {artisan.experience} years</p>
-            <p className="text-gray-600 mb-2">Pay: ${artisan.pay}</p>
+        {artisans.map((artisan) => {
+          const { text, disabled } = getButtonTextAndDisabled(artisan.user?.email);
 
-            <button
-              onClick={() => handleOrderClick(artisan.user?.email)}
-              className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
+          return (
+            <div
+              key={artisan.id}
+              className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center"
             >
-              {getButtonText(artisan.user?.email)}
-            </button>
-          </div>
-        ))}
+              {artisan.profile_img ? (
+                <img
+                  src={artisan.profile_img}
+                  alt={`${artisan.user?.first_name}'s profile`}
+                  className="w-24 h-24 rounded-full object-cover mb-4"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-gray-300 mb-4"></div>
+              )}
+              <h2 className="text-lg font-semibold mb-2">
+                {artisan.user?.first_name} {artisan.user?.last_name}
+              </h2>
+              <p className="text-gray-600 mb-2">Location: {artisan.location?.location}</p>
+              <p className="text-gray-600 mb-2">Service: {artisan.service?.title}</p>
+              <p className="text-gray-600 mb-2">Experience: {artisan.experience} years</p>
+              <p className="text-gray-600 mb-2">Pay: ${artisan.pay}</p>
+
+              <button
+                onClick={() => handleOrderClick(artisan.user?.email)}
+                className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
+                disabled={disabled}
+              >
+                {text}
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
