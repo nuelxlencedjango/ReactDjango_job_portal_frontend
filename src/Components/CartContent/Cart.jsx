@@ -87,7 +87,7 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-20"
+              className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-20"
             >
               {/* Image and Name */}
               <div className="flex flex-col items-center sm:items-start">
@@ -98,7 +98,7 @@ const Cart = () => {
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-gray-300"></div>
+                  <div className="w-15 h-15 rounded-full bg-gray-300"></div>
                 )}
                 <p className="text-center sm:text-left text-lg font-medium mt-2">
                   {item.artisan.first_name} {item.artisan.last_name}
