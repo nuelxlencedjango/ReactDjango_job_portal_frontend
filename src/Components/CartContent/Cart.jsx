@@ -61,7 +61,7 @@ const Cart = () => {
       // Handle error (e.g., show message to user)
     }
   };
-  
+
   const calculateTotal = () =>
     cartItems.reduce((total, item) => total + item.artisan.pay, 0);
 
@@ -87,7 +87,7 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-50 cusor-pointer"
+              className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-150"
             >
               {/* Image and Name */}
               <div className="flex flex-col items-center sm:items-start">
@@ -95,12 +95,12 @@ const Cart = () => {
                   <img
                     src={item.artisan.profile_img}
                     alt={`${item.artisan.first_name}'s profile`}
-                    className="w-14 h-14 rounded-full object-cover"
+                    className="w-16 h-16 rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-gray-300"></div>
                 )}
-                <p className="text-center sm:text-left text-lg font-medium mt-1">
+                <p className="text-center sm:text-left text-lg font-medium mt-2">
                   {item.artisan.first_name} {item.artisan.last_name}
                 </p>
               </div>
@@ -118,15 +118,15 @@ const Cart = () => {
               {/* Remove Button */}
               <button
                 onClick={() => handleRemoveFromCart(item.id)}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mt-4 sm:mt-0"
+                className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 mt-4 sm:mt-0 sm:ml-4"
               >
                 Remove
               </button>
 
+              {/* Add Link Button */}
               <Link 
                   to={`/artisans/artisans-by-service/${encodeURIComponent(item.artisan.service)}`} 
-                  
-                  className="bg-green-500 text-white px-8 py-2 rounded-lg hover:bg-red-600 mt-4 sm:mt-0"
+                  className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 mt-4 sm:mt-0 sm:ml-4"
                 >
                 Add
                 </Link>
@@ -154,11 +154,10 @@ const Cart = () => {
               <p className="font-bold text-lg">${calculateTotal()}</p>
             </div>
             <div className="flex justify-end">
-                 <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
-                 Pay Now
-                </button>
-              </div>
-            
+              <button className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600">
+                Pay Now
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -167,4 +166,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
