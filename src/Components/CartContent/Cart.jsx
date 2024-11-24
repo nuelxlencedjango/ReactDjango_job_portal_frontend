@@ -89,7 +89,7 @@ const Cart = () => {
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-14 h-14 rounded-full bg-gray-300"></div>
+                  <div className="w-16 h-16 rounded-full bg-gray-300"></div>
                 )}
                 <p className="text-center sm:text-left text-lg font-medium mt-1">
                   {item.artisan.first_name} {item.artisan.last_name}
