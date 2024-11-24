@@ -18,7 +18,7 @@ const Artisans = () => {
         setArtisans(response.data);
         console.log('List of artisans:', response.data, 'artisan email:',response.email, 
           'cart_items:',response.cart_items,'all artisans:', response.artisans);
-          
+
       } catch (error) {
         if (error.response && error.response.status === 401) {
           Cookies.remove('access_token');
@@ -108,9 +108,9 @@ const Artisans = () => {
         className={`mt-auto px-4 py-2 rounded-lg ${
           artisan.in_cart ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 text-white'
         }`}
-        disabled={artisan.in_cart}
+        disabled={artisan.user?.email}
       >
-        {artisan.in_cart ? 'Already in the cart' : 'Add to cart'}
+        {artisan.user?.email ? 'Already in the cart' : 'Add to cart'}
       </button>
     </div>
   ))}
