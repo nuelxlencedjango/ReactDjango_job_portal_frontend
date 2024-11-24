@@ -126,7 +126,7 @@ const Cart = () => {
               <Link 
                   to={`/artisans/artisans-by-service/${encodeURIComponent(item.artisan.service)}`} 
                   
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mt-4 sm:mt-0"
+                  className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 mt-4 sm:mt-0"
                 >
                 Add A {item.artisan.service}
                 </Link>
