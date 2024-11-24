@@ -3,11 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import api from '../../api';
 
-
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [cartStatus, setCartStatus] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const Artisans = () => {
         setArtisans(response.data);
         console.log('List of artisans:', response.data, 'artisan email:',response.data.user?.email, 
           'cart_items:',response.data.user?.cart_items,'all artisans:', response.data.user?.artisans);
-
+          
       } catch (error) {
         if (error.response && error.response.status === 401) {
           Cookies.remove('access_token');
@@ -34,14 +34,31 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title]);
 
+  const checkIfArtisanInCart = async (email) => {
+    const token = Cookies.get('access_token');
+    if (token) {
+      try {
+        const response = await api.get(`/employers/check-artisan/${email}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return response.data.in_cart;
+      } catch (error) {
+        console.error('Error checking artisan in cart:', error);
+        return false;
+      }
+    }
+    return false;
+  };
+
   const handleOrderClick = async (email) => {
     const token = Cookies.get('access_token');
-    console.log('user token:', token);
     if (!email) {
       console.error('Missing artisan email.');
       return;
     }
-  
+
     if (token) {
       try {
         const response = await api.post(
@@ -53,12 +70,10 @@ const Artisans = () => {
             },
           }
         );
-        
-  
+
         if (response.status === 201) {
           alert('Service added to your cart!');
-          navigate('/cart'); 
-         
+          navigate('/cart');
         }
       } catch (error) {
         if (error.response) {
@@ -71,7 +86,18 @@ const Artisans = () => {
       navigate('/login');
     }
   };
-  
+
+  const getButtonText = async (email) => {
+    if (!cartStatus[email]) {
+      const inCart = await checkIfArtisanInCart(email);
+      setCartStatus((prevStatus) => ({
+        ...prevStatus,
+        [email]: inCart,
+      }));
+    }
+
+    return cartStatus[email] ? 'Already in the cart' : 'Add to cart';
+  };
 
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
@@ -80,48 +106,41 @@ const Artisans = () => {
       </h1>
 
       {loading && <div className="loading-indicator">Loading...</div>}
+
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
-  {artisans.map((artisan) => (
-    <div
-      key={artisan.id}
-      className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center"
-    >
-      {artisan.profile_img ? (
-        <img
-          src={artisan.profile_img}
-          alt={`${artisan.user?.first_name}'s profile`}
-          className="w-24 h-24 rounded-full object-cover mb-4"
-        />
-      ) : (
-        <div className="w-24 h-24 rounded-full bg-gray-300 mb-4"></div>
-      )}
-      <h2 className="text-lg font-semibold mb-2">
-        {artisan.user?.first_name} {artisan.user?.last_name}
-      </h2>
-      <p className="text-gray-600 mb-2">Location: {artisan.location?.location}</p>
-      <p className="text-gray-600 mb-2">Service: {artisan.service?.title}</p>
-      <p className="text-gray-600 mb-2">Experience: {artisan.experience} years</p>
-      <p className="text-gray-600 mb-2">Pay: ${artisan.pay}</p>
+        {artisans.map((artisan) => (
+          <div
+            key={artisan.id}
+            className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center"
+          >
+            {artisan.profile_img ? (
+              <img
+                src={artisan.profile_img}
+                alt={`${artisan.user?.first_name}'s profile`}
+                className="w-24 h-24 rounded-full object-cover mb-4"
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-full bg-gray-300 mb-4"></div>
+            )}
+            <h2 className="text-lg font-semibold mb-2">
+              {artisan.user?.first_name} {artisan.user?.last_name}
+            </h2>
+            <p className="text-gray-600 mb-2">Location: {artisan.location?.location}</p>
+            <p className="text-gray-600 mb-2">Service: {artisan.service?.title}</p>
+            <p className="text-gray-600 mb-2">Experience: {artisan.experience} years</p>
+            <p className="text-gray-600 mb-2">Pay: ${artisan.pay}</p>
 
-      <button
-  onClick={() => handleOrderClick(artisan.user?.email)}
-  className={`mt-auto px-4 py-2 rounded-lg ${
-    artisan.in_cart ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 text-white'
-  }`}
-  disabled={artisan.in_cart}
->
-  {artisan.in_cart ? 'Already in the cart' : 'Add to cart'}
-</button>
-
-    </div>
-  ))}
-</div>
-
+            <button
+              onClick={() => handleOrderClick(artisan.user?.email)}
+              className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
+            >
+              {getButtonText(artisan.user?.email)}
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
 export default Artisans;
-
-
-
