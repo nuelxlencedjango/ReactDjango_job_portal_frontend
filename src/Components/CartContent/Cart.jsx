@@ -100,13 +100,13 @@ const Cart = () => {
                 ) : (
                   <div className="w-15 h-15 rounded-full bg-gray-300"></div>
                 )}
-                <p className="text-center sm:text-left text-lg font-medium mt-2">
+                <p className="text-center sm:text-left text-lg font-medium mt-1">
                   {item.artisan.first_name} {item.artisan.last_name}
                 </p>
               </div>
 
               {/* Details */}
-              <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-4 sm:mt-0">
+              <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0">
                 <span className="text-gray-600 sm:ml-4">
                    {item.artisan.service}
                 </span>
