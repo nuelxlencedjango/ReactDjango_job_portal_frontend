@@ -7,6 +7,7 @@ const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [cartArtisans, setCartArtisans] = useState([]); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,6 +16,7 @@ const Artisans = () => {
         setLoading(true);
         const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
+        console.log('List of artisans:', response.data);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           Cookies.remove('access_token');
@@ -27,11 +29,29 @@ const Artisans = () => {
       }
     };
 
+    const fetchCartArtisans = async () => {
+      const token = Cookies.get('access_token');
+      if (token) {
+        try {
+          const response = await api.get('/cart/', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setCartArtisans(response.data.artisans); // Assuming the cart response contains artisans
+        } catch (error) {
+          console.error("Error fetching cart:", error);
+        }
+      }
+    };
+
     fetchArtisans();
+    fetchCartArtisans(); // Fetch the user's cart when the component mounts
   }, [service_title]);
 
   const handleOrderClick = async (email) => {
     const token = Cookies.get('access_token');
+    console.log('user token:', token);
     if (!email) {
       console.error('Missing artisan email.');
       return;
@@ -51,14 +71,7 @@ const Artisans = () => {
 
         if (response.status === 201) {
           alert('Service added to your cart!');
-          // Update the UI to reflect the change
-          setArtisans((prevArtisans) =>
-            prevArtisans.map((artisan) =>
-              artisan.user?.email === email
-                ? { ...artisan, already_in_cart: true }
-                : artisan
-            )
-          );
+          navigate('/cart');
         }
       } catch (error) {
         if (error.response) {
@@ -70,6 +83,11 @@ const Artisans = () => {
     } else {
       navigate('/login');
     }
+  };
+
+  const isArtisanInCart = (artisanEmail) => {
+    // Check if the artisan is already in the cart by matching email
+    return cartArtisans.some((cartItem) => cartItem.email === artisanEmail);
   };
 
   return (
@@ -105,14 +123,10 @@ const Artisans = () => {
 
             <button
               onClick={() => handleOrderClick(artisan.user?.email)}
-              className={`mt-auto px-4 py-2 rounded-lg ${
-                artisan.already_in_cart
-                  ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                  : 'bg-blue-500 text-white'
-              }`}
-              disabled={artisan.already_in_cart}
+              className="mt-auto bg-blue-500 text-white px-4 py-2 rounded-lg"
+              disabled={isArtisanInCart(artisan.user?.email)} // Disable button if already in cart
             >
-              {artisan.already_in_cart ? 'Already in Cart' : 'Add to Cart'}
+              {isArtisanInCart(artisan.user?.email) ? "Already in Cart" : "Add to Cart"}
             </button>
           </div>
         ))}
