@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../api";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -27,8 +27,8 @@ const Cart = () => {
           },
         });
 
-        setCartItems(response.data.cart_items || []); // Set cart items if available
-        setUserData(response.data.user_data || {}); // Set user details
+        setCartItems(response.data.cart_items || []);
+        setUserData(response.data.user_data || {});
       } catch (error) {
         console.error("Error fetching cart data:", error);
       } finally {
@@ -41,13 +41,12 @@ const Cart = () => {
 
   const handleRemoveFromCart = async (itemId) => {
     const token = Cookies.get("access_token");
-  
+
     if (!token) {
-      console.error("No access token found. Redirecting to login...");
-      navigate("/login"); // Redirect to login if no token
+      navigate("/login");
       return;
     }
-  
+
     try {
       await api.delete(`/employers/cart/${itemId}/`, {
         headers: {
@@ -58,7 +57,6 @@ const Cart = () => {
       alert("Item removed from cart!");
     } catch (error) {
       console.error("Error removing item from cart:", error);
-      // Handle error (e.g., show message to user)
     }
   };
 
@@ -87,7 +85,7 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-shadow duration-20"
+              className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
             >
               {/* Image and Name */}
               <div className="flex flex-col items-center sm:items-start">
@@ -108,7 +106,7 @@ const Cart = () => {
               {/* Details */}
               <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0">
                 <span className="text-gray-600 sm:ml-4">
-                   {item.artisan.service}
+                  {item.artisan.service}
                 </span>
                 <span className="text-gray-600 sm:mr-4">
                   Pay: ${item.artisan.pay}
@@ -118,18 +116,10 @@ const Cart = () => {
               {/* Remove Button */}
               <button
                 onClick={() => handleRemoveFromCart(item.id)}
-                className="bg-red-500 text-white px-4 py-3 rounded-lg hover:bg-red-600 mt-4 sm:mt-0 sm:ml-4"
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300"
               >
                 Remove
               </button>
-
-              {/* Add Link Button */}
-              <Link 
-                  to={`/artisans/artisans-by-service/${encodeURIComponent(item.artisan.service)}`} 
-                  className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 mt-4 sm:mt-0 sm:ml-4"
-                >
-                Add
-                </Link>
             </div>
           ))}
 
@@ -141,9 +131,20 @@ const Cart = () => {
           )}
         </div>
 
-        {/* Right Section: Total Box */}
+        {/* Right Section: Order Summary */}
         {cartItems.length > 0 && (
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full lg:w-1/3 mt-8 lg:mt-4"  style={{ maxHeight: "350px" }}>
+          <div
+            className="sticky top-20 bg-gray-100 p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 w-full lg:w-1/3"
+          >
+            {/* Image */}
+            <div className="w-full h-32 mb-4">
+              <img
+                src="https://via.placeholder.com/300x200"
+                alt="Order Summary"
+                className="rounded-lg object-cover w-full h-full"
+              />
+            </div>
+
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <div className="flex justify-between items-center mb-4">
               <p className="text-gray-700 text-lg">Total Items:</p>
@@ -154,7 +155,7 @@ const Cart = () => {
               <p className="font-bold text-lg">${calculateTotal()}</p>
             </div>
             <div className="flex justify-end">
-              <button className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600">
+              <button className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110">
                 Checkout
               </button>
             </div>
