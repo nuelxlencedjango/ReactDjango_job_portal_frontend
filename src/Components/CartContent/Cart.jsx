@@ -112,7 +112,7 @@ const Cart = () => {
 
                 {/* Icon positioned between Service and Pay */}
                 <div className="absolute cart-icon-wrapper top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <DryIcon className="text-green-500 cart-icon" style={{ fontSize: 24 }} />
+                  <DryIcon className="cart-icon text-green-500" style={{ fontSize: 24 }} />
                 </div>
 
                 <span className="text-gray-600 sm:mr-4">
