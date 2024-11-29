@@ -84,57 +84,56 @@ const Cart = () => {
         <div className="flex-grow">
           {cartItems.map((item) => (
             <div
-              key={item.id}
-              className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-            >
-              {/* Image and Name */}
-              <div className="flex flex-col items-center sm:items-start">
-                {item.artisan.profile_img ? (
-                  <img
-                    src={item.artisan.profile_img}
-                    alt={`${item.artisan.first_name}'s profile`}
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-16 h-16 rounded-full bg-gray-300"></div>
-                )}
-                <p className="text-center sm:text-left text-lg font-medium mt-1">
-                  {item.artisan.first_name} {item.artisan.last_name}
-                </p>
+            key={item.id}
+            className="flex flex-col sm:flex-row items-center sm:items-start justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+          >
+            {/* Image and Name */}
+            <div className="flex flex-col items-center sm:items-start">
+              {item.artisan.profile_img ? (
+                <img
+                  src={item.artisan.profile_img}
+                  alt={`${item.artisan.first_name}'s profile`}
+                  className="w-16 h-16 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-gray-300"></div>
+              )}
+              <p className="text-center sm:text-left text-lg font-medium mt-1">
+                {item.artisan.first_name} {item.artisan.last_name}
+              </p>
+            </div>
+          
+            {/* Details */}
+            <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0 relative">
+              {/* Service */}
+              <span className="text-gray-600 sm:ml-4">{item.artisan.service}</span>
+          
+              {/* Icon: Adjust position for small screens */}
+              <div className="absolute sm:relative top-0 left-0 sm:top-auto sm:left-auto sm:translate-x-0 sm:translate-y-0">
+                <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
               </div>
-
-              {/* Details */}
-              <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0 relative">
-                <span className="text-gray-600 sm:ml-4">
-                  {item.artisan.service}
-                </span>
-
-                {/* Icon positioned between Service and Pay */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
-                </div>
-
-                <span className="text-gray-600 sm:mr-4">
-                  Pay: ${item.artisan.pay}
-                </span>
-              </div>
-
-              {/* Remove Button */}
+          
+              {/* Pay */}
+              <span className="text-gray-600 sm:mr-4">Pay: ${item.artisan.pay}</span>
+            </div>
+          
+            {/* Buttons in the Same Row on Small Screens */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 mt-2 sm:mt-0">
               <button
                 onClick={() => handleRemoveFromCart(item.id)}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 mr-2"
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300"
               >
                 Remove
               </button>
-
-              {/* Add Button */}
               <Link
                 to={`/artisans/artisans-by-service/${encodeURIComponent(item.artisan.service)}`}
-                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-black-600 color-white transition-all duration-300 transform hover:scale-110"
+                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110"
               >
                 Add
               </Link>
             </div>
+          </div>
+          
           ))}
 
           {/* Total Below Items */}
