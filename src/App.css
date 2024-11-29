@@ -317,13 +317,11 @@ select {
 }
 
 
+
+
 /*cart items*/
 @media (max-width: 640px) {
-  .artisan-main{
-    display: flex;
-    padding: 0%;
-    margin: 0%;
-  }
+
   .cart-icon-wrapper{
     display: none;
   }
