@@ -85,7 +85,7 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative"
+              className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
             >
               {/* Image and Name */}
               <div className="flex flex-col items-center sm:items-start">
@@ -109,40 +109,31 @@ const Cart = () => {
                   {item.artisan.service}
                 </span>
 
-                {/* Icon for mobile (between Service and Pay) */}
-                <div className="absolute sm:hidden top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                {/* Icon positioned between Service and Pay */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
                 </div>
 
                 <span className="text-gray-600 sm:mr-4">
                   Pay: ${item.artisan.pay}
                 </span>
-
-                {/* Icon for large screens (Top-left corner) */}
-                <div className="absolute sm:block top-0 left-0 p-2 sm:p-4 sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2">
-                  <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
-                </div>
               </div>
 
-              {/* Remove Button on left (sm screens and up) */}
-              <div className="absolute sm:static sm:left-0 sm:top-auto sm:ml-4 sm:mt-0 left-1/4 top-4 sm:top-0 sm:mt-0">
-                <button
-                  onClick={() => handleRemoveFromCart(item.id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300"
-                >
-                  Remove
-                </button>
-              </div>
+              {/* Remove Button */}
+              <button
+                onClick={() => handleRemoveFromCart(item.id)}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 mr-2"
+              >
+                Remove
+              </button>
 
-              {/* Add Button on right (sm screens and up) */}
-              <div className="absolute sm:static sm:right-0 sm:top-auto sm:mr-4 sm:mt-0 right-1/4 top-4 sm:top-0 sm:mt-0">
-                <Link
-                  to={`/artisans/artisans-by-service/${encodeURIComponent(item.artisan.service)}`}
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-black-600 color-white transition-all duration-300 transform hover:scale-110"
-                >
-                  Add
-                </Link>
-              </div>
+              {/* Add Button */}
+              <Link
+                to={`/artisans/artisans-by-service/${encodeURIComponent(item.artisan.service)}`}
+                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-black-600 color-white transition-all duration-300 transform hover:scale-110"
+              >
+                Add
+              </Link>
             </div>
           ))}
 
@@ -190,3 +181,6 @@ const Cart = () => {
 };
 
 export default Cart;
+
+
+
