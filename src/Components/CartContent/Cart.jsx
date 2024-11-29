@@ -110,7 +110,7 @@ const Cart = () => {
                 </span>
 
                 {/* Icon positioned between Service and Pay */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:hidden">
                   <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
                 </div>
 
@@ -127,7 +127,7 @@ const Cart = () => {
                 Remove
               </button>
 
-              {/* Add Button */} 
+              {/* Add Button */}
               <Link
                 to={`/artisans/artisans-by-service/${encodeURIComponent(item.artisan.service)}`}
                 className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-black-600 color-white transition-all duration-300 transform hover:scale-110"
