@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import api from '../../api';
+import DryIcon from '@mui/icons-material/Dry';  // Import DryIcon
 
 const Artisans = () => {
   const { service_title } = useParams();
@@ -112,7 +113,7 @@ const Artisans = () => {
   return (
     <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
       <h1 className="text-2xl font-semibold mb-4 artisanlist-heading display-center">
-        Available {service_title} for your service
+        Available {service_title}s for your service
       </h1>
 
       {loading && <div className="loading-indicator">Loading...</div>}
@@ -124,32 +125,39 @@ const Artisans = () => {
           return (
             <div
               key={artisan.id}
-              className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center transition-transform transform hover:scale-105"
+              className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center relative transition-transform transform hover:scale-105"
             >
-              {/* Icon and Profile Image */}
-              <div className="flex items-center justify-center w-full mb-4">
-                <div className="w-6 h-6 bg-blue-500 rounded-full mr-2" title="Ready for work"></div>
-                {artisan.profile_img ? (
-                  <img
-                    src={artisan.profile_img}
-                    alt={`${artisan.user?.first_name}'s profile`}
-                    className="w-24 h-24 rounded-full object-cover transition-all duration-300 transform hover:scale-110"
-                  />
-                ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-300"></div>
-                )}
+              {/* Top-left and top-right icons */}
+              <div className="absolute top-2 left-2">
+                <DryIcon className="text-blue-500" style={{ fontSize: 24 }} />
               </div>
+              <div className="absolute top-2 right-2">
+                <div className="w-6 h-6 bg-green-500 rounded-full" title="Ready for work" />
+              </div>
+
+              {/* Profile Image stays centered */}
+              {artisan.profile_img ? (
+                <img
+                  src={artisan.profile_img}
+                  alt={`${artisan.user?.first_name}'s profile`}
+                  className="w-24 h-24 rounded-full object-cover mb-4 transition-all duration-300 transform hover:scale-110"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-gray-300 mb-4"></div>
+              )}
 
               {/* Artisan details */}
               <h2 className="text-lg font-semibold mb-2">
                 {artisan.user?.first_name} {artisan.user?.last_name}
               </h2>
 
+              {/* Location and Service on the same row */}
               <div className="flex justify-between w-full mb-2">
                 <p className="text-gray-600">Location: {artisan.location?.location}</p>
                 <p className="text-gray-600">Service: {artisan.service?.title}</p>
               </div>
 
+              {/* Experience and Pay on the same row if they fit */}
               <div className="flex justify-between w-full mb-2">
                 <p className="text-gray-600">Experience: {artisan.experience} years</p>
                 <p className="text-gray-600">Pay: ${artisan.pay}</p>
