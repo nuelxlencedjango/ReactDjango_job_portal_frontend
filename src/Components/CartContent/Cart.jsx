@@ -120,6 +120,7 @@ const Cart = () => {
               </div>
 
               {/* Remove Button */}
+              <div className="buttons-container">
               <button
                 onClick={() => handleRemoveFromCart(item.id)}
                 className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 mr-2"
@@ -134,6 +135,7 @@ const Cart = () => {
               >
                 Add
               </Link>
+            </div>
             </div>
           ))}
 
@@ -181,6 +183,5 @@ const Cart = () => {
 };
 
 export default Cart;
-
 
 
