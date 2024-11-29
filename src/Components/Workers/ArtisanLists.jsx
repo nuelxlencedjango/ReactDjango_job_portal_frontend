@@ -136,15 +136,17 @@ const Artisans = () => {
               </div>
 
               {/* Profile Image stays centered */}
-              {artisan.profile_img ? (
-                <img
-                  src={artisan.profile_img}
-                  alt={`${artisan.user?.first_name}'s profile`}
-                  className="w-24 h-24 rounded-full object-cover mb-4 transition-all duration-300 transform hover:scale-110"
-                />
-              ) : (
-                <div className="w-24 h-24 rounded-full bg-gray-300 mb-4"></div>
-              )}
+              <div className="flex justify-center w-full mb-4">
+                {artisan.profile_img ? (
+                  <img
+                    src={artisan.profile_img}
+                    alt={`${artisan.user?.first_name}'s profile`}
+                    className="w-24 h-24 rounded-full object-cover transition-all duration-300 transform hover:scale-110"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-gray-300 mb-4"></div>
+                )}
+              </div>
 
               {/* Artisan details */}
               <h2 className="text-lg font-semibold mb-2">
