@@ -1,197 +1,185 @@
-import React, { useEffect, useState } from "react";
-import api from "../../api";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import DryIcon from "@mui/icons-material/Dry";  // Import the DryIcon
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import api from '../../api';
+import DryIcon from '@mui/icons-material/Dry';  // Import DryIcon
 
-const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+const Artisans = () => {
+  const { service_title } = useParams();
+  const [artisans, setArtisans] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [userData, setUserData] = useState({});
-  const [artisansCount, setArtisansCount] = useState(1);  // Counter to simulate increasing artisans
+  const [cartStatus, setCartStatus] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCartData = async () => {
-      const token = Cookies.get("access_token");
-
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
+    const fetchArtisans = async () => {
       try {
         setLoading(true);
-        const response = await api.get("/employers/cart-items/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setCartItems(response.data.cart_items || []);
-        setUserData(response.data.user_data || {});
+        const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
+        setArtisans(response.data);
       } catch (error) {
-        console.error("Error fetching cart data:", error);
+        if (error.response && error.response.status === 401) {
+          Cookies.remove('access_token');
+          navigate('/login');
+        } else {
+          console.error("Error fetching artisans:", error);
+        }
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCartData();
-  }, [navigate]);
+    fetchArtisans();
+  }, [service_title]);
 
-  const handleRemoveFromCart = async (itemId) => {
-    const token = Cookies.get("access_token");
+  // Check if artisan is in the cart
+  const checkIfArtisanInCart = async (email) => {
+    const token = Cookies.get('access_token');
+    if (token) {
+      try {
+        const response = await api.get(`/employers/check-artisan/${email}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return response.data.in_cart;
+      } catch (error) {
+        console.error('Error checking artisan in cart:', error);
+        return false;
+      }
+    }
+    return false;
+  };
 
-    if (!token) {
-      navigate("/login");
+  // Handle the button click (add to cart)
+  const handleOrderClick = async (email) => {
+    const token = Cookies.get('access_token');
+    if (!email) {
+      console.error('Missing artisan email.');
       return;
     }
 
-    try {
-      await api.delete(`/employers/cart/${itemId}/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-      alert("Item removed from cart!");
-    } catch (error) {
-      console.error("Error removing item from cart:", error);
+    if (token) {
+      try {
+        const response = await api.post(
+          '/employers/add_to_cart/',
+          { artisan_email: email },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 201) {
+          alert('Service added to your cart!');
+          navigate('/cart');
+        } else {
+          alert(response.data.detail);  // Handle already in cart case
+        }
+      } catch (error) {
+        console.error("Error adding to cart:", error.response.data);
+      }
+    } else {
+      navigate('/login');
     }
   };
 
-  const calculateTotal = () =>
-    cartItems.reduce((total, item) => total + item.artisan.pay, 0);
+  // Update cart status when an artisan is rendered
+  useEffect(() => {
+    const updateCartStatus = async () => {
+      const status = {};
+      for (const artisan of artisans) {
+        const inCart = await checkIfArtisanInCart(artisan.user?.email);
+        status[artisan.user?.email] = inCart;
+      }
+      setCartStatus(status);
+    };
 
-  // Function to increase the number of artisans in the cart
-  const handleAddArtisan = () => {
-    setArtisansCount(artisansCount + 1);
+    if (artisans.length > 0) {
+      updateCartStatus();
+    }
+  }, [artisans]);
+
+  // Determine button text and disabled state based on the cart status
+  const getButtonTextAndDisabled = (email) => {
+    const isInCart = cartStatus[email];
+    return {
+      text: isInCart ? 'Already in the cart' : 'Add to cart',
+      disabled: isInCart,  // Disable button if artisan is in the cart
+    };
   };
 
   return (
-    <div className="container mx-auto px-4 mt-10 mb-20 relative">
-      {/* Icon at top center */}
-      <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
-        <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
-      </div>
+    <div className="container mx-auto px-4 mt-30" data-aos="fade-up">
+      <h1 className="text-2xl font-semibold mb-4 artisanlist-heading display-center">
+        Available {service_title}s for your service
+      </h1>
 
-      {/* Welcome User */}
-      <p className="text-lg font-medium text-gray-700 mb-2">
-        Welcome, {userData.first_name || "User"}!
-      </p>
+      {loading && <div className="loading-indicator">Loading...</div>}
 
-      {/* Header */}
-      <h1 className="text-2xl font-bold text-center mb-10">Your Cart</h1>
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
+        {artisans.map((artisan) => {
+          const { text, disabled } = getButtonTextAndDisabled(artisan.user?.email);
 
-      {loading && <div>Loading...</div>}
-
-      {!loading && cartItems.length === 0 && (
-        <p className="text-gray-600 text-center">Your cart is empty.</p>
-      )}
-
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Left Section */}
-        <div className="flex-grow">
-          {cartItems.map((item) => (
+          return (
             <div
-              key={item.id}
-              className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+              key={artisan.id}
+              className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center relative transition-transform transform hover:scale-105"
             >
-              {/* Image and Name */}
-              <div className="flex flex-col items-center sm:items-start">
-                {item.artisan.profile_img ? (
+              {/* Top-left and top-right icons */}
+              <div className="absolute top-2 left-4">
+                <DryIcon className="text-black-500" style={{ fontSize: 24 }} />
+              </div>
+             
+              <div className="absolute top-2 right-4">
+                <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
+              </div>
+
+              {/* Profile Image stays centered */}
+              <div className="flex justify-center w-full mb-4">
+                {artisan.profile_img ? (
                   <img
-                    src={item.artisan.profile_img}
-                    alt={`${item.artisan.first_name}'s profile`}
-                    className="w-16 h-16 rounded-full object-cover"
+                    src={artisan.profile_img}
+                    alt={`${artisan.user?.first_name}'s profile`}
+                    className="w-24 h-24 rounded-full object-cover transition-all duration-300 transform hover:scale-110"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-gray-300"></div>
+                  <div className="w-24 h-24 rounded-full bg-gray-300 mb-4"></div>
                 )}
-                <p className="text-center sm:text-left text-lg font-medium mt-1">
-                  {item.artisan.first_name} {item.artisan.last_name}
-                </p>
               </div>
 
-              {/* Details */}
-              <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0">
-                <span className="text-gray-600 sm:ml-4">{item.artisan.service}</span>
-                <span className="text-gray-600 sm:mr-4">Pay: ${item.artisan.pay}</span>
+              {/* Artisan details */}
+              <h2 className="text-lg font-semibold mb-2">
+                {artisan.user?.first_name} {artisan.user?.last_name}
+              </h2>
+
+              {/* Location and Service on the same row */}
+              <div className="flex justify-between w-full mb-2">
+                <p className="text-gray-600">Location: {artisan.location?.location}</p>
+                <p className="text-gray-600">Service: {artisan.service?.title}</p>
               </div>
 
-              {/* Remove Button */}
+              {/* Experience and Pay on the same row if they fit */}
+              <div className="flex justify-between w-full mb-2">
+                <p className="text-gray-600">Experience: {artisan.experience} years</p>
+                <p className="text-gray-600">Pay: ${artisan.pay}</p>
+              </div>
+
+              {/* Add to cart button */}
               <button
-                onClick={() => handleRemoveFromCart(item.id)}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300"
+                onClick={() => handleOrderClick(artisan.user?.email)}
+                className="mt-auto bg-green-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:bg-green-600"
+                disabled={disabled}
               >
-                Remove
+                {text}
               </button>
             </div>
-          ))}
-
-          {/* Add Artisan Button */}
-          <div className="text-center mt-4">
-            <button
-              onClick={handleAddArtisan}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all duration-300"
-            >
-              Add Artisan
-            </button>
-            <p className="mt-2">Current Artisans Count: {artisansCount}</p>
-          </div>
-
-          {/* Total Below Items */}
-          {cartItems.length > 0 && (
-            <div className="text-right mt-4 text-xl font-bold">
-              Total: ${calculateTotal()}
-            </div>
-          )}
-        </div>
-
-        {/* Right Section: Order Summary */}
-        {cartItems.length > 0 && (
-          <div
-            className="bg-gray-100 p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 w-full lg:w-1/3 mt-10"
-          >
-            {/* Image */}
-            <div className="w-full h-32 mb-4">
-              <img
-                src="https://via.placeholder.com/300x200"
-                alt="Order Summary"
-                className="rounded-lg object-cover w-full h-full"
-              />
-            </div>
-
-            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-gray-700 text-lg">Total Items:</p>
-              <p className="font-bold text-lg">{cartItems.length}</p>
-            </div>
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-gray-700 text-lg">Total Amount:</p>
-              <p className="font-bold text-lg">${calculateTotal()}</p>
-            </div>
-            <div className="flex justify-end">
-              <button className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110">
-                Checkout
-              </button>
-            </div>
-          </div>
-        )}
+          );
+        })}
       </div>
     </div>
   );
 };
 
-export default Cart;
-
-
-
-
-
-
-
-
-
+export default Artisans;
