@@ -104,13 +104,13 @@ const Cart = () => {
               </div>
 
               {/* Details */}
-              <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0 relative">
+              <div className="flex flex-col sm:flex-row artisan-main flex-grow justify-between px-4 items-center mt-2 sm:mt-0 relative">
                 <span className="text-gray-600 sm:ml-4">
                   {item.artisan.service}
                 </span>
 
                 {/* Icon positioned between Service and Pay */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className="absolute cart-icon top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
                 </div>
 
