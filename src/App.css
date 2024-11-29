@@ -315,3 +315,38 @@ select {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+/*cart items*/
+.icon-container {
+  position: relative;
+}
+
+.icon-style {
+  position: relative;
+}
+
+@media screen and (max-width: 640px) {
+  .icon-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+
+  .icon-style {
+    transform: translate(0, 0);
+  }
+
+  /* Ensures buttons align in the same row */
+  .flex-col.sm\\:flex-row {
+    flex-direction: row !important;
+  }
+
+  .gap-2 {
+    gap: 10px;
+  }
+
+  .mt-2.sm\\:mt-0 {
+    margin-top: 0;
+  }
+}

@@ -85,8 +85,13 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
             key={item.id}
-            className="flex flex-col sm:flex-row items-center sm:items-start justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+            className="flex flex-col sm:flex-row items-center sm:items-start justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative"
           >
+            {/* Icon: Positioned for smaller screens */}
+            <div className="icon-container">
+              <DryIcon className="text-green-500 icon-style" style={{ fontSize: 24 }} />
+            </div>
+          
             {/* Image and Name */}
             <div className="flex flex-col items-center sm:items-start">
               {item.artisan.profile_img ? (
@@ -104,20 +109,14 @@ const Cart = () => {
             </div>
           
             {/* Details */}
-            <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0 relative">
+            <div className="flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0">
               {/* Service */}
               <span className="text-gray-600 sm:ml-4">{item.artisan.service}</span>
-          
-              {/* Icon: Adjust position for small screens */}
-              <div className="absolute sm:relative top-0 left-0 sm:top-auto sm:left-auto sm:translate-x-0 sm:translate-y-0">
-                <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
-              </div>
-          
               {/* Pay */}
               <span className="text-gray-600 sm:mr-4">Pay: ${item.artisan.pay}</span>
             </div>
           
-            {/* Buttons in the Same Row on Small Screens */}
+            {/* Buttons: Always in the same row */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 mt-2 sm:mt-0">
               <button
                 onClick={() => handleRemoveFromCart(item.id)}
