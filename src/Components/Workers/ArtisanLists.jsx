@@ -111,7 +111,7 @@ const Artisans = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
+    <div className="container px-4 mt-22" data-aos="fade-up">
       <h1 className="text-2xl font-semibold mb-4 artisanlist-heading display-center">
         Available {service_title}s for your service
       </h1>
