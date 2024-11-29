@@ -102,23 +102,26 @@ const Cart = () => {
                   {item.artisan.first_name} {item.artisan.last_name}
                 </p>
               </div>
+{/* Details */}
+<div className="artisan-main relative flex flex-col sm:flex-row items-center justify-between px-4 mt-2 sm:mt-0 sm:px-1">
+  
+  {/* Service (on the left) */}
+  <span className="job-icon text-gray-600 sm:ml-2 sm:mr-4">
+    {item.artisan.service}
+  </span>
+  
+  {/* Icon between Service and Pay */}
+  <div className="cart-icon-wrapper absolute sm:relative top-1/2 sm:top-auto left-1/2 sm:left-auto transform -translate-x-1/2 sm:translate-x-0 sm:-translate-y-1/2">
+    <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
+  </div>
 
-              {/* Details */}
-              <div className="artisan-main flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0 relative sm:px-1">
-                <span className="job-icon text-gray-600 sm:ml-2">
-                  {item.artisan.service}
-                </span>
-                
+  {/* Pay (on the right) */}
+  <span className="pay-icon text-gray-600 sm:ml-4">
+    Pay: ${item.artisan.pay}
+  </span>
+  
+</div>
 
-                {/* Icon positioned between Service and Pay */}
-                <div className="absolute cart-icon-wrapper top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <DryIcon className="cart-icon text-green-500" style={{ fontSize: 24 }} />
-                </div>
-
-                <span className="pay-icon text-gray-600 sm:mr-2">
-                  Pay: ${item.artisan.pay}
-                </span>
-              </div>
 
               {/* Remove Button */}
               <div className="buttons-container">
