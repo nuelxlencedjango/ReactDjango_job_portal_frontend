@@ -318,27 +318,40 @@ select {
 
 
 /*cart items*/
-
-
 @media (max-width: 640px) {
   /* Move the icon to the top left */
   .cart-icon {
     position: absolute;
     top: 8px;
     left: 8px;
-    transform: none; 
+    transform: none;
+    width: 40px; /* Adjust icon size if necessary */
+    height: 40px;
   }
 
-  /* Make buttons appear side by side */
+  /* Align service and pay on the same row */
+  .service-pay-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .service-pay-container .service,
+  .service-pay-container .pay {
+    flex: 1;
+    text-align: center; /* Center-align text if needed */
+  }
+
+  /* Adjust buttons layout */
   .buttons-container {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    margin-top: 8px;
+    gap: 16px; /* Add more space between buttons */
+    margin-top: 16px;
   }
 
   .buttons-container button {
     flex: 1;
-    margin: 0 4px;
   }
 }
