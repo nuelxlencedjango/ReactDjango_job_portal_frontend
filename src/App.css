@@ -321,12 +321,12 @@ select {
 @media (max-width: 640px) {
   /* Move the icon to the top left */
   .cart-icon {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    transform: none;
-    width: 40px; /* Adjust icon size if necessary */
-    height: 40px;
+   
+    display: block !important;
+    left: -200px !important;
+    top: -120px !important;
+    margin: 10px !important;
+
   }
 
   /* Align service and pay on the same row */
