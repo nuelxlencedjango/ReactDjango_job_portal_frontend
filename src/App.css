@@ -318,18 +318,15 @@ select {
 
 
 /*cart items*/
-/* Default Icon Position */
-
-
-/* On screens 640px or smaller, move icon to the top-left corner */
 @media (max-width: 640px) {
-  .cart-icon {
-
-    font-size: 20px;
-    display: flex;
-    left: -260px;
+  .cart-icon-wrapper {
     position: absolute;
-    top: -100px;
-    color: #4CAF50;
+    top: 8px; /* Positioned at the top-left corner */
+    left: 8px;
+  }
+
+  .cart-icon {
+    font-size: 20px;
+    color: #4CAF50; /* Green color */
   }
 }
