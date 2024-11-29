@@ -145,11 +145,13 @@ const Artisans = () => {
                 {artisan.user?.first_name} {artisan.user?.last_name}
               </h2>
 
+           
               <div className="flex justify-between w-full mb-2">
                 <p className="text-gray-600">Location: {artisan.location?.location}</p>
                 <p className="text-gray-600">Service: {artisan.service?.title}</p>
               </div>
 
+          
               <div className="flex justify-between w-full mb-2">
                 <p className="text-gray-600">Experience: {artisan.experience} years</p>
                 <p className="text-gray-600">Pay: ${artisan.pay}</p>
