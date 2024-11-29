@@ -339,9 +339,11 @@ margin: 10px;
 position: absolute;
 }
 .job-icon{
+  position: absolute;
   left: 120px;
 }
 .pay-icon{
+  position: absolute;
   right: 100px;
 }
 }
