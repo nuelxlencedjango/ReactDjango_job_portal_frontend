@@ -128,11 +128,14 @@ const Artisans = () => {
               className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center relative transition-transform transform hover:scale-105"
             >
               {/* Top-left and top-right icons */}
-              <div className="absolute top-2 left-2">
-                <DryIcon className="text-blue-500" style={{ fontSize: 24 }} />
+              <div className="absolute top-2 left-4">
+                <DryIcon className="text-black-500" style={{ fontSize: 24 }} />
               </div>
-              <div className="absolute top-2 right-2">
+              {/*<div className="absolute top-2 right-2">
                 <div className="w-6 h-6 bg-green-500 rounded-full" title="Ready for work" />
+              </div>*/}
+              <div className="absolute top-2 right-4">
+                <DryIcon className="text-black-500" style={{ fontSize: 24 }} />
               </div>
 
               {/* Profile Image stays centered */}
