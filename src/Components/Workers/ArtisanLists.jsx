@@ -135,7 +135,7 @@ const Artisans = () => {
                 <div className="w-6 h-6 bg-green-500 rounded-full" title="Ready for work" />
               </div>*/}
               <div className="absolute top-2 right-4">
-                <DryIcon className="text-black-500" style={{ fontSize: 24 }} />
+                <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
               </div>
 
               {/* Profile Image stays centered */}
