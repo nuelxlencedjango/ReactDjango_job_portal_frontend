@@ -333,17 +333,14 @@ select {
 
 
 @media (max-width: 640px) {
-.artisan-main {
-display: block;
-margin: 10px;
-position: absolute;
-}
-.job-icon{
-  position: absolute;
-  left: 120px;
-}
-.pay-icon{
-  position: absolute;
-  right: 100px;
-}
+  .cart-icon-wrapper {
+    position: absolute;
+    top: 8px; /* Positioned at the top-left corner */
+    left: 8px;
+  }
+
+  .cart-icon {
+    font-size: 20px;
+    color: #4CAF50; /* Green color */
+  }
 }
