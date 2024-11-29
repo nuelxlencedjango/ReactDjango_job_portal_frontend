@@ -124,16 +124,16 @@ const Artisans = () => {
           return (
             <div
               key={artisan.id}
-              className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center"
+              className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center transition-transform transform hover:scale-105"
             >
               {/* Icon and Profile Image */}
-              <div className="flex items-center justify-between w-full mb-4">
+              <div className="flex items-center justify-center w-full mb-4">
                 <div className="w-6 h-6 bg-blue-500 rounded-full mr-2" title="Ready for work"></div>
                 {artisan.profile_img ? (
                   <img
                     src={artisan.profile_img}
                     alt={`${artisan.user?.first_name}'s profile`}
-                    className="w-24 h-24 rounded-full object-cover"
+                    className="w-24 h-24 rounded-full object-cover transition-all duration-300 transform hover:scale-110"
                   />
                 ) : (
                   <div className="w-24 h-24 rounded-full bg-gray-300"></div>
@@ -145,13 +145,11 @@ const Artisans = () => {
                 {artisan.user?.first_name} {artisan.user?.last_name}
               </h2>
 
-           
               <div className="flex justify-between w-full mb-2">
                 <p className="text-gray-600">Location: {artisan.location?.location}</p>
                 <p className="text-gray-600">Service: {artisan.service?.title}</p>
               </div>
 
-          
               <div className="flex justify-between w-full mb-2">
                 <p className="text-gray-600">Experience: {artisan.experience} years</p>
                 <p className="text-gray-600">Pay: ${artisan.pay}</p>
@@ -160,7 +158,7 @@ const Artisans = () => {
               {/* Add to cart button */}
               <button
                 onClick={() => handleOrderClick(artisan.user?.email)}
-                className="mt-auto bg-green-500 text-white px-4 py-2 rounded-lg"
+                className="mt-auto bg-green-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:bg-green-600"
                 disabled={disabled}
               >
                 {text}
