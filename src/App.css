@@ -330,8 +330,9 @@ select {
 /* On screens 640px or smaller, move icon to the top-left corner */
 @media (max-width: 640px) {
   .cart-icon {
-    top: 10px !important;       /* Adjust to your preference */
-    left: 10px !important;      /* Adjust to your preference */
-    transform: none; /* Remove the centering transform */
+    top: 10px !important;      
+    left: 10px !important;     
+    transform: none; 
+    align-items: flex-start;
   }
 }
