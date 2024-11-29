@@ -319,20 +319,17 @@ select {
 
 /*cart items*/
 /* Default Icon Position */
-.cart-icon {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%);
-  transition: all 0.3s ease;
-}
+
 
 /* On screens 640px or smaller, move icon to the top-left corner */
 @media (max-width: 640px) {
   .cart-icon {
-    top: 10px !important;      
-    left: 10px !important;     
-    transform: none; 
-    align-items: flex-start;
+
+    font-size: 20px;
+    display: flex;
+    left: -260px;
+    position: absolute;
+    top: -100px;
+    color: #4CAF50;
   }
 }
