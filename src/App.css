@@ -353,13 +353,13 @@ select {
 
 @media screen and (max-width: 640px) {
 .artisan-main {
-  align-items: flex-start;
-  flex-direction: row;
+  align-items: flex-start !important;
+  flex-direction: row !important;
 }
 .cart-icon{
-  display: block;
-  top: -90px;
-  left: 0;
-  margin: 25px;
+  display: block !important;
+  top: -90px !important;
+  left: 0 !important;
+  margin: 25px !important;
 }
 }
