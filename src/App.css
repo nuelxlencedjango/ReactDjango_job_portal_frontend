@@ -324,6 +324,7 @@ select {
 
   .cart-icon-wrapper{
     display: none;
+    visibility: hidden;
   }
 }
 
