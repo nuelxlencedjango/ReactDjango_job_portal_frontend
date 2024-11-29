@@ -122,9 +122,9 @@ const Cart = () => {
                 Remove
               </button>
               <Link
-              to={`/artisans/artisans-by-service/${encodeURIComponent(userData.job?.title)}`} 
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-110 inline-block"
-            >
+              to={`/artisans/artisans-by-service/${encodeURIComponent(item.job?.title)}`} 
+              className="bg-blue-500 text-white px-4 py-3 rounded-lg hover:bg-black-600 color-white transition-all duration-300 transform hover:scale-110 inline-block"
+            >         
               Add
             </Link>
             </div>
@@ -141,7 +141,8 @@ const Cart = () => {
         {/* Right Section: Order Summary */}
         {cartItems.length > 0 && (
           <div
-            className="sticky top-20 bg-gray-100 h-400 p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 w-full lg:w-1/3"
+            className="sticky top-20 bg-gray-100 h-400 p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 w-full lg:w-1/3 mt-10"
+            
           >
             {/* Image */}
             <div className="w-full h-32 mb-4">
@@ -174,7 +175,6 @@ const Cart = () => {
 };
 
 export default Cart;
-
 
 
 
