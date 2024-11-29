@@ -319,14 +319,10 @@ select {
 
 /*cart items*/
 @media (max-width: 640px) {
-  .cart-icon-wrapper {
-    position: absolute;
-    top: 8px; /* Positioned at the top-left corner */
-    left: 8px;
-  }
-
-  .cart-icon {
-    display: none;
+  .artisan-main{
+    display: flex;
+    padding: 0%;
+    margin: 0%;
   }
 }
 
