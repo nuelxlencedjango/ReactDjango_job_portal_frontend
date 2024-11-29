@@ -104,8 +104,8 @@ const Cart = () => {
               </div>
 
               {/* Details */}
-              <div className="artisan-main flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0 relative">
-                <span className="job-icon text-gray-600 sm:ml-4">
+              <div className="artisan-main flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0 relative sm:px-1">
+                <span className="job-icon text-gray-600 sm:ml-2">
                   {item.artisan.service}
                 </span>
                 
@@ -115,7 +115,7 @@ const Cart = () => {
                   <DryIcon className="cart-icon text-green-500" style={{ fontSize: 24 }} />
                 </div>
 
-                <span className="pay-icon text-gray-600 sm:mr-4">
+                <span className="pay-icon text-gray-600 sm:mr-2">
                   Pay: ${item.artisan.pay}
                 </span>
               </div>
