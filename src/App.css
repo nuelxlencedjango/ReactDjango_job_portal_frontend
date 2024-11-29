@@ -320,9 +320,9 @@ select {
 /*cart items*/
 /* Default Icon Position */
 .cart-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
   transform: translate(-50%, -50%);
   transition: all 0.3s ease;
 }
@@ -330,8 +330,8 @@ select {
 /* On screens 640px or smaller, move icon to the top-left corner */
 @media (max-width: 640px) {
   .cart-icon {
-    top: 10px;       /* Adjust to your preference */
-    left: 10px;      /* Adjust to your preference */
+    top: 10px !important;       /* Adjust to your preference */
+    left: 10px !important;      /* Adjust to your preference */
     transform: none; /* Remove the centering transform */
   }
 }
