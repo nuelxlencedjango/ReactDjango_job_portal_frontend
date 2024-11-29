@@ -322,14 +322,14 @@ select {
   /* Move the icon to the top left */
   .cart-icon {
     position: absolute;
-    top: 8px; /* Top padding */
-    left: 8px; /* Left padding */
-    transform: none; /* Reset transformations */
-    width: 40px; /* Adjust icon size */
+    top: 8px;
+    left: 8px;
+    transform: none;
+    width: 40px; /* Adjust icon size if necessary */
     height: 40px;
   }
 
-  /* Align Service and Pay on the same row */
+  /* Align service and pay on the same row */
   .service-pay-container {
     display: flex;
     justify-content: space-between;
@@ -339,16 +339,15 @@ select {
 
   .service-pay-container .service,
   .service-pay-container .pay {
-    flex: 1; /* Flex spacing for equal widths */
-    text-align: left; /* Align text to the left */
-    padding: 0 8px; /* Add some horizontal padding */
+    flex: 1;
+    text-align: center; /* Center-align text if needed */
   }
 
   /* Adjust buttons layout */
   .buttons-container {
     display: flex;
     justify-content: space-between;
-    gap: 12px; /* Add space between buttons */
+    gap: 16px; /* Add more space between buttons */
     margin-top: 16px;
   }
 

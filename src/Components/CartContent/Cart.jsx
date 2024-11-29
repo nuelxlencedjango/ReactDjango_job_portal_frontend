@@ -110,7 +110,6 @@ const Cart = () => {
                 </span>
 
                 {/* Icon positioned between Service and Pay */}
-                <div className="card relative">
                 <div className="absolute cart-icon top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
                 </div>
@@ -136,7 +135,6 @@ const Cart = () => {
               >
                 Add
               </Link>
-            </div>
             </div>
             </div>
           ))}
@@ -185,4 +183,5 @@ const Cart = () => {
 };
 
 export default Cart;
+
 
