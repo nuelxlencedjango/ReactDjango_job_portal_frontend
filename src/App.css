@@ -350,3 +350,16 @@ select {
     margin-top: 0;
   }
 }
+
+@media screen and (max-width: 640px) {
+.artisan-main {
+  align-items: flex-start;
+  flex-direction: row;
+}
+.cart-icon{
+  display: block;
+  top: -90px;
+  left: 0;
+  margin: 25px;
+}
+}
