@@ -318,48 +318,27 @@ select {
 
 
 /*cart items*/
-.icon-container {
-  position: relative;
-}
 
-.icon-style {
-  position: relative;
-}
 
-@media screen and (max-width: 640px) {
-  .icon-container {
+@media (max-width: 640px) {
+  /* Move the icon to the top left */
+  .cart-icon {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 8px;
+    left: 8px;
+    transform: none; 
   }
 
-  .icon-style {
-    transform: translate(0, 0);
+  /* Make buttons appear side by side */
+  .buttons-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 8px;
   }
 
-  /* Ensures buttons align in the same row */
-  .flex-col.sm\\:flex-row {
-    flex-direction: row !important;
+  .buttons-container button {
+    flex: 1;
+    margin: 0 4px;
   }
-
-  .gap-2 {
-    gap: 10px;
-  }
-
-  .mt-2.sm\\:mt-0 {
-    margin-top: 0;
-  }
-}
-
-@media screen and (max-width: 640px) {
-.artisan-main {
-  align-items: flex-start !important;
-  flex-direction: row !important;
-}
-.cart-icon{
-  display: block !important;
-  top: -90px !important;
-  left: 0 !important;
-  margin: 25px !important;
-}
 }
