@@ -330,3 +330,18 @@ select {
     color: #4CAF50; /* Green color */
   }
 }
+
+
+@media (max-width: 640px) {
+.artisan-main {
+display: block;
+margin: 10px;
+position: absolute;
+}
+.job-icon{
+  left: 120px;
+}
+.pay-icon{
+  right: 100px;
+}
+}
