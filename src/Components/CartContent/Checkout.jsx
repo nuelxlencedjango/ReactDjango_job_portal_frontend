@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 import Cookies from "js-cookie";
+import { useLocation } from "react-router-dom";
 
 const Checkout = () => {
   const [userDetails, setUserDetails] = useState(null);
-  const [totalAmount, setTotalAmount] = useState(100); // Example total amount, can be dynamic
   const [purchaseDate] = useState(new Date().toLocaleDateString());
+  const location = useLocation();
+  const totalAmount = location.state?.totalAmount || 0;  // Retrieve total amount from state
 
   useEffect(() => {
     // Fetch user details on component mount
@@ -40,10 +42,7 @@ const Checkout = () => {
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
         <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Checkout</h1>
 
-        {/* Checkout Container */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
-          {/* User Details Section (larger section) */}
           <div className="user-details-section bg-gray-50 p-6 rounded-lg shadow-md col-span-1 lg:col-span-2">
             <h2 className="text-2xl font-semibold text-gray-700 mb-4">User Details</h2>
 
@@ -93,16 +92,14 @@ const Checkout = () => {
             )}
           </div>
 
-          {/* Summary Section (smaller section) */}
           <div className="summary-section bg-gray-50 p-6 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold text-gray-700 mb-4">Summary</h2>
             <div className="space-y-4">
               <p><strong className="font-medium text-gray-600">Purchase Date:</strong> {purchaseDate}</p>
-              <hr className="my-2 border-gray-300" /> {/* Separator line */}
+              <hr className="my-2 border-gray-300" />
               <p><strong className="font-medium text-gray-600">Total Amount:</strong> ${totalAmount}</p>
             </div>
 
-            {/* Buttons */}
             <div className="flex space-x-4 mt-6">
               <button
                 className="w-1/2 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none transition-all duration-300"
@@ -118,7 +115,6 @@ const Checkout = () => {
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>
