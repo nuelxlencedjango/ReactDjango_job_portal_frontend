@@ -43,8 +43,8 @@ const Checkout = () => {
         {/* Checkout Container */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
-          {/* User Details Section */}
-          <div className="user-details-section bg-gray-50 p-6 rounded-lg shadow-md">
+          {/* User Details Section (larger section) */}
+          <div className="user-details-section bg-gray-50 p-6 rounded-lg shadow-md col-span-1 lg:col-span-2">
             <h2 className="text-2xl font-semibold text-gray-700 mb-4">User Details</h2>
 
             {userDetails ? (
@@ -93,11 +93,12 @@ const Checkout = () => {
             )}
           </div>
 
-          {/* Summary Section */}
+          {/* Summary Section (smaller section) */}
           <div className="summary-section bg-gray-50 p-6 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold text-gray-700 mb-4">Summary</h2>
             <div className="space-y-4">
               <p><strong className="font-medium text-gray-600">Purchase Date:</strong> {purchaseDate}</p>
+              <hr className="my-2 border-gray-300" /> {/* Separator line */}
               <p><strong className="font-medium text-gray-600">Total Amount:</strong> ${totalAmount}</p>
             </div>
 
