@@ -1,32 +1,55 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 import Cookies from "js-cookie";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const [userDetails, setUserDetails] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
   const [purchaseDate] = useState(new Date().toLocaleDateString());
-  const location = useLocation();
-
-  // Retrieve totalAmount from the location state
-  const totalAmount = location?.state?.totalAmount;
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Debug: Check if location state is properly passed
-    console.log("Location state:", location);
+    const fetchCartData = async () => {
+      const token = Cookies.get("access_token");
 
-    if (totalAmount === undefined || totalAmount === null) {
-      console.error("Total amount not passed correctly");
-    }
-  }, [location]);
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const response = await api.get("/employers/cart-items/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setCartItems(response.data.cart_items || []);
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCartData();
+  }, [navigate]);
 
   useEffect(() => {
-    // Fetch user details on component mount
     const fetchUserDetails = async () => {
+      const token = Cookies.get("access_token");
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
       try {
         const response = await api.get("employers/employer-details/", {
           headers: {
-            Authorization: `Bearer ${Cookies.get("access_token")}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         setUserDetails(response.data);
@@ -36,7 +59,10 @@ const Checkout = () => {
     };
 
     fetchUserDetails();
-  }, []);
+  }, [navigate]);
+
+  const calculateTotal = () =>
+    cartItems.reduce((total, item) => total + item.artisan.pay, 0);
 
   const handleContinue = () => {
     alert("Proceeding to payment...");
@@ -45,8 +71,14 @@ const Checkout = () => {
 
   const handleCancel = () => {
     alert("Checkout process canceled");
-    // Logic for canceling (e.g., redirecting or resetting state)
+    // Logic for canceling the checkout process (e.g., redirecting or resetting state)
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  const totalAmount = calculateTotal();
 
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-center py-10">
