@@ -172,9 +172,9 @@ const Cart = () => {
               <p className="font-bold text-lg">${calculateTotal()}</p>
             </div>
             <div className="flex justify-end">
-              <button className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110">
+              <Link to={`/checkout-page`} className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110">
                 Checkout
-              </button>
+              </Link>
             </div>
           </div>
         )}
