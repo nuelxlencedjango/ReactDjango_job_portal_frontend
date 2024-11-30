@@ -11,7 +11,7 @@ const Checkout = () => {
     // Fetch user details on component mount
     const fetchUserDetails = async () => {
       try {
-        const response = await api.get("/employer-details/", {
+        const response = await api.get("employers/employer-details/", {
           headers: {
             Authorization: `Bearer ${Cookies.get("access_token")}`,
           },
