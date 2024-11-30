@@ -111,6 +111,7 @@
     background: #EAEAEA;
     color: #676767;
   }
+  
   /* end of login page*/
 
   /*Add member page*/
@@ -283,6 +284,71 @@ select {
   border-radius: 4px;
   cursor: pointer;
 }
+
+/*checkout page*/
+.checkout-page {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.checkout-container {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.user-details-section,
+.summary-section {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fff;
+}
+
+.user-details-section h2,
+.summary-section h2 {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.user-details p,
+.summary-section p {
+  margin: 10px 0;
+  font-size: 1rem;
+}
+
+.continue-button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.continue-button:hover {
+  background-color: #0056b3;
+}
+/*end checkout page*/
+
+
+
 @media (max-width:450px) {
   .artisan-form{
     padding: 0px !important;

@@ -1,84 +1,66 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import api from "./api"; // Import the API instance
+import Cookies from "js-cookie";
 
-function CheckoutPage() {
-  const [formData, setFormData] = useState({
-    full_name: '',
-    email: '',
-    phone: '',
-    shipping_address: '',
-    billing_address: '',
-  });
+const Checkout = () => {
+  const [userDetails, setUserDetails] = useState(null);
+  const [totalAmount, setTotalAmount] = useState(100); // Example total amount
+  const [purchaseDate] = useState(new Date().toLocaleDateString());
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleCheckout = async () => {
-    const token = localStorage.getItem('authToken'); // Replace with your authentication token retrieval method
-    try {
-      const response = await axios.post(
-        'http://127.0.0.1:8000/api/checkout/',
-        formData,
-        {
+  useEffect(() => {
+    // Fetch user details on component mount
+    const fetchUserDetails = async () => {
+      try {
+        const response = await api.get("/employer-details/", {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${Cookies.get("access_token")}`,
           },
-        }
-      );
-      console.log('Checkout successful:', response.data);
-      // Redirect to payment page or show success message
-    } catch (error) {
-      console.error('Error during checkout:', error.response.data);
-    }
+        });
+        setUserDetails(response.data);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  const handleContinue = () => {
+    alert("Proceeding to payment...");
+    // Redirect to payment page logic here
   };
 
   return (
-    <div>
-      <h1>Checkout</h1>
-      <form>
-        <input
-          type="text"
-          name="full_name"
-          placeholder="Full Name"
-          value={formData.full_name}
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone Number"
-          value={formData.phone}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="shipping_address"
-          placeholder="Shipping Address"
-          value={formData.shipping_address}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="billing_address"
-          placeholder="Billing Address (Optional)"
-          value={formData.billing_address}
-          onChange={handleChange}
-        />
-        <button type="button" onClick={handleCheckout}>
-          Proceed to Payment
-        </button>
-      </form>
+    <div className="checkout-page">
+      <h1 className="page-title">Checkout</h1>
+      <div className="checkout-container">
+        {/* User Details Section */}
+        <div className="user-details-section">
+          <h2>User Details</h2>
+          {userDetails ? (
+            <div className="user-details">
+              <p><strong>Name:</strong> {userDetails.full_name}</p>
+              <p><strong>Email:</strong> {userDetails.email}</p>
+              <p><strong>Phone:</strong> {userDetails.phone}</p>
+              <p><strong>Address:</strong> {userDetails.address}</p>
+            </div>
+          ) : (
+            <p>Loading user details...</p>
+          )}
+        </div>
+
+        {/* Summary Section */}
+        <div className="summary-section">
+          <h2>Summary</h2>
+          <p><strong>Purchase Date:</strong> {purchaseDate}</p>
+          <p><strong>Total Amount:</strong> ${totalAmount}</p>
+          <button className="continue-button" onClick={handleContinue}>
+            Continue
+          </button>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
-export default CheckoutPage;
+export default Checkout;
