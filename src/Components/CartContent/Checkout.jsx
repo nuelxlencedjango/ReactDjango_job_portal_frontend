@@ -145,17 +145,18 @@ const Checkout = () => {
 
             <div className="flex space-x-4 mt-6">
               {/* Reduced button width to w-1/3 */}
-              <button
-                className="w-2/3 py-2 text-sm bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none transition-all duration-300"
-                onClick={handleContinue}
-              >
-                Continue
-              </button>
+             
               <button
                 className="w-2/3 py-2 text-sm bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 focus:outline-none transition-all duration-300"
                 onClick={handleCancel}
               >
                 Cancel
+              </button>
+              <button
+                className="w-2/3 py-2 text-sm bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none transition-all duration-300"
+                onClick={handleContinue}
+              >
+                Continue
               </button>
             </div>
           </div>
