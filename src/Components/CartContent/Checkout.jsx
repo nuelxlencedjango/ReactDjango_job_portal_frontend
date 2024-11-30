@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 const Checkout = () => {
   const [userDetails, setUserDetails] = useState(null);
-  const [totalAmount, setTotalAmount] = useState(100); // Example total amount
+  const [totalAmount, setTotalAmount] = useState(100); // Example total amount, can be dynamic
   const [purchaseDate] = useState(new Date().toLocaleDateString());
 
   useEffect(() => {
@@ -28,6 +28,11 @@ const Checkout = () => {
   const handleContinue = () => {
     alert("Proceeding to payment...");
     // Redirect to payment page logic here
+  };
+
+  const handleCancel = () => {
+    alert("Checkout process canceled");
+    // Logic for canceling (e.g., redirecting or resetting state)
   };
 
   return (
@@ -60,12 +65,22 @@ const Checkout = () => {
               <p><strong className="font-medium text-gray-600">Purchase Date:</strong> {purchaseDate}</p>
               <p><strong className="font-medium text-gray-600">Total Amount:</strong> ${totalAmount}</p>
             </div>
-            <button
-              className="mt-6 w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none transition-all duration-300"
-              onClick={handleContinue}
-            >
-              Continue
-            </button>
+            
+            {/* Buttons */}
+            <div className="mt-6 space-x-4">
+              <button
+                className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none transition-all duration-300"
+                onClick={handleContinue}
+              >
+                Continue
+              </button>
+              <button
+                className="w-full py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 focus:outline-none transition-all duration-300"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
 
         </div>
