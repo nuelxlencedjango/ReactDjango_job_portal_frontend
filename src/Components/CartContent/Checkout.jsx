@@ -65,13 +65,14 @@ const Checkout = () => {
     cartItems.reduce((total, item) => total + item.artisan.pay, 0);
 
   const handleContinue = () => {
+    // Proceeding to payment
     alert("Proceeding to payment...");
-    // Redirect to payment page logic here
+    navigate('/payment'); // Navigate to the Payment page
   };
 
   const handleCancel = () => {
     alert("Checkout process canceled");
-    // Logic for canceling the checkout process (e.g., redirecting or resetting state)
+    navigate('/cart'); // Navigate back to the cart page
   };
 
   if (loading) {
@@ -86,6 +87,7 @@ const Checkout = () => {
         <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* User Details Section */}
           <div className="user-details-section bg-gray-50 p-6 rounded-lg shadow-md col-span-1 lg:col-span-2">
             <h2 className="text-2xl font-semibold text-gray-700 mb-4">User Details</h2>
 
@@ -135,6 +137,7 @@ const Checkout = () => {
             )}
           </div>
 
+          {/* Summary Section */}
           <div className="summary-section bg-gray-50 p-6 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold text-gray-700 mb-4">Summary</h2>
             <div className="space-y-4">
@@ -144,16 +147,16 @@ const Checkout = () => {
             </div>
 
             <div className="flex space-x-4 mt-6">
-              {/* Reduced button width to w-1/3 */}
-             
+              {/* Cancel Button */}
               <button
                 className="w-2/3 py-2 text-sm bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 focus:outline-none transition-all duration-300"
                 onClick={handleCancel}
               >
                 Cancel
               </button>
+              {/* Continue Button */}
               <button
-                className="w-2/3 py-2 text-sm bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none transition-all duration-300"
+                className="w-2/3 py-2 text-sm bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none transition-all duration-300"
                 onClick={handleContinue}
               >
                 Continue
