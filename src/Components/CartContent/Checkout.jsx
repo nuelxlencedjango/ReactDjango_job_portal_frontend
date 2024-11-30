@@ -7,7 +7,18 @@ const Checkout = () => {
   const [userDetails, setUserDetails] = useState(null);
   const [purchaseDate] = useState(new Date().toLocaleDateString());
   const location = useLocation();
-  const totalAmount = location.state?.totalAmount || 0;  // Retrieve total amount from state
+
+  // Retrieve totalAmount from the location state
+  const totalAmount = location?.state?.totalAmount;
+
+  useEffect(() => {
+    // Debug: Check if location state is properly passed
+    console.log("Location state:", location);
+
+    if (totalAmount === undefined || totalAmount === null) {
+      console.error("Total amount not passed correctly");
+    }
+  }, [location]);
 
   useEffect(() => {
     // Fetch user details on component mount

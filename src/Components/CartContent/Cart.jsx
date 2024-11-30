@@ -163,7 +163,7 @@ const Cart = () => {
               <Link
                 to={{
                   pathname: "/checkout-page",
-                  state: { totalAmount: calculateTotal() },  // Pass the total amount to Checkout
+                  state: { totalAmount: calculateTotal() },  
                 }}
                 className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110"
               >
