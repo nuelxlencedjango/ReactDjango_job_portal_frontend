@@ -145,13 +145,13 @@ const Checkout = () => {
 
             <div className="flex space-x-4 mt-6">
               <button
-                className="w-1/2 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none transition-all duration-300"
+                className="w-1/2 py-2 text-sm bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none transition-all duration-300"
                 onClick={handleContinue}
               >
                 Continue
               </button>
               <button
-                className="w-1/2 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 focus:outline-none transition-all duration-300"
+                className="w-1/2 py-2 text-sm bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 focus:outline-none transition-all duration-300"
                 onClick={handleCancel}
               >
                 Cancel
