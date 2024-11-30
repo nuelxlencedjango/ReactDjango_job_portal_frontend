@@ -26,9 +26,15 @@ const Checkout = () => {
           },
         });
 
-        setCartItems(response.data.cart_items || []);
+        if (response.data.cart_items && response.data.cart_items.length === 0) {
+          alert("Your cart is empty. Redirecting to the cart page...");
+          navigate("/cart");
+        } else {
+          setCartItems(response.data.cart_items || []);
+        }
       } catch (error) {
         console.error("Error fetching cart data:", error);
+        alert("There was an issue fetching cart data. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -47,7 +53,7 @@ const Checkout = () => {
       }
 
       try {
-        const response = await api.get("employers/employer-details/", {
+        const response = await api.get("/employers/employer-details/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -55,6 +61,7 @@ const Checkout = () => {
         setUserDetails(response.data);
       } catch (error) {
         console.error("Error fetching user details:", error);
+        alert("There was an issue fetching your details. Please try again.");
       }
     };
 
@@ -64,15 +71,44 @@ const Checkout = () => {
   const calculateTotal = () =>
     cartItems.reduce((total, item) => total + item.artisan.pay, 0);
 
-  const handleContinue = () => {
-    // Proceeding to payment
-    alert("Proceeding to payment...");
-    navigate('/payment'); // Navigate to the Payment page
+  const handleContinue = async () => {
+    const token = Cookies.get("access_token");
+    if (!token) {
+      alert("You need to be logged in to continue.");
+      navigate("/login");
+      return;
+    }
+
+    const checkoutData = {
+      user_id: userDetails?.id, // Assuming you have an ID in `userDetails`
+      cart_items: cartItems.map((item) => ({
+        artisan_id: item.artisan.id,
+        pay: item.artisan.pay,
+      })),
+      total_amount: calculateTotal(),
+      purchase_date: purchaseDate,
+    };
+
+    try {
+      const response = await api.post("/api/checkout/", checkoutData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 201) {
+        const { order_id } = response.data;
+        navigate("/payment-page", { state: { totalAmount: calculateTotal(), order_id } });
+      }
+    } catch (error) {
+      console.error("Error submitting checkout data:", error);
+      alert("There was an issue with your checkout. Please try again.");
+    }
   };
 
   const handleCancel = () => {
     alert("Checkout process canceled");
-    navigate('/cart'); // Navigate back to the cart page
+    navigate("/cart");
   };
 
   if (loading) {
@@ -98,7 +134,7 @@ const Checkout = () => {
                     <label className="block text-gray-600 font-medium mb-1">Full Name</label>
                     <input
                       type="text"
-                      value={userDetails.full_name}
+                      value={userDetails.full_name || ""}
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       disabled
                     />
@@ -107,7 +143,7 @@ const Checkout = () => {
                     <label className="block text-gray-600 font-medium mb-1">Email</label>
                     <input
                       type="email"
-                      value={userDetails.email}
+                      value={userDetails.email || ""}
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       disabled
                     />
@@ -116,7 +152,7 @@ const Checkout = () => {
                     <label className="block text-gray-600 font-medium mb-1">Phone</label>
                     <input
                       type="text"
-                      value={userDetails.phone}
+                      value={userDetails.phone || ""}
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       disabled
                     />
@@ -125,7 +161,7 @@ const Checkout = () => {
                     <label className="block text-gray-600 font-medium mb-1">Address</label>
                     <input
                       type="text"
-                      value={userDetails.address}
+                      value={userDetails.address || ""}
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       disabled
                     />
@@ -147,14 +183,12 @@ const Checkout = () => {
             </div>
 
             <div className="flex space-x-4 mt-6">
-              {/* Cancel Button */}
               <button
                 className="w-2/3 py-2 text-sm bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 focus:outline-none transition-all duration-300"
                 onClick={handleCancel}
               >
                 Cancel
               </button>
-              {/* Continue Button */}
               <button
                 className="w-2/3 py-2 text-sm bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none transition-all duration-300"
                 onClick={handleContinue}
