@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "./api"; // Import the API instance
+import api from "../../api";
 import Cookies from "js-cookie";
 
 const Checkout = () => {
