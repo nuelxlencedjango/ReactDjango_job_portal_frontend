@@ -1,10 +1,8 @@
-
-
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaCreditCard, FaShoppingCart } from 'react-icons/fa';
+import { FaCreditCard } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
+import api from '../../api';  // Import the api.js instance
 
 const Checkout = () => {
   const [userDetails, setUserDetails] = useState(null);
@@ -13,16 +11,20 @@ const Checkout = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
-    // Fetch user details and cart items from the API
+    // Fetch user details and cart items from the API using the api.js instance
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('access_token');
         if (!token) return navigate('/login');
-        
-        const userResponse = await axios.get('/api/user/details', { headers: { Authorization: `Bearer ${token}` } });
+
+        const userResponse = await api.get('/api/user/details', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setUserDetails(userResponse.data);
-        
-        const cartResponse = await axios.get('/api/cart/items', { headers: { Authorization: `Bearer ${token}` } });
+
+        const cartResponse = await api.get('/api/cart/items', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setCartItems(cartResponse.data.items);
         setTotalAmount(cartResponse.data.totalAmount);
       } catch (error) {
@@ -51,7 +53,10 @@ const Checkout = () => {
         payment_method: data.payment_method
       };
 
-      const response = await axios.post('/api/checkout', checkoutData, { headers: { Authorization: `Bearer ${token}` } });
+      const response = await api.post('/api/checkout', checkoutData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       if (response.status === 201) {
         navigate(`/payment/${response.data.order_id}`);
       }

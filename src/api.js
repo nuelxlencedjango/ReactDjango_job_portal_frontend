@@ -1,141 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaCreditCard } from 'react-icons/fa';
-import { useForm } from 'react-hook-form';
-import api from '../../api';  // Import the api.js instance
+import axios from 'axios';
+import Cookies from 'js-cookie'; 
 
-const Checkout = () => {
-  const [userDetails, setUserDetails] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
-  const [totalAmount, setTotalAmount] = useState(0);
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    // Fetch user details and cart items from the API using the api.js instance
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('access_token');
-        if (!token) return navigate('/login');
+// Axios instance for API requests
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,  // Backend URL
+  withCredentials: true,  // Ensure cookies are included in requests
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-        const userResponse = await api.get('/api/user/details', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUserDetails(userResponse.data);
+// Function to refresh access token
+const refreshAccessToken = async () => {
+  const refreshToken = Cookies.get('refresh_token');  // Get refresh token from cookies
+  if (!refreshToken) {
+    throw new Error('No refresh token available');
+  }
 
-        const cartResponse = await api.get('/api/cart/items', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setCartItems(cartResponse.data.items);
-        setTotalAmount(cartResponse.data.totalAmount);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
-  }, [navigate]);
-
-  const { register, handleSubmit } = useForm();
-
-  const onSubmit = async (data) => {
-    try {
-      const token = localStorage.getItem('access_token');
-      if (!token) return navigate('/login');
-      
-      const checkoutData = {
-        user_id: userDetails.id,
-        items: cartItems.map(item => ({
-          product_id: item.product_id,
-          quantity: item.quantity,
-          price: item.price
-        })),
-        total_amount: totalAmount,
-        shipping_address: data.shipping_address,
-        payment_method: data.payment_method
-      };
-
-      const response = await api.post('/api/checkout', checkoutData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.status === 201) {
-        navigate(`/payment/${response.data.order_id}`);
-      }
-    } catch (error) {
-      console.error('Error during checkout:', error);
-    }
-  };
-
-  return (
-    <div className="bg-gray-100 min-h-screen p-8">
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6">Checkout</h2>
-
-        {/* User Info */}
-        {userDetails && (
-          <div className="space-y-4">
-            <p><strong>Name:</strong> {userDetails.full_name}</p>
-            <p><strong>Email:</strong> {userDetails.email}</p>
-            <p><strong>Phone:</strong> {userDetails.phone}</p>
-            <p><strong>Address:</strong> {userDetails.address}</p>
-          </div>
-        )}
-
-        {/* Cart Items */}
-        <div className="mt-8 space-y-4">
-          <h3 className="text-2xl font-medium text-gray-700">Cart Items</h3>
-          <ul className="space-y-2">
-            {cartItems.map(item => (
-              <li key={item.product_id} className="flex justify-between items-center">
-                <span>{item.name} (x{item.quantity})</span>
-                <span>${item.price * item.quantity}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Total */}
-        <div className="mt-6 flex justify-between items-center text-lg font-semibold">
-          <span>Total Amount</span>
-          <span>${totalAmount}</span>
-        </div>
-
-        {/* Shipping Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
-          <div>
-            <label className="block text-gray-700 mb-2" htmlFor="shipping_address">Shipping Address</label>
-            <input
-              {...register('shipping_address', { required: true })}
-              type="text"
-              id="shipping_address"
-              placeholder="Enter your shipping address"
-              className="w-full p-3 border border-gray-300 rounded-md"
-            />
-          </div>
-
-          <div className="mt-4">
-            <label className="block text-gray-700 mb-2" htmlFor="payment_method">Payment Method</label>
-            <select
-              {...register('payment_method', { required: true })}
-              id="payment_method"
-              className="w-full p-3 border border-gray-300 rounded-md"
-            >
-              <option value="credit_card">Credit Card</option>
-              <option value="paypal">PayPal</option>
-              <option value="bank_transfer">Bank Transfer</option>
-            </select>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full mt-6 py-3 bg-blue-600 text-white font-semibold rounded-md flex items-center justify-center gap-2 hover:bg-blue-700 transition duration-300"
-          >
-            <FaCreditCard />
-            Proceed to Payment
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+  try {
+    const response = await api.post('/api/token/refresh/', { refresh: refreshToken });
+    Cookies.set('access_token', response.data.access, {
+      secure: true,
+      httpOnly: true,
+      sameSite: 'None',  // Ensure cookies are sent with cross-origin requests
+    });
+    return response.data.access;
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    window.location.href = '/login';  // Redirect to login if refresh fails
+  }
 };
 
-export default Checkout;
+// Axios response interceptor for handling token expiration
+api.interceptors.response.use(
+  (response) => response, // Return the response if successful
+  async (error) => {
+    if (error.response && error.response.status === 401) {
+      try {
+        const newAccessToken = await refreshAccessToken();
+        if (newAccessToken) {
+          error.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          return axios(error.config);  // Retry the original request with new token
+        }
+      } catch (e) {
+        console.error('Failed to refresh token', e);
+        window.location.href = '/login';  // Redirect to login if token refresh fails
+      }
+    }
+    return Promise.reject(error);  // If not a token issue, reject the error
+  }
+);
+
+export default api;
