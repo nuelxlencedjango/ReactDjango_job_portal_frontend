@@ -3,18 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { FaCreditCard } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 import api from '../../api';  // Import the api.js instance
+import Cookies from 'js-cookie';  // Import the cookies library
 
-const Checkout = () => {
+const Payment = () => {
   const [userDetails, setUserDetails] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     // Fetch user details and cart items from the API using the api.js instance
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('access_token');
+        // Fetch token directly from Cookies
+        const token = Cookies.get('access_token');
         if (!token) return navigate('/login');
 
         const userResponse = await api.get('/api/user/details', {
@@ -38,7 +40,8 @@ const Checkout = () => {
 
   const onSubmit = async (data) => {
     try {
-      const token = localStorage.getItem('access_token');
+      // Fetch token directly from Cookies
+      const token = Cookies.get('access_token');
       if (!token) return navigate('/login');
       
       const checkoutData = {
