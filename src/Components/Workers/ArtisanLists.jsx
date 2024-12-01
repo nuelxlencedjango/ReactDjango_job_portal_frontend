@@ -163,7 +163,7 @@ const Artisans = () => {
               {/* Experience and Pay on the same row if they fit */}
               <div className="flex justify-between w-full mb-2">
                 <p className="text-gray-600">Experience: {artisan.experience} years</p>
-                <p className="text-gray-600">Pay: ${artisan.pay}</p>
+                <p className="text-red-600">Pay: ${artisan.pay}</p>
               </div>
 
               {/* Add to cart button */}
