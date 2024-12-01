@@ -39,8 +39,7 @@ const App = () => {
           <Route path="/artisans/artisans-by-service/:service_title" element={<ArtisanList />} />
           <Route path="/cart" element={<Cart />} />
 
-          {/*<Route path='/checkout-page' element={<Checkout />} />
-          <Route path='/payment-method' element={<Payment />} /> */}
+        
 
           <Route path='/pay-money' element={<CheckPayment />}/>
 
