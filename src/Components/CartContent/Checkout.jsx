@@ -108,7 +108,7 @@ const Checkout = () => {
 
   const handleCancel = () => {
     alert("Checkout process canceled");
-    navigate("/cart1");
+    navigate("/cart");
   };
 
   if (loading) {
