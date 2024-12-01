@@ -13,7 +13,7 @@ import Footer from './Components/FooterDiv/Footer';
 import OrderForm from './Components/OrdersRequest/OderForm';
 import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
-import Payment from './Components/CartContent/payments';
+import Payment from "./Components/CartContent/Pay";
 
 
 import AOS from 'aos';
