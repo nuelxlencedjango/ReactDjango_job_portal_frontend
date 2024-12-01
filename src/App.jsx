@@ -20,6 +20,8 @@ import 'aos/dist/aos.css';
 import './index.css';
 
 
+
+
 const App = () => {
   useEffect(() => {
     AOS.init({ duration: 1000 });
