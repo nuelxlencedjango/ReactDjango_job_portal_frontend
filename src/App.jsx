@@ -13,7 +13,8 @@ import Footer from './Components/FooterDiv/Footer';
 import OrderForm from './Components/OrdersRequest/OderForm';
 import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
-import Checkout from './Components/CartContent/Checkout1';
+//import Checkout from './Components/CartContent/Checkout1';
+import Payment from './Components/CartContent/Payment';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -36,7 +37,8 @@ const App = () => {
           <Route path="/artisans/artisans-by-service/:service_title" element={<ArtisanList />} />
           <Route path="/cart" element={<Cart />} />
 
-          <Route path='/checkout-page' element={<Checkout />} />
+          {/*<Route path='/checkout-page' element={<Checkout />} />*/}
+          <Route path='/payment' element={<Payment />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUP />} />
