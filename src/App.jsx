@@ -13,8 +13,9 @@ import Footer from './Components/FooterDiv/Footer';
 import OrderForm from './Components/OrdersRequest/OderForm';
 import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
-//import Checkout from './Components/CartContent/Checkout1';
 import Payment from './Components/NavBar/Payments';
+//import Checkout from './Components/CartContent/Checkout1';
+
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
