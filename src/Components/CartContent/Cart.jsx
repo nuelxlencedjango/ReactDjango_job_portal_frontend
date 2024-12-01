@@ -161,7 +161,7 @@ const Cart = () => {
             </div>
             <div className="flex justify-end">
               <Link
-                to={{
+                to={{     
                   pathname: "/pay",
                   state: { totalAmount: calculateTotal() },  
                 }}
