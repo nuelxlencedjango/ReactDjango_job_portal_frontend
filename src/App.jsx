@@ -14,7 +14,6 @@ import OrderForm from './Components/OrdersRequest/OderForm';
 import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
 import Payment from './Components/CartContent/payments';
-//import Checkout from './Components/CartContent/Checkout1';
 
 
 import AOS from 'aos';
