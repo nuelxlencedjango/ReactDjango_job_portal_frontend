@@ -14,7 +14,7 @@ import OrderForm from './Components/OrdersRequest/OderForm';
 import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
 //import Payment from "./Components/CartContent/Pay";
-import CheckPayment from './Components/CartContent/CheckPayment'
+import Payment from './Components/CartContent/Payment';
 
 
 
@@ -39,9 +39,8 @@ const App = () => {
           <Route path="/artisans/artisans-by-service/:service_title" element={<ArtisanList />} />
           <Route path="/cart" element={<Cart />} />
 
-        
-
-          <Route path='/pay-money' element={<CheckPayment />}/>
+          <Route path='/payment' element={<Payment />}/>
+          
 
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUP />} />
