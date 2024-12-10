@@ -1,7 +1,7 @@
 // src/pages/RegistrationPage.jsx
 import React from "react";
 import { useParams } from "react-router-dom";
-import RegistrationForm from "../components/RegistrationForm";
+import RegistrationForm from "./RegistrationForm";
 
 const RegistrationPage = () => {
   const { userType } = useParams(); // Get userType from URL params

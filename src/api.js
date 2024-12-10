@@ -1,5 +1,5 @@
 // api.js
-import axios from 'axios';
+/*import axios from 'axios';
 import Cookies from 'js-cookie'; 
 
 // Axios instance for API requests
@@ -52,4 +52,32 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export default api;*/
+
+
+
+
+
+
+
+
+
+// src/api.js
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: "http://localhost:8000/api/users/", // Backend base URL (make sure this is correct)
+  headers: {
+    "Content-Type": "multipart/form-data", // Ensure we can handle file uploads
+  }
+});
+
+// Register API call
+export const registerUser = async (userType, formData) => {
+  try {
+    const response = await api.post(`register/${userType}/`, formData);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error.message;
+  }
+};

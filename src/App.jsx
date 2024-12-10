@@ -50,8 +50,12 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
           <Route path="/order-service" element={<ProtectedRoute>
 
-          <Route path="/register/:userType" element={<RegistrationPage />} />
-        <Route path="/success" element={<h1>Registration Successful!</h1>} /> 
+         {/* <Route path="/register/:userType" element={<RegistrationPage />} />
+        <Route path="/success" element={<h1>Registration Successful!</h1>} /> */}
+
+        <Route path="/register/artisan" element={<RegistrationForm userType="artisan" />} />
+        <Route path="/register/employer" element={<RegistrationForm userType="employer" />} />
+        <Route path="/register/manager" element={<RegistrationForm userType="manager" />} />
 
             <OrderForm />
             </ProtectedRoute>}/>
@@ -64,4 +68,6 @@ const App = () => {
 };
 
 export default App;
+
+
 

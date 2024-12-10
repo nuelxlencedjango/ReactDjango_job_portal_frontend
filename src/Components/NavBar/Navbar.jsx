@@ -29,7 +29,9 @@ const Navbar = () => {
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/'}>Blog</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/login'}>Login</Link></li>  
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/signup'}>Register</Link></li>
-                        <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/register'}>Regista</Link></li>
+                        <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={`/register/artisan`}>Regista</Link> </li>
+
+                        
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/dashboard'}>Dashboard</Link></li>
                     </div>
                     <div className="md:hidden flex items-center">
@@ -48,6 +50,8 @@ const Navbar = () => {
                             <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/'}>Blog</Link></li>
                             <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/login'}>Login</Link></li> 
                             <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/signup'}>Register</Link></li>
+                            <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={`/register/user`}>Regista</Link> </li>
+
                             <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/dashboard'}>Dashboard</Link></li>
                         </ul>
                     </div>
@@ -58,3 +62,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
