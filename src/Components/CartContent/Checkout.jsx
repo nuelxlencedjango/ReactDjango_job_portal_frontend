@@ -3,7 +3,7 @@ import api from "../../api";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
-const Checkout = () => {
+const Checkout = () => { 
   const [userDetails, setUserDetails] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [purchaseDate] = useState(new Date().toLocaleDateString());
@@ -79,7 +79,7 @@ const Checkout = () => {
       return;
     }
 
-    const checkoutData = {
+    const checkoutData = {  
       user_id: userDetails?.id, // Assuming you have an ID in `userDetails`
       cart_items: cartItems.map((item) => ({
         artisan_id: item.artisan.id,
@@ -90,7 +90,7 @@ const Checkout = () => {
     };
 
     try {
-      const response = await api.post("/api/checkout/", checkoutData, {
+      const response = await api.post("/api/checkout/", checkoutData, { 
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -101,13 +101,13 @@ const Checkout = () => {
         navigate("/payment-page", { state: { totalAmount: calculateTotal(), order_id } });
       }
     } catch (error) {
-      console.error("Error submitting checkout data:", error);
-      alert("There was an issue with your checkout. Please try again.");
+      console.error("Error submitting checkout data:", error); 
+      alert("There was an issue with your checkout. Please try again."); 
     }
   };
 
   const handleCancel = () => {
-    alert("Checkout process canceled");
+    alert("Checkout process canceled"); 
     navigate("/cart");
   };
 
@@ -120,7 +120,7 @@ const Checkout = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-center py-10">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Checkout</h1>
+        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Checkout</h1> 
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* User Details Section */}
@@ -203,4 +203,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default Checkout; 

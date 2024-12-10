@@ -48,6 +48,10 @@ const App = () => {
           <Route path="/available-jobs" element={<AvailableJobs />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/order-service" element={<ProtectedRoute>
+
+          <Route path="/register/:userType" element={<RegistrationPage />} />
+        <Route path="/success" element={<h1>Registration Successful!</h1>} /> 
+
             <OrderForm />
             </ProtectedRoute>}/>
 
@@ -59,6 +63,4 @@ const App = () => {
 };
 
 export default App;
-
-
 
