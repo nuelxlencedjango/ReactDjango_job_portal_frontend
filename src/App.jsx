@@ -15,7 +15,7 @@ import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
 //import Payment from "./Components/CartContent/Pay";
 import Payment from './Components/CartContent/Payment';
-import RegistrationForm from './Components/UserPage/RegistrationPage'
+
 
 
 

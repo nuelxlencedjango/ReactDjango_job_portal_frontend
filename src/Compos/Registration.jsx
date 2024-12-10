@@ -176,14 +176,14 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [email, setEmail] = useState("");
     const [experience, setExperience] = useState("");
-    const [jobType, setJobType] = useState("");
-    const [industry, setIndustry] = useState("");
     const [pay, setPay] = useState("");
     const [profileImage, setProfileImage] = useState(null);
     const [fingerprintImage, setFingerprintImage] = useState(null);
     const [nin, setNin] = useState("");
     const [companyName, setCompanyName] = useState("");
     const [companyAddress, setCompanyAddress] = useState("");
+    const [location, setLocation] = useState("");  // Location state
+    const [service, setService] = useState("");  // Service state
     const [loading, setLoading] = useState(false);
 
     // Toggle between Artisan and Employer form
@@ -211,11 +211,11 @@ const Register = () => {
             formData.append('email', email);
             formData.append('password', password);
             formData.append('confirm_password', confirmPassword);
+            formData.append('location', location);  // Add location to formData
+            formData.append('service', service);    // Add service to formData
 
             if (isArtisan) {
                 formData.append('experience', experience);
-                formData.append('job_type', jobType);
-                formData.append('industry', industry);
                 formData.append('pay', pay);
                 formData.append('profile_image', profileImage);
                 formData.append('fingerprint_image', fingerprintImage);
@@ -311,6 +311,36 @@ const Register = () => {
                         />
                     </div>
 
+                    {/* Location Select */}
+                    <div className="relative">
+                        <select
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            className="form-input block w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            required
+                        >
+                            <option value="">Select Location</option>
+                            <option value="location1">Location 1</option>
+                            <option value="location2">Location 2</option>
+                            <option value="location3">Location 3</option>
+                        </select>
+                    </div>
+
+                    {/* Service Select */}
+                    <div className="relative">
+                        <select
+                            value={service}
+                            onChange={(e) => setService(e.target.value)}
+                            className="form-input block w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            required
+                        >
+                            <option value="">Select Service</option>
+                            <option value="service1">Service 1</option>
+                            <option value="service2">Service 2</option>
+                            <option value="service3">Service 3</option>
+                        </select>
+                    </div>
+
                     {/* Conditional Fields for Artisan */}
                     {isArtisan ? (
                         <>
@@ -321,26 +351,6 @@ const Register = () => {
                                     value={experience}
                                     onChange={(e) => setExperience(e.target.value)}
                                     placeholder="Experience (years)"
-                                    required
-                                />
-                            </div>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    className="form-input block w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    value={jobType}
-                                    onChange={(e) => setJobType(e.target.value)}
-                                    placeholder="Job Type"
-                                    required
-                                />
-                            </div>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    className="form-input block w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    value={industry}
-                                    onChange={(e) => setIndustry(e.target.value)}
-                                    placeholder="Industry"
                                     required
                                 />
                             </div>
