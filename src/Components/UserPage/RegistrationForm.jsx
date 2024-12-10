@@ -241,7 +241,7 @@ export default RegistrationForm;*/}
 
 // src/components/RegistrationForm.jsx
 import React, { useState } from "react";
-import { registerUser } from "../api";
+import { registerUser } from "../../api";
 import { useNavigate } from "react-router-dom";
 
 const RegistrationForm = ({ userType }) => {

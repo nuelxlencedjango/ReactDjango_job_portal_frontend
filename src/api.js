@@ -1,11 +1,11 @@
 // api.js
-/*import axios from 'axios';
+import axios from 'axios';
 import Cookies from 'js-cookie'; 
 
 // Axios instance for API requests
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,  // Backend URL
-  withCredentials: true,  // Ensure cookies are included in requests
+  withCredentials: true,  // includes in requests
   headers: {
     'Content-Type': 'application/json',
   },
@@ -23,12 +23,12 @@ const refreshAccessToken = async () => {
     Cookies.set('access_token', response.data.access, {
       secure: true,
       httpOnly: true,
-      sameSite: 'None',  // Ensure cookies are sent with cross-origin requests
+      sameSite: 'None',  // ensures cookies are sent with cross-origin requests
     });
     return response.data.access;
   } catch (error) {
     console.error('Error refreshing token:', error);
-    window.location.href = '/login';  // Redirect to login if refresh fails
+    window.location.href = '/login';  // Redirects to login if refresh fails
   }
 };
 
@@ -52,32 +52,6 @@ api.interceptors.response.use(
   }
 );
 
-export default api;*/
+export default api;
 
 
-
-
-
-
-
-
-
-// src/api.js
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: "http://localhost:8000/api/users/", // Backend base URL (make sure this is correct)
-  headers: {
-    "Content-Type": "multipart/form-data", // Ensure we can handle file uploads
-  }
-});
-
-// Register API call
-export const registerUser = async (userType, formData) => {
-  try {
-    const response = await api.post(`register/${userType}/`, formData);
-    return response.data;
-  } catch (error) {
-    throw error.response ? error.response.data : error.message;
-  }
-};

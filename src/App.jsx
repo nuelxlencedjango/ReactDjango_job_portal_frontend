@@ -15,7 +15,7 @@ import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
 //import Payment from "./Components/CartContent/Pay";
 import Payment from './Components/CartContent/Payment';
-import RegistrationPage from './Components/UserPage/RegistrationPage'
+import RegistrationForm from './Components/UserPage/RegistrationPage'
 
 
 
@@ -52,10 +52,6 @@ const App = () => {
 
          {/* <Route path="/register/:userType" element={<RegistrationPage />} />
         <Route path="/success" element={<h1>Registration Successful!</h1>} /> */}
-
-        <Route path="/register/artisan" element={<RegistrationForm userType="artisan" />} />
-        <Route path="/register/employer" element={<RegistrationForm userType="employer" />} />
-        <Route path="/register/manager" element={<RegistrationForm userType="manager" />} />
 
             <OrderForm />
             </ProtectedRoute>}/>
