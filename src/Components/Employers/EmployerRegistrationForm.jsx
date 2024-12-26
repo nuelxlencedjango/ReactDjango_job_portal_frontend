@@ -16,6 +16,7 @@ const EmployerRegistrationForm = () => {
         password: '',
         confirmPassword: '',
         phone_number: '',
+        //user_type: 'employer',
     });
 
     const navigate = useNavigate();
@@ -210,3 +211,8 @@ const EmployerRegistrationForm = () => {
 };
 
 export default EmployerRegistrationForm;
+
+
+
+
+

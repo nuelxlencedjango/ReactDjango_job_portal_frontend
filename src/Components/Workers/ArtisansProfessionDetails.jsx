@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUser, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import { RiBriefcase4Fill } from 'react-icons/ri';
+import { FaNairaSign } from "react-icons/fa6";
 import { useNavigate, useParams } from 'react-router-dom';
 
 const ArtisanDetailsForm = () => {
@@ -11,17 +12,27 @@ const ArtisanDetailsForm = () => {
         location: '',
         experience: '',
         address: '',
-        phone: '',
+        phone_number: '',
         service: '',
-        profile_img: null,
+        pay: '',
+        //user_type: 'artisan',   
+        profile_image: null,
+       
     });
+
+
 
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const [locations, setLocations] = useState([]);
     const [services, setServices] = useState([]);
 
-    const { userId, username } = useParams();
+    const { username } = useParams();
+
+    //const storedUserId = localStorage.getItem('user_id');
+    console.log("" + "username:", username)
+    //const [userIdd, setUserId] = useState(null);
+
     const navigate = useNavigate();
 
     const handleInputChange = (e) => {
@@ -32,37 +43,53 @@ const ArtisanDetailsForm = () => {
         }));
     };
 
+    
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setFormData(prevData => ({
             ...prevData,
-            profile_img: file
+            profile_image: file,
+           
         }));
     };
 
     const fetchLocations = async () => {
         try {
-            const response = await axios.get('https://i-wanwok-backend.up.railway.app/artisans/location-list/'); 
+            const response = await axios.get('https://i-wanwok-backend.up.railway.app/api/location-list/'); 
             setLocations(response.data);
-            console.log(response)
+            console.log("locations :",response.data)
+            console.log(response.data.location)
         } catch (error) {
             console.error('Error fetching locations:', error);
         }
     };
 
-    
+
+
+
     const fetchServices = async () => {
         try {
-            const response = await axios.get('https://i-wanwok-backend.up.railway.app/artisans/profession-list/'); 
+            const response = await axios.get('https://i-wanwok-backend.up.railway.app/api/profession-list/');
             setServices(response.data);
-            console.log("profession:",response)
+            console.log("profession:", response);
         } catch (error) {
             console.error('Error fetching professions:', error);
-        }
-        finally{
-            console.log('loading')
+            if (error.response) {
+                //general: error.response.data.detail || "Error occurred fetching professions."
+                const backendErrors = error.response.data.nin || error.response.data.location || error.response.data.service || error.response.data.address || error.response.data.experience|| error.response.data.phone_number || error.response.data.profile_image; 
+                
+                setErrors({
+                    general: backendErrors || "Failed to register user. Please try again." 
+                  });
+            } else {
+                setErrors({
+                    general: "Network error. Please try again."
+                });
+            }
         }
     };
+    
 
     useEffect(() => {
         fetchLocations();
@@ -72,42 +99,53 @@ const ArtisanDetailsForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         const newErrors = {};
         if (!formData.nin) newErrors.nin = "NIN is required";
         if (!formData.location) newErrors.location = "Location is required";
         if (!formData.service) newErrors.service = "Service is required";
         if (!formData.experience) newErrors.experience = "Experience is required";
         if (!formData.address) newErrors.address = "Address is required";
-        if (!formData.phone) newErrors.phone = "Phone is required";
-
+        if (!formData.phone_number) newErrors.phone_number = "Phone is required";
+    
         setErrors(newErrors);
-
+    
         if (Object.keys(newErrors).length > 0) {
             return;
         }
+        setLoading(true);
     
         const formDataToSend = new FormData();
-        formDataToSend.append('user_id', userId);
+        formDataToSend.append('username', username);
         formDataToSend.append('nin', formData.nin);
         formDataToSend.append('location', formData.location);
         formDataToSend.append('experience', formData.experience);
         formDataToSend.append('address', formData.address);
-        formDataToSend.append('phone', formData.phone);
+        formDataToSend.append('phone_number', formData.phone_number);
         formDataToSend.append('service', formData.service);
-        if (formData.profile_img) {
-            formDataToSend.append('profile_img', formData.profile_img);
+        formDataToSend.append('pay', formData.pay);
+
+
+            // Ensure the location is correctly selected and passed
+        if (formData.location) {
+        formDataToSend.append('location', formData.location);
+        console.log('chosen location:',formData.location)
+         }
+        
+        // Append image files to FormData if they exist
+        if (formData.profile_image) {
+            formDataToSend.append('profile_image', formData.profile_image);
         }
+       
     
         try {
-            setLoading(true);
-            const response = await axios.post('https://i-wanwok-backend.up.railway.app/artisans/add_artisan/', formDataToSend, {
+            const response = await axios.post('https://i-wanwok-backend.up.railway.app/acct/user-register/', formDataToSend, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
     
             if (response.status === 201) {
                 alert('Artisan details submitted successfully.');
-                navigate('/available-jobs');
+                navigate('/dashboard');
             } else {
                 throw new Error("Unexpected response status");
             }
@@ -126,14 +164,22 @@ const ArtisanDetailsForm = () => {
     
 
     return (
-        <div className="min-h-screen mt-20 flex flex-col items-center justify-center bg-gray-100 py-6">
-            <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
-                <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">Hi, {username} ! Please fill in the rest</h1>
+        <div className="min-h-screen mt-0 flex flex-col items-center justify-center bg-gray-100 py-6">
+            <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md mb-10 mt-10">
+                <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">Hi, {username} ! Please fill in the rest</h1> 
                 {errors.general && (
                     <div className="mb-4 text-red-500 text-md text-center">
-                        {errors.general}
+                        {errors.general} 
                     </div>
                 )}
+                {Object.keys(errors).length > 0 && (
+                    <div className="mb-4 text-red-500 text-md text-center">
+                        {Object.keys(errors).map((key) => (
+                           <p key={key}>{errors[key]}</p>
+                     ))}
+                    </div>
+                    )}
+       
                 {loading && (
                     <div className="absolute inset-0 bg-gray-100 bg-opacity-75 flex items-center justify-center z-10">
                         <div className="loader"></div>
@@ -239,15 +285,15 @@ const ArtisanDetailsForm = () => {
                             <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             <input
                                 type="text"
-                                name="phone"
-                                value={formData.phone}
+                                name="phone_number"
+                                value={formData.phone_number}
                                 onChange={handleInputChange}
                                 placeholder="Phone Number"
-                                className={`w-full pl-10 pr-4 py-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
+                                className={`w-full pl-10 pr-4 py-2 border ${errors.phone_number ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
                             />
-                            {errors.phone && (
+                            {errors.phone_number && (
                                 <div className="text-red-500 text-sm">
-                                    {errors.phone}
+                                    {errors.phone_number}
                                 </div>
                             )}
                         </div>
@@ -256,11 +302,37 @@ const ArtisanDetailsForm = () => {
                            
                            <input
                                type="file"
-                               name="profile_img"
+                               name="profile_image"
                                onChange={handleFileChange}
                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                            />
                        </div>
+                       {/*<div className="relative">
+                           <input
+                               type="file"
+                               name="fingerprint_image"
+                               onChange={handleFileChange}
+                               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                           />
+                       </div>*/}
+
+
+                       <div className="relative">
+                            <FaNairaSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="number"
+                                name="pay"
+                                value={formData.pay}
+                                onChange={handleInputChange}
+                                placeholder="A day pay"
+                                className={`w-full pl-10 pr-4 py-2 border ${errors.pay ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
+                            />
+                            {errors.experience && (
+                                <div className="text-red-500 text-sm">
+                                    {errors.pay}
+                                </div>
+                            )}
+                        </div>
                    
                   
                     <button
@@ -271,11 +343,23 @@ const ArtisanDetailsForm = () => {
                         {loading ? 'Submitting...' : 'Submit'}
                     </button>
                 </form>
+                {Object.keys(errors).length > 0 && (
+                    <div className="mb-4 text-red-500 text-md text-center">
+                        {Object.keys(errors).map((key) => (
+                           <p key={key}>{errors[key]}</p>
+                     ))}
+                    </div>
+                    )}
                 </div>
+           
             </div>
         </div>
     );
 };
 
 export default ArtisanDetailsForm;
+
+
+
+
 

@@ -1,213 +1,222 @@
+
+
+
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { FaUser } from 'react-icons/fa';
 import { MdOutlineEmail } from 'react-icons/md';
 import { RiLockPasswordFill } from 'react-icons/ri';
+import { useNavigate, Link, useParams } from "react-router-dom";
+import { BsPersonCheckFill } from "react-icons/bs";
+import { IoPersonCircle } from "react-icons/io5";
 
-import { useNavigate, Link } from "react-router-dom";
+
+const InputField = ({ label, type, name, value, onChange, error }) => {
+  return (
+    <div className="relative">
+      {label === "Username" && <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      {label === "First Name" && <IoPersonCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      {label === "Last Name" && <BsPersonCheckFill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      {label === "Email" && <MdOutlineEmail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      {label === "Password" && <RiLockPasswordFill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+     {label === "Confirm Password" && <RiLockPasswordFill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />} 
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={label}
+        className={`w-full pl-10 pr-4 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
+      />
+      {error && <div className="text-red-500 text-sm">{error}</div>}
+    </div>
+  );
+};
+
+
 
 const BasicDetailsForm = () => {
-    const [formData, setFormData] = useState({
-        username: '',
-        first_name: '',
-        last_name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-    });
+  const [formData, setFormData] = useState({
+    username: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    password2: '',  
+    user_type: 'artisan',
+  });
 
-    const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(false); // Loading state
-    const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: value
-        }));
-    };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
-    const handleNext = async (e) => {
-        e.preventDefault();
+  const handleNext = async (e) => {
+    e.preventDefault();
 
-        const newErrors = {};
-        if (!formData.username) newErrors.username = "Username is required";
-        if (!formData.first_name) newErrors.first_name = "First Name is required";
-        if (!formData.last_name) newErrors.last_name = "Last Name is required";
-        if (!formData.email) newErrors.email = "Email is required";
-        if (!formData.password) newErrors.password = "Password is required";
-        if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
+    const newErrors = {};
+    if (!formData.username) newErrors.username = "Username is required";
+    if (!formData.first_name) newErrors.first_name = "First Name is required";
+    if (!formData.last_name) newErrors.last_name = "Last Name is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    if (formData.password !== formData.password2)  
+      newErrors.password2 = "Passwords do not match";  
+    setErrors(newErrors);
 
-        setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
 
-        if (Object.keys(newErrors).length > 0) {
-            return;
+    setLoading(true);
+
+    try {
+      // Send a single POST request to register the user and create the artisan profile 
+      const response = await axios.post(
+        "https://i-wanwok-backend.up.railway.app/acct/registration/", 
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json", // or 'multipart/form-data' if you have file uploads
+          },
         }
+      );
 
-        const formDataToSend = new FormData();
-        for (const key in formData) {
-            formDataToSend.append(key, formData[key]);
-        }
+      console.log("Response:", response.data);
 
-        setLoading(true); // Start loading
-        try {
-            const response = await axios.post('https://i-wanwok-backend.up.railway.app/accounts/register-artisan/', formDataToSend, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+      if (response.status === 201) {
+        alert("User registration and artisan profile creation was successful.");
+        navigate(`/profession-details/${response.data.id}/${response.data.username}`);
+      } else {
+        throw new Error("Unexpected response status from registration.");
+      }
+    } catch (error) {
+      console.error("API Error:", error.response || error);
+      if (error.response) {
+        const backendErrors = error.response.data.username || error.response.data.email || error.response.data.errors || error.response.data.error;
+        setErrors({
+          general: backendErrors || "Failed to register user. Please try again."
+        });
+      } else {
+        setErrors({
+          general: "Network error. Please try again."
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            console.log('Response:', response.data);
 
-            if (response.status === 201) {
-                const userId = response.data.id;
-                const username = response.data.username;
 
-                alert('User registration was successful.');
-                navigate(`/profession-details/${userId}/${username}`);
-            } else {
-                throw new Error("Unexpected response status");
-            }
-        } catch (error) {
-            console.error("API Error:", error.response || error);
-            if (error.response) {
-                if (error.response.data.errors) {
-                    setErrors(error.response.data.errors);
-                } else if (error.response.data.error) {
-                    setErrors({ general: error.response.data.error });
-                } else {
-                    setErrors({ general: "An unexpected error occurred" });
-                }
-            } else {
-                setErrors({ general: "An unexpected error occurred" });
-            }
-        } finally {
-            setLoading(false); // Stop loading
-        }
-    };
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-0">
+      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md relative mb-10">
+        <h1 className="text-1xl font-bold text-gray-800 text-center mb-6">Sign Up For Workers - Step 1</h1>
+        {errors.general && (
+          <div className="mb-4 text-red-500 text-md text-center">
+            {errors.general}
+          </div>
+        )}
+        {loading && (
+          <div className="absolute inset-0 bg-gray-100 bg-opacity-75 flex items-center justify-center z-10">
+    
+       <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-gray-500" 
+       role="status"> <span className="sr-only">Loading...</span>
+        </div>  
+        </div>
+     )}
 
-    return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-6">
-            <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md relative">
-                <h1 className="text-1xl font-bold text-gray-800 text-center mb-6">Sign Up For Workers - Step 1</h1>
-                {errors.general && (
-                    <div className="mb-4 text-red-500 text-md text-center">
-                        {errors.general}
-                    </div>
-                )}
-                {loading && (
-                    <div className="absolute inset-0 bg-gray-100 bg-opacity-75 flex items-center justify-center z-10">
-                        <div className="loader"></div>
-                    </div>
-                )}
-                 <div className='bg-gray-200 p-4 rounded-md'>
+               <div className='bg-gray-200 p-4 rounded-md'>
                 <form onSubmit={handleNext} className="space-y-6">
                     <div className="relative">
                         <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleInputChange}
-                            placeholder="Username"
-                            className={`w-full pl-10 pr-4 py-2 border ${errors.username ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
-                        />
-                        {errors.username && (
-                            <div className="text-red-500 text-sm">
-                                {errors.username}
-                            </div>
-                        )}
+                        <InputField
+        label="Username"
+        type="text"
+        name="username"
+        value={formData.username}
+        onChange={handleInputChange}
+        error={errors.username}
+      />
                     </div>
                     <div className="relative">
                         <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="text"
-                            name="first_name"
-                            value={formData.first_name}
-                            onChange={handleInputChange}
-                            placeholder="First Name"
-                            className={`w-full pl-10 pr-4 py-2 border ${errors.first_name ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
-                        />
-                        {errors.first_name && (
-                            <div className="text-red-500 text-sm">
-                                {errors.first_name}
-                            </div>
-                        )}
+                        <InputField
+        label="First Name"
+        type="text"
+        name="first_name"
+        value={formData.first_name}
+        onChange={handleInputChange}
+        error={errors.first_name}
+      />
                     </div>
                     <div className="relative">
                         <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="text"
-                            name="last_name"
-                            value={formData.last_name}
-                            onChange={handleInputChange}
-                            placeholder="Last Name"
-                            className={`w-full pl-10 pr-4 py-2 border ${errors.last_name ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
-                        />
-                        {errors.last_name && (
-                            <div className="text-red-500 text-sm">
-                                {errors.last_name}
-                            </div>
-                        )}
+       
+       <InputField
+        label="Last Name"
+        type="text"
+        name="last_name"
+        value={formData.last_name}
+        onChange={handleInputChange}
+        error={errors.last_name}
+      />
                     </div>
                     <div className="relative">
-                        <MdOutlineEmail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="Email"
-                            className={`w-full pl-10 pr-4 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
-                        />
-                        {errors.email && (
-                            <div className="text-red-500 text-sm">
-                                {errors.email}
-                            </div>
-                        )}
+                        <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <InputField
+        label="Email"
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleInputChange}
+        error={errors.email}
+      />
                     </div>
                     <div className="relative">
-                        <RiLockPasswordFill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            placeholder="Password"
-                            className={`w-full pl-10 pr-4 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
-                        />
-                        {errors.password && (
-                            <div className="text-red-500 text-sm">
-                                {errors.password}
-                            </div>
-                        )}
+                        <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <InputField
+        label="Password"
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={handleInputChange}
+        error={errors.password}
+      />
                     </div>
+
                     <div className="relative">
-                        <RiLockPasswordFill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="password"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleInputChange}
-                            placeholder="Confirm Password"
-                            className={`w-full pl-10 pr-4 py-2 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
-                        />
-                        {errors.confirmPassword && (
-                            <div className="text-red-500 text-sm">
-                                {errors.confirmPassword}
-                            </div>
-                        )}
+                        <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <InputField
+        label="Confirm Password" 
+        type="password"
+        name="password2" 
+        value={formData.password2}
+        onChange={handleInputChange}
+        error={errors.password2} 
+      />
                     </div>
+              
                     <button
                         type="submit"
                         className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-                        disabled={loading} // Disable the button when loading
+                        disabled={loading}
                     >
-                        {loading ? "Loading..." : "Next"} {/* Display loading text when loading */}
+                        {loading ? "Loading..." : "Next"}
                     </button>
                 </form>
-
-                  {/* Link to login page */}
-                  <div className="text-center mt-4">
+                {Object.keys(errors).length > 0 && (
+    <div className="mb-4 text-red-500 text-md text-center">
+      {Object.keys(errors).map((key) => (
+        <p key={key}>{errors[key]}</p>
+      ))}
+    </div>
+  )}
+                <div className="text-center mt-4">
                     <p className="text-sm text-gray-600">
                         Already have an account?{" "}
                         <Link to="/login" className="text-green-500 hover:underline">
@@ -215,14 +224,22 @@ const BasicDetailsForm = () => {
                         </Link>
                     </p>
                 </div>
-                
             </div>
-            </div>
-        </div>
-    );
+  </div>
+</div>
+
+);
 };
 
 export default BasicDetailsForm;
+
+
+
+
+
+
+
+
 
 
 
