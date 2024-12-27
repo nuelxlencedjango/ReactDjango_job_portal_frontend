@@ -15,8 +15,9 @@ const Artisans = () => {
     const fetchArtisans = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/artisans/artisans-by-service/${service_title}/`);
+        const response = await api.get(`/api/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
+        console.log('responses:', response.data)
       } catch (error) {
         if (error.response && error.response.status === 401) {
           Cookies.remove('access_token');

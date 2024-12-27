@@ -13,7 +13,7 @@ import Footer from './Components/FooterDiv/Footer';
 import OrderForm from './Components/OrdersRequest/OderForm';
 import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
-//import Payment from "./Components/CartContent/Pay";
+import ArtisanDashboard from "./Components/Dashboard/ArtisanDashboard";
 import Payment from './Components/CartContent/Payment';
 
 
@@ -48,7 +48,9 @@ const App = () => {
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
           <Route path="/available-jobs" element={<AvailableJobs />} />
           <Route path="*" element={<NotFound />} />
+          <Route path='artisan-dashboard' element={< ArtisanDashboard />} />
           <Route path="/order-service" element={<ProtectedRoute>
+         
 
          {/* <Route path="/register/:userType" element={<RegistrationPage />} />
         <Route path="/success" element={<h1>Registration Successful!</h1>} /> */}

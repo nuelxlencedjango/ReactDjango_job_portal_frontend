@@ -32,7 +32,7 @@ const Navbar = () => {
 
 
                         
-                        <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/dashboard'}>Dashboard</Link></li>
+                        <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/artisan-dashboard'}>Dashboard</Link></li>
                     </div>
                     <div className="md:hidden flex items-center">
                         <button onClick={toggleMenu} className="text-2xl text-blue-600">
