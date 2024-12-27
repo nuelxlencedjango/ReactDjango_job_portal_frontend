@@ -212,14 +212,12 @@ const BasicDetailsForm = () => {
                 {Object.keys(errors).length > 0 && (
     <div className="mb-4 text-red-500 text-md text-center">
       {Object.keys(errors).map((key) => (
-        <p key={key}>{errors[key]}</p>
-      ))}
-    </div>
-  )}
-                <div className="text-center mt-4">
-                    <p className="text-sm text-gray-600">
-                        Already have an account?{" "}
-                        <Link to="/login" className="text-green-500 hover:underline">
+        <p key={key}>{errors[key]}</p>))}
+    </div>)}
+      <div className="text-center mt-4">
+          <p className="text-sm text-gray-600">
+              Already have an account?{" "}
+                  <Link to="/login" className="text-green-500 hover:underline">
                             Log in
                         </Link>
                     </p>

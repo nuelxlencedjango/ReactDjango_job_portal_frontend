@@ -37,7 +37,7 @@ const RegistrationToggle = () => {
                     <button
                         onClick={() => handleToggle('employer')} // Toggle to employer form
                         className={`py-2 px-4 mt-4 sm:mt-6 md:mt-10 font-semibold rounded-md 
-                            {!isArtisan ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-800'} 
+                            ${!isArtisan ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-800'} 
                             focus:outline-none focus:ring-2 focus:ring-green-500`}
                         aria-label="Toggle to Employer Registration"
                     >

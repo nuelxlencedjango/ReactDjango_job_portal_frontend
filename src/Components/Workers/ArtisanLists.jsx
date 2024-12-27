@@ -122,10 +122,13 @@ const Artisans = () => {
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
         {artisans.map((artisan) => {
           const { text, disabled } = getButtonTextAndDisabled(artisan.user?.email);
+         
+          // Use a more unique key like artisan.id or a combination of artisan.id and artisan.user.email
+          const uniqueKey = artisan.id || artisan.user?.email || artisan.user?.id;
 
           return (
             <div
-              key={artisan.id}
+              key={uniqueKey}
               className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center relative transition-transform transform hover:scale-105"
             >
               {/* Top-left and top-right icons */}
@@ -139,9 +142,9 @@ const Artisans = () => {
 
               {/* Profile Image stays centered */}
               <div className="flex justify-center w-full mb-4">
-                {artisan.profile_img ? (
+                {artisan.profile_image ? (
                   <img
-                    src={artisan.profile_img}
+                    src={artisan.profile_image}
                     alt={`${artisan.user?.first_name}'s profile`}
                     className="w-24 h-24 rounded-full object-cover transition-all duration-300 transform hover:scale-110"
                   />

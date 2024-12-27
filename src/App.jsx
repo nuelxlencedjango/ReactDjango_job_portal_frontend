@@ -9,6 +9,7 @@ import Jobs from './Components/JobDiv/Jobs';
 import ArtisanList from './Components/Workers/ArtisanLists';
 import SignUP from './Compos/Registration';
 import ArtisanProfessionDetails from './Components/Workers/ArtisansProfessionDetails';
+import EmployerDetailForm from './Components/Employers/EmployerRegistrationForm';
 import Footer from './Components/FooterDiv/Footer';
 import OrderForm from './Components/OrdersRequest/OderForm';
 import ProtectedRoute from './api/ProtectedRoute';
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUP />} />
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
+          <Route path="/employer-details/:userId/:username" element={<EmployerDetailForm />} />
           <Route path="/available-jobs" element={<AvailableJobs />} />
           <Route path="*" element={<NotFound />} />
           <Route path='artisan-dashboard' element={< ArtisanDashboard />} />
