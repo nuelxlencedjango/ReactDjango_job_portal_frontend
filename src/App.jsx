@@ -9,7 +9,7 @@ import Jobs from './Components/JobDiv/Jobs';
 import ArtisanList from './Components/Workers/ArtisanLists';
 import SignUP from './Compos/Registration';
 import ArtisanProfessionDetails from './Components/Workers/ArtisansProfessionDetails';
-import EmployerDetailForm from './Components/Employers/EmployerRegistrationForm';
+import EmployerDetailForm from './Components/Employers/EmployerDetailForm';
 import Footer from './Components/FooterDiv/Footer';
 import OrderForm from './Components/OrdersRequest/OderForm';
 import ProtectedRoute from './api/ProtectedRoute';

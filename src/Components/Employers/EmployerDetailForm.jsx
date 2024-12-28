@@ -1,23 +1,13 @@
 
-
-
-
-
-
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
-
+import { GiPostOffice } from "react-icons/gi";
 import { useNavigate, useParams } from 'react-router-dom';
 
 const ArtisanDetailsForm = () => {
     const [formData, setFormData] = useState({
-       
+       company_name:'',
         location: '',
         phone_number: '',
        
@@ -76,6 +66,7 @@ const ArtisanDetailsForm = () => {
         const newErrors = {};
         if (!formData.location) newErrors.location = "Location is required";
         if (!formData.phone_number) newErrors.phone_number = "Phone is required";
+        if (!formData.company_name) newErrors.company_name = "Organization's is required";
     
         setErrors(newErrors);
     
@@ -88,6 +79,7 @@ const ArtisanDetailsForm = () => {
         formDataToSend.append('username', username);
         formDataToSend.append('location', formData.location);
         formDataToSend.append('phone_number', formData.phone_number);
+        formDataToSend.append('company_name', formData.company_name);
        
 
             // Ensure the location is correctly selected and passed
@@ -103,7 +95,7 @@ const ArtisanDetailsForm = () => {
             });
     
             if (response.status === 201) {
-                alert('Artisan details submitted successfully.');
+                alert('Employer registration submitted successfully.');
                 navigate('/');
             } else {
                 throw new Error("Unexpected response status");
@@ -170,7 +162,22 @@ const ArtisanDetailsForm = () => {
                             )}
                         </div>
 
-        
+                        <div className="relative">
+                            <GiPostOffice className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="text"
+                                name="company_name"
+                                value={formData.company_name}
+                                onChange={handleInputChange}
+                                placeholder="Company name"
+                                className={`w-full pl-10 pr-4 py-2 border ${errors.company_name ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
+                            />
+                            {errors.company_name && (
+                                <div className="text-red-500 text-sm">
+                                    {errors.company_name}
+                                </div>
+                            )}
+                        </div>
 
                         <div className="relative">
                             <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -188,6 +195,7 @@ const ArtisanDetailsForm = () => {
                                 </div>
                             )}
                         </div>
+
                         
                     <button
                         type="submit"

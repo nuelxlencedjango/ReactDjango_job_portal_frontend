@@ -15,7 +15,7 @@ const ArtisanDetailsForm = () => {
         phone_number: '',
         service: '',
         pay: '',
-        //user_type: 'artisan',   
+        //user_type: 'artisan', 
         profile_image: null,
        
     });
@@ -29,9 +29,9 @@ const ArtisanDetailsForm = () => {
 
     const { username } = useParams();
 
-    //const storedUserId = localStorage.getItem('user_id');
-    console.log("" + "username:", username)
-    //const [userIdd, setUserId] = useState(null);
+    //const storedUserId = localStorage.getItem('user_id'); 
+    console.log("" + "username:", username) 
+    //const [userIdd, setUserId] = useState(null); 
 
     const navigate = useNavigate();
 
@@ -80,7 +80,7 @@ const ArtisanDetailsForm = () => {
                 const backendErrors = error.response.data.nin || error.response.data.location || error.response.data.service || error.response.data.address || error.response.data.experience|| error.response.data.phone_number || error.response.data.profile_image; 
                 
                 setErrors({
-                    general: backendErrors || "Failed to register user. Please try again." 
+                    general: backendErrors || "Failed to register user. Please try again."  
                   });
             } else {
                 setErrors({
@@ -116,7 +116,7 @@ const ArtisanDetailsForm = () => {
         setLoading(true);
     
         const formDataToSend = new FormData();
-        formDataToSend.append('username', username);
+        formDataToSend.append('username', username); 
         formDataToSend.append('nin', formData.nin);
         formDataToSend.append('location', formData.location);
         formDataToSend.append('experience', formData.experience);
@@ -139,7 +139,7 @@ const ArtisanDetailsForm = () => {
        
     
         try {
-            const response = await axios.post('https://i-wanwok-backend.up.railway.app/acct/user-register/', formDataToSend, {
+            const response = await axios.post('https://i-wanwok-backend.up.railway.app/acct/user-register/', formDataToSend, { 
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
     
@@ -166,7 +166,7 @@ const ArtisanDetailsForm = () => {
     return (
         <div className="min-h-screen mt-0 flex flex-col items-center justify-center bg-gray-100 py-6">
             <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md mb-10 mt-10">
-                <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">Hi, {username} ! Please fill in the rest</h1> 
+                <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">Hi, {username} ! Please fill in the rest</h1>  
                 {errors.general && (
                     <div className="mb-4 text-red-500 text-md text-center">
                         {errors.general} 

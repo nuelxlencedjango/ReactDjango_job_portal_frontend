@@ -87,7 +87,7 @@ const BasicDetailsForm = () => {
       if (response.status === 201) {
         alert("User registration and artisan profile creation was successful.");
         navigate(`/employer-details/${response.data.id}/${response.data.username}`);
-      } else {
+      } else { 
         throw new Error("Unexpected response status from registration.");
       }
     } catch (error) {
