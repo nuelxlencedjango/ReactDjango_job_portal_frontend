@@ -24,7 +24,7 @@ const JobSearch = ({ messages }) => {
 
     const fetchLocations = async () => {
         try {
-            const response = await axios.get('https://i-wanwok-backend.up.railway.app/artisans/location-list/');
+            const response = await axios.get('https://i-wanwok-backend.up.railway.app/api/location-list/');
             setLocations(response.data);
             
         } catch (error) {
@@ -34,7 +34,7 @@ const JobSearch = ({ messages }) => {
 
     const fetchJobTypes = async () => {
         try {
-            const response = await axios.get('https://i-wanwok-backend.up.railway.app/artisans/profession-list/');
+            const response = await axios.get('https://i-wanwok-backend.up.railway.app/api/profession-list/');
             setJobTypes(response.data);
            
         } catch (error) {
@@ -70,7 +70,7 @@ const JobSearch = ({ messages }) => {
 
         try {
             //API request
-            const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-search/?${queryParams}`);
+            const response = await axios.get(`https://i-wanwok-backend.up.railway.app/api/artisans-search/?${queryParams}`);
             
             // Navigate to result
             navigate('/results', { state: { searchParams: formState, results: response.data } }); 

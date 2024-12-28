@@ -34,11 +34,11 @@ const Artisans = () => {
   }, [service_title]);
 
   // Check if artisan is in the cart
-  const checkIfArtisanInCart = async (email) => {
+  const checkIfArtisanInCart = async (email) => { 
     const token = Cookies.get('access_token');
     if (token) {
       try {
-        const response = await api.get(`/employers/check-artisan/${email}/`, {
+        const response = await api.get(`/employer/check-artisan/${email}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -63,7 +63,7 @@ const Artisans = () => {
     if (token) {
       try {
         const response = await api.post(
-          '/employers/add_to_cart/',
+          '/employer/add_to_cart/',
           { artisan_email: email },
           {
             headers: {
