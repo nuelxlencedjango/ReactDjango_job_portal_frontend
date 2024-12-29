@@ -21,7 +21,7 @@ const Cart = () => {
 
       try {
         setLoading(true);
-        const response = await api.get("/employers/cart-items/", {
+        const response = await api.get("/employer/cart-items/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -48,7 +48,7 @@ const Cart = () => {
     }
 
     try {
-      await api.delete(`/employers/cart/${itemId}/`, {
+      await api.delete(`/employer/cart/${itemId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -88,7 +88,7 @@ const Cart = () => {
               <div className="flex flex-col items-center sm:items-start">
                 {item.artisan.profile_img ? (
                   <img
-                    src={item.artisan.profile_img}
+                    src={item.artisan.profile_image}
                     alt={`${item.artisan.first_name}'s profile`}
                     className="w-16 h-16 rounded-full object-cover"
                   />

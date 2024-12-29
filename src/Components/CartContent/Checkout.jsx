@@ -20,7 +20,7 @@ const Checkout = () => {
       }
 
       try {
-        const response = await api.get("/employers/cart-items/", {
+        const response = await api.get("/employer/cart-items/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -53,7 +53,7 @@ const Checkout = () => {
       }
 
       try {
-        const response = await api.get("/employers/employer-details/", {
+        const response = await api.get("/employer/employer-details/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
