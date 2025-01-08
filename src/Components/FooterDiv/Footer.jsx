@@ -12,7 +12,7 @@ const Footer = () => {
           </h1>
         </div>
         <p className="text-white pb-4 opacity-70 leading-7">
-          We will always make our seekers and companies. Job seekers find the best jobs while the companies find the best talents.
+          We will always make our Job seekers find the best jobs while the companies find the best talents!!
         </p>
       </div>
       <div className="grid">
