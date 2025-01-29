@@ -101,17 +101,61 @@ const Payment = () => {
 };
 
 export default Payment;*/}
-
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaCcVisa, FaCcMastercard, FaCcAmex } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 
 const PaymentPage = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const totalAmount = location.state?.totalAmount || 0; // Get the totalAmount from the Cart component
 
+  const [amount, setAmount] = useState(totalAmount);
+
+  // Update the amount if the totalAmount changes
+  useEffect(() => {
+    setAmount(totalAmount);
+  }, [totalAmount]);
+
+  // Flutterwave configuration
+  const config = {
+    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", // Replace with your actual public key
+    tx_ref: "iwanwok_" + Math.floor(Math.random() * 1000000000 + 1),
+    amount: amount,
+    currency: "NGN",
+    redirect_url: "https://www.i-wan-wok.com/payment_confirmation/",
+    customer: {
+      email: "user@example.com", // Replace with dynamic email from form
+      phone_number: "070********", // Replace with dynamic phone number from form
+      name: "John Doe", // Replace with dynamic name from form
+    },
+    customizations: {
+      title: "Iwan_wok",
+      description: "Payment for the services requested",
+    },
+  };
+
+  // Initialize Flutterwave payment
+  const handleFlutterPayment = useFlutterwave(config);
+
+  // Form submission handler
   const onSubmit = (data) => {
-    console.log(data);
+    console.log(data); // Form data (email, phoneNumber, fullname, etc.)
+
+    // Trigger Flutterwave payment
+    handleFlutterPayment({
+      callback: (response) => {
+        console.log(response);
+        closePaymentModal(); // Close the payment modal
+        alert("Payment was successfully completed!");
+        navigate("/payment_confirmation"); // Redirect to a confirmation page
+      },
+      onClose: () => {
+        alert("Payment closed!");
+      },
+    });
   };
 
   return (
@@ -122,84 +166,80 @@ const PaymentPage = () => {
       >
         <h1 className="text-2xl font-bold mb-6 text-center">Payment</h1>
 
-        {/* Payment Options */}
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold mb-2">Payment Method</h2>
-          <div className="flex items-center space-x-2">
-            <input
-              type="radio"
-              id="card"
-              value="card"
-              {...register("paymentMethod", { required: true })}
-              className="mr-2"
-            />
-            <label htmlFor="card" className="flex items-center">
-              Cards <FaCcVisa className="ml-1 text-blue-600" />
-              <FaCcMastercard className="ml-1 text-red-600" />
-              <FaCcAmex className="ml-1 text-purple-600" />
-            </label>
-          </div>
-          <div className="flex items-center space-x-2 mt-2">
-            <input
-              type="radio"
-              id="googlepay"
-              value="googlepay"
-              {...register("paymentMethod")}
-              className="mr-2"
-            />
-            <label htmlFor="googlepay">Google Pay</label>
-          </div>
-          <div className="flex items-center space-x-2 mt-2">
-            <input
-              type="radio"
-              id="paypal"
-              value="paypal"
-              {...register("paymentMethod")}
-              className="mr-2"
-            />
-            <label htmlFor="paypal">PayPal</label>
-          </div>
-        </div>
-
         {/* Card Details */}
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2">Card Number</label>
           <input
             type="text"
             placeholder="1234 5678 9012 3456"
-            {...register("cardNumber", { required: true })}
+            {...register("cardNumber", { required: "Card number is required" })}
             className="w-full p-2 border rounded"
           />
+          {errors.cardNumber && <p className="text-red-500 text-sm">{errors.cardNumber.message}</p>}
         </div>
+
         <div className="flex space-x-4 mb-4">
           <div className="w-1/2">
             <label className="block text-gray-700 font-medium mb-2">Expiration</label>
             <input
               type="text"
               placeholder="MM/YY"
-              {...register("expiration", { required: true })}
+              {...register("expiration", { required: "Expiration is required" })}
               className="w-full p-2 border rounded"
             />
+            {errors.expiration && <p className="text-red-500 text-sm">{errors.expiration.message}</p>}
           </div>
           <div className="w-1/2">
             <label className="block text-gray-700 font-medium mb-2">CVC</label>
             <input
               type="text"
-              placeholder="3 digits"
-              {...register("cvc", { required: true })}
+              placeholder="123"
+              {...register("cvc", { required: "CVC is required" })}
               className="w-full p-2 border rounded"
             />
+            {errors.cvc && <p className="text-red-500 text-sm">{errors.cvc.message}</p>}
           </div>
         </div>
 
+        {/* Customer Info */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Card Holder Name</label>
+          <label className="block text-gray-700 font-medium mb-2">Full Name</label>
           <input
             type="text"
-            placeholder="Card Holder Name"
-            {...register("cardHolderName", { required: true })}
+            placeholder="Full Name"
+            {...register("fullname", { required: "Full name is required" })}
             className="w-full p-2 border rounded"
           />
+          {errors.fullname && <p className="text-red-500 text-sm">{errors.fullname.message}</p>}
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Email</label>
+          <input
+            type="email"
+            placeholder="user@example.com"
+            {...register("email", { required: "Email is required" })}
+            className="w-full p-2 border rounded"
+          />
+          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Phone Number</label>
+          <input
+            type="text"
+            placeholder="070********"
+            {...register("phoneNumber", { required: "Phone number is required" })}
+            className="w-full p-2 border rounded"
+          />
+          {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
+        </div>
+
+        {/* Total Amount */}
+        <div className="mb-4 text-right">
+          <h3 className="text-xl font-bold">
+            Total: ₦{amount.toFixed(2)}
+          </h3>
         </div>
 
         {/* Terms and Conditions */}
@@ -207,13 +247,14 @@ const PaymentPage = () => {
           <input
             type="checkbox"
             id="terms"
-            {...register("terms", { required: true })}
+            {...register("terms", { required: "You must agree to the terms" })}
             className="mr-2"
           />
           <label htmlFor="terms">
             I declare to have read the <a href="#" className="text-blue-600">Privacy Policy</a> and agree to the{" "}
             <a href="#" className="text-blue-600">T&C of Booking</a>.
           </label>
+          {errors.terms && <p className="text-red-500 text-sm">{errors.terms.message}</p>}
         </div>
 
         {/* Submit Button */}
@@ -229,4 +270,3 @@ const PaymentPage = () => {
 };
 
 export default PaymentPage;
-

@@ -42,7 +42,8 @@ const App = () => {
           <Route path="/api/artisans-by-service/:service_title" element={<ArtisanList />} />
           <Route path="/cart" element={<Cart />} />
 
-          <Route path='/payment' element={<Payment />}/>
+          <Route path="/payment" element={<Payment />}/>
+          
           
 
           <Route path="/login" element={<Login />} />
