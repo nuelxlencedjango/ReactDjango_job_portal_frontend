@@ -30,6 +30,7 @@ const ArtisanSearch = () => {
 
       // Fetch data from the Django backend using the authenticated API instance
       const response = await api.get(`/administrator/artisans/search/?${params}`);
+      console.log('users data:', response.data)
       setResults(response.data);
     } catch (err) {
       setError("An error occurred while fetching data.");
