@@ -121,13 +121,13 @@ const Login = () => {
       // Redirect based on user_type
       const { user_type } = response.data;
       if (user_type === 'manager') {
-        navigate('/manager-dashboard');  // Redirect to manager's page
+        navigate('/manager-dashboard');  
       } else if (user_type === 'employer') {
-        navigate('/employer-dashboard');  // Redirect to employer's page
+        navigate('/employer-dashboard');  
       } else if (user_type === 'artisan') {
-        navigate('/artisan-dashboard');  // Redirect to artisan's page
+        navigate('/artisan-dashboard');  
       } else {
-        navigate('/');  // Default redirect
+        navigate('/'); 
       }
     } catch (error) {
       console.error('Login error:', error);
