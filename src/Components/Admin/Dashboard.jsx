@@ -10,7 +10,7 @@ const ManagerDashboard = () => {
 
       <Link to={`/api/artisans-by-se/$`}
                   className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 flex items-center gap-2">
-                  <FaPlus className="text-sm" /> Add Finger Print
+                  Add Finger Print
               </Link>
     </div>
   );
