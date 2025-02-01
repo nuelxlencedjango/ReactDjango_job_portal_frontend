@@ -25,9 +25,8 @@ import ManagerDashboard from './Components/Admin/Dashboard';
 import ArtisanDashboard from './pages/ArtisanDashboard';*/}
 
 
-import Cat from './Components/Admin/Cat';
 
-import Dep from './Components/Admin/DepS';
+import ArtisanSearchPage from './Components/Admin/ArtisanSearchPage';
 
 
 import AOS from 'aos';
@@ -59,8 +58,8 @@ const App = () => {
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
           <Route path="/employer-details/:userId/:username" element={<EmployerDetailForm />} />
 
-          <Route path="/chatgpt" element={< Cat/>} />
-          <Route path="/deepseek" element={<Dep />} />
+  
+          <Route path="/artisan-search" element={<ArtisanSearchPage />} />
 
           <Route path="/manager-dashboard" element={<ManagerDashboard />} />
 
