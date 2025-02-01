@@ -20,6 +20,15 @@ import Payment from './Components/CartContent/Payment';
 
 
 
+import ManagerDashboard from './Components/Admin/Dashboard';
+{/*import EmployerDashboard from './pages/EmployerDashboard';
+import ArtisanDashboard from './pages/ArtisanDashboard';*/}
+
+
+import Cat from './Components/Admin/Cat';
+
+import Dep from './Components/Admin/DepS';
+
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -43,13 +52,23 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
 
           <Route path="/payment" element={<Payment />}/>
-          
-          
-
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUP />} />
+
+
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
           <Route path="/employer-details/:userId/:username" element={<EmployerDetailForm />} />
+
+          <Route path="/chatgpt" element={< Cat/>} />
+          <Route path="/deepseek" element={<Dep />} />
+
+          <Route path="/manager-dashboard" element={<ManagerDashboard />} />
+
+          {/*
+          <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+        <Route path="/artisan-dashboard" element={<ArtisanDashboard />} /
+          */}
+
           <Route path='/service-details' element ={< ServiceDetails />} /> 
           <Route path="/available-jobs" element={<AvailableJobs />} />
           <Route path="*" element={<NotFound />} />
@@ -71,6 +90,5 @@ const App = () => {
 };
 
 export default App;
-
 
 

@@ -73,7 +73,9 @@ const Cart = () => {
   // Inside Cart component
 
 const handleProceedToCheckout = () => {
-  navigate("/payment", { state: { totalAmount: calculateTotal() } });
+  navigate("/payment", { state: { totalAmount: calculateTotal(),
+    first_name:userData.first_name, last_name:userData.last_name, email: userData.email,} 
+  });
 };
 
   return (

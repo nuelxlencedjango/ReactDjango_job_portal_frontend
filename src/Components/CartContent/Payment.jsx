@@ -1,123 +1,33 @@
-{/*import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-const Payment = () => {
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expirationDate, setExpirationDate] = useState('');
-  const [cvv, setCvv] = useState('');
-  const [amount, setAmount] = useState(0); 
-
-  const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle payment submission logic here
-
-    alert('Payment processed successfully!');
-    navigate('/confirmation'); 
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex justify-center items-center py-10">
-      <div className="w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Payment</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-600 font-medium mb-1">Payment Method</label>
-            <select
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            >
-              <option value="">Select a payment method</option>
-              <option value="creditCard">Credit Card</option>
-              <option value="paypal">PayPal</option>
-            </select>
-          </div>
-
-          {paymentMethod === 'creditCard' && (
-            <div>
-              <div>
-                <label className="block text-gray-600 font-medium mb-1">Card Number</label>
-                <input
-                  type="text"
-                  value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                  placeholder="1234 5678 1234 5678"
-                  required
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-gray-600 font-medium mb-1">Expiration Date</label>
-                  <input
-                    type="text"
-                    value={expirationDate}
-                    onChange={(e) => setExpirationDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                    placeholder="MM/YY"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-600 font-medium mb-1">CVV</label>
-                  <input
-                    type="text"
-                    value={cvv}
-                    onChange={(e) => setCvv(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                    placeholder="123"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div>
-            <label className="block text-gray-600 font-medium mb-1">Amount</label>
-            <input
-              type="text"
-              value={`$${amount}`}
-              readOnly
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-            />
-          </div>
-
-          <div className="mt-6 flex justify-center">
-            <button
-              type="submit"
-              className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none transition-all duration-300"
-            >
-              Submit Payment
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-export default Payment;*/}
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 
 const PaymentPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const location = useLocation();
   const navigate = useNavigate();
+
   const totalAmount = location.state?.totalAmount || 0; // Get the totalAmount from the Cart component
+  const first_name = location.state?.first_name || "";
+  const last_name = location.state?.last_name || "";
+  const email = location.state?.email || "";
+  const phone_number = location.state?.phone_number || ""; // Make sure you get phone_number
 
   const [amount, setAmount] = useState(totalAmount);
+  const [userFirstName, setUserFirstName] = useState(first_name);
+  const [userLastName, setUserLastName] = useState(last_name);
+  const [userEmail, setUserEmail] = useState(email);
+  const [userPhone, setUserPhone] = useState(phone_number);
 
   // Update the amount if the totalAmount changes
   useEffect(() => {
     setAmount(totalAmount);
-  }, [totalAmount]);
+    setUserFirstName(first_name);
+    setUserLastName(last_name);
+    setUserEmail(email);
+    setUserPhone(phone_number);
+  }, [totalAmount, first_name, last_name, email, phone_number]);
 
   // Flutterwave configuration
   const config = {
@@ -127,9 +37,9 @@ const PaymentPage = () => {
     currency: "NGN",
     redirect_url: "https://www.i-wan-wok.com/payment_confirmation/",
     customer: {
-      email: "user@example.com", // Replace with dynamic email from form
-      phone_number: "070********", // Replace with dynamic phone number from form
-      name: "John Doe", // Replace with dynamic name from form
+      email: userEmail, // Replace with dynamic email from form
+      phone_number: userPhone, // Replace with dynamic phone number from form
+      name: `${userFirstName} ${userLastName}`, // Concatenate first name and last name
     },
     customizations: {
       title: "Iwan_wok",
@@ -164,75 +74,27 @@ const PaymentPage = () => {
         className="bg-white p-6 rounded shadow-md w-full max-w-lg"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-2xl font-bold mb-6 text-center">Payment</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">Total Amount: ₦{amount.toFixed(2)}</h1>
 
-        {/* Card Details */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Card Number</label>
-          <input
-            type="text"
-            placeholder="1234 5678 9012 3456"
-            {...register("cardNumber", { required: "Card number is required" })}
-            className="w-full p-2 border rounded"
-          />
-          {errors.cardNumber && <p className="text-red-500 text-sm">{errors.cardNumber.message}</p>}
-        </div>
-
-        <div className="flex space-x-4 mb-4">
-          <div className="w-1/2">
-            <label className="block text-gray-700 font-medium mb-2">Expiration</label>
-            <input
-              type="text"
-              placeholder="MM/YY"
-              {...register("expiration", { required: "Expiration is required" })}
-              className="w-full p-2 border rounded"
-            />
-            {errors.expiration && <p className="text-red-500 text-sm">{errors.expiration.message}</p>}
-          </div>
-          <div className="w-1/2">
-            <label className="block text-gray-700 font-medium mb-2">CVC</label>
-            <input
-              type="text"
-              placeholder="123"
-              {...register("cvc", { required: "CVC is required" })}
-              className="w-full p-2 border rounded"
-            />
-            {errors.cvc && <p className="text-red-500 text-sm">{errors.cvc.message}</p>}
-          </div>
-        </div>
-
-        {/* Customer Info */}
+        {/* User Details */}
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2">Full Name</label>
-          <input
-            type="text"
-            placeholder="Full Name"
-            {...register("fullname", { required: "Full name is required" })}
-            className="w-full p-2 border rounded"
+          <input 
+            type="text" 
+            value={`${userFirstName} ${userLastName}`}
+            className="w-full p-2 border rounded" 
+            readOnly 
           />
-          {errors.fullname && <p className="text-red-500 text-sm">{errors.fullname.message}</p>}
         </div>
 
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2">Email</label>
-          <input
-            type="email"
-            placeholder="user@example.com"
-            {...register("email", { required: "Email is required" })}
-            className="w-full p-2 border rounded"
+          <input 
+            type="text" 
+            value={userEmail} 
+            className="w-full p-2 border rounded" 
+            readOnly 
           />
-          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Phone Number</label>
-          <input
-            type="text"
-            placeholder="070********"
-            {...register("phoneNumber", { required: "Phone number is required" })}
-            className="w-full p-2 border rounded"
-          />
-          {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
         </div>
 
         {/* Total Amount */}
@@ -242,28 +104,21 @@ const PaymentPage = () => {
           </h3>
         </div>
 
-        {/* Terms and Conditions */}
-        <div className="mb-4 flex items-center">
-          <input
-            type="checkbox"
-            id="terms"
-            {...register("terms", { required: "You must agree to the terms" })}
-            className="mr-2"
-          />
-          <label htmlFor="terms">
-            I declare to have read the <a href="#" className="text-blue-600">Privacy Policy</a> and agree to the{" "}
-            <a href="#" className="text-blue-600">T&C of Booking</a>.
-          </label>
-          {errors.terms && <p className="text-red-500 text-sm">{errors.terms.message}</p>}
+        {/* Button and Link on the Same Line */}
+        <div className="flex justify-between items-center">
+          <Link
+            to="/cart"
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 w-1/3 text-center"
+          >
+            Go Back
+          </Link>
+          <button
+            type="submit"
+            className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-105 w-1/3"
+          >
+            Pay Now
+          </button>
         </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-105 w-full"
-        >
-          Pay Now
-        </button>
       </form>
     </div>
   );
