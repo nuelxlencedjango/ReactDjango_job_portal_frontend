@@ -95,13 +95,13 @@ import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { FaUser } from 'react-icons/fa';
 import { RiLockPasswordFill } from 'react-icons/ri';
-import axiosInstance from '../api/axios'; // Ensure you import axiosInstance
+import axiosInstance from '../api/axios';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -123,7 +123,7 @@ const Login = () => {
       if (user_type === 'manager') {
         navigate('/manager-dashboard');  
       } else if (user_type === 'employer') {
-        navigate('/employer-dashboard');  
+        navigate('/');  
       } else if (user_type === 'artisan') {
         navigate('/artisan-dashboard');  
       } else {
