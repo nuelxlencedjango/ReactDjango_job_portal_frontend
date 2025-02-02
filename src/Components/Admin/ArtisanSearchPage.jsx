@@ -66,7 +66,7 @@ const ArtisanSearch = () => {
           <button
             onClick={handleSearch}
             disabled={loading}
-            className="p-2 bg-green-400 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
+            className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
           >
             {loading ? "Searching..." : "Search"}
           </button>
