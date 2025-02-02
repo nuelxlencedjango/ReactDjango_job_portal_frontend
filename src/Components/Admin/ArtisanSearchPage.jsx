@@ -37,7 +37,8 @@ const ArtisanSearch = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Search Artisans</h1>
+        <h3 className="text-2xl font-bold text-gray-800 mb-6">Search Artisans</h3>
+        <h5>Use any of the following to search</h5>
 
         {/* Search Form */}
         <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 mb-6">
@@ -65,7 +66,7 @@ const ArtisanSearch = () => {
           <button
             onClick={handleSearch}
             disabled={loading}
-            className="p-2 bg-green-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            className="p-2 bg-green-500 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
             {loading ? "Searching..." : "Search"}
           </button>
