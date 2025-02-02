@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie'; // For CSRF token
 
 const FingerprintUpload = () => {
   const { artisanId } = useParams(); // Get artisan ID from the URL
@@ -9,7 +10,6 @@ const FingerprintUpload = () => {
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(''); // For image preview
 
-  console.log('artisan id:', artisanId)
   // Handle Fingerprint Image Change (File Upload)
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -29,14 +29,20 @@ const FingerprintUpload = () => {
     const formData = new FormData();
     formData.append('fingerprint_image', fingerprintImage);
 
+    // Debugging: Log FormData contents
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
     setLoading(true);
     try {
       const response = await axios.post(
-        `/upload-fingerprint/${artisanId}/`, 
+        `/acct/upload-fingerprint/${artisanId}/`,
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
+            'X-CSRFToken': Cookies.get('csrftoken'), // Add CSRF token
           },
         }
       );
@@ -45,6 +51,17 @@ const FingerprintUpload = () => {
     } catch (error) {
       setMessage('Error uploading fingerprint.');
       console.error('Error uploading fingerprint:', error);
+
+      // Debugging: Log the full error response
+      if (error.response) {
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+        console.error('Error response headers:', error.response.headers);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
     } finally {
       setLoading(false);
     }
