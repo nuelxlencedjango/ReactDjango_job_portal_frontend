@@ -29,6 +29,11 @@ const FingerprintUpload = () => {
     const formData = new FormData();
     formData.append('fingerprint_image', fingerprintImage);
 
+      // Debugging: Log FormData contents
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
+  }
+
     setLoading(true);
     try {
       // Send the request using the custom axios instance
@@ -38,7 +43,8 @@ const FingerprintUpload = () => {
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-CSRFToken': Cookies.get('csrftoken'), // Add CSRF token
+            'Authorization': `Bearer ${Cookies.get('access_token')}`, 
+            //'X-CSRFToken': Cookies.get('csrftoken'), // Add CSRF token
           },
         }
       );
@@ -141,3 +147,5 @@ const FingerprintUpload = () => {
 };
 
 export default FingerprintUpload;
+
+
