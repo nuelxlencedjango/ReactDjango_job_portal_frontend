@@ -1,6 +1,6 @@
-
 import React, { useState } from "react";
 import api from "../../api";
+import { Link } from "react-router-dom"; 
 
 const ArtisanSearch = () => {
   const [name, setName] = useState("");
@@ -22,9 +22,9 @@ const ArtisanSearch = () => {
         phone_number: phoneNumber,
       });
 
-      // data from  using the authenticated API instance
+      // Fetch data using the authenticated API instance
       const response = await api.get(`/administrator/artisans/search/?${params}`);
-      console.log('users data:', response.data)
+      console.log('Users data:', response.data);
       setResults(response.data);
     } catch (err) {
       setError("An error occurred while fetching data.");
@@ -37,8 +37,7 @@ const ArtisanSearch = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6">Search Artisans</h3>
-        <h5>Use any of the following to search</h5>
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Search Artisans</h1>
 
         {/* Search Form */}
         <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 mb-6">
@@ -47,26 +46,26 @@ const ArtisanSearch = () => {
             placeholder="First Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
             placeholder="Phone Number"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={handleSearch}
             disabled={loading}
-            className="p-2 bg-green-500 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
+            className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
             {loading ? "Searching..." : "Search"}
           </button>
@@ -82,7 +81,7 @@ const ArtisanSearch = () => {
         {/* Loading Spinner */}
         {loading && (
           <div className="flex justify-center mb-6">
-            <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           </div>
         )}
 
@@ -97,13 +96,15 @@ const ArtisanSearch = () => {
                   className="p-4 bg-gray-50 rounded-lg shadow-sm"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    
+                    {/* Artisan Image */}
                     {artisan.profile_image && (
-                      <img
-                        src={artisan.profile_image}
-                        alt="Profile"
-                        className="w-20 h-20 rounded-full object-cover"
-                      />
+                      <div className="flex-shrink-0">
+                        <img
+                          src={artisan.profile_image}
+                          alt="Profile"
+                          className="w-20 h-20 rounded-full object-cover"
+                        />
+                      </div>
                     )}
 
                     {/* Artisan Details */}
@@ -126,6 +127,16 @@ const ArtisanSearch = () => {
                       <p className="text-gray-600">
                         <strong>Location:</strong> {artisan.location || "N/A"}
                       </p>
+                    </div>
+
+                    {/* Fingerprint Link */}
+                    <div className="flex-shrink-0">
+                      <Link
+                        to={`/add-fingerprint/${artisan.id}`}
+                        className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        Add Fingerprint
+                      </Link>
                     </div>
                   </div>
                 </li>
