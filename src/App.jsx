@@ -59,8 +59,9 @@ const App = () => {
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
           <Route path="/employer-details/:userId/:username" element={<EmployerDetailForm />} />
 
-          <Route path="/artisan-finger-print" element={<ArtisanFingerprint />} />
-          
+         
+          <Route path="/artisan-finger-print/:artisanId" element={<FingerprintUpload />} />
+
           <Route path="/artisan-search" element={<ArtisanSearchPage />} />
 
           <Route path="/manager-dashboard" element={<ManagerDashboard />} />

@@ -1,31 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const FingerprintUpload = () => {
-  const [artisanProfiles, setArtisanProfiles] = useState([]);
-  const [selectedProfile, setSelectedProfile] = useState(null);
+  const { artisanId } = useParams(); // Get artisan ID from the URL
   const [fingerprintImage, setFingerprintImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
-
-  // Fetch Artisan Profiles from the API
-  useEffect(() => {
-    const fetchArtisanProfiles = async () => {
-      try {
-        const response = await axios.get('/api/artisan-profiles/');
-        setArtisanProfiles(response.data);
-      } catch (error) {
-        console.error('Error fetching artisan profiles:', error);
-      }
-    };
-
-    fetchArtisanProfiles();
-  }, []);
-
-  // Handle Artisan Profile Selection
-  const handleProfileChange = (e) => {
-    setSelectedProfile(e.target.value);
-  };
+  const [message, setMessage] = useState('');
 
   // Handle Fingerprint Image Change (File Upload)
   const handleImageChange = (e) => {
@@ -37,22 +18,25 @@ const FingerprintUpload = () => {
 
   // Handle Fingerprint Image Upload
   const handleUpload = async () => {
-    if (!selectedProfile || !fingerprintImage) {
-      setMessage('Please select a profile and upload an image.');
+    if (!fingerprintImage) {
+      setMessage('Please upload an image.');
       return;
     }
 
     const formData = new FormData();
-    formData.append('artisan_profile', selectedProfile);
     formData.append('fingerprint_image', fingerprintImage);
 
     setLoading(true);
     try {
-      const response = await axios.post('/api/upload-fingerprint/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(
+        `/api/upload-fingerprint/${artisanId}/`, 
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
 
       setMessage('Fingerprint uploaded successfully!');
     } catch (error) {
@@ -65,27 +49,7 @@ const FingerprintUpload = () => {
 
   return (
     <div className="container mx-auto px-4 mt-10">
-      <h1 className="text-3xl font-bold text-center mb-10">Upload Fingerprint</h1>
-
-      {/* Artisan Profile Selection */}
-      <div className="mb-6">
-        <label htmlFor="artisanProfile" className="block text-xl mb-2">
-          Select Artisan Profile
-        </label>
-        <select
-          id="artisanProfile"
-          className="w-full p-2 border border-gray-300 rounded-lg"
-          value={selectedProfile}
-          onChange={handleProfileChange}
-        >
-          <option value="">--Select Profile--</option>
-          {artisanProfiles.map((profile) => (
-            <option key={profile.id} value={profile.id}>
-              {profile.service} ({profile.user.username})
-            </option>
-          ))}
-        </select>
-      </div>
+      <h1 className="text-3xl font-bold text-center mb-10">Upload Fingerprint for Artisan</h1>
 
       {/* Fingerprint Image Upload */}
       <div className="mb-6">
@@ -105,6 +69,7 @@ const FingerprintUpload = () => {
       <div className="flex justify-center">
         <button
           onClick={handleUpload}
+          disabled={loading}
           className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-all duration-300"
         >
           {loading ? 'Uploading...' : 'Upload Fingerprint'}
