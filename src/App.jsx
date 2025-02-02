@@ -21,6 +21,7 @@ import Payment from './Components/CartContent/Payment';
 
 
 import ManagerDashboard from './Components/Admin/Dashboard';
+import  ArtisanFingerprint  from './Components/Workers/FingerPrintUpload';
 {/*import EmployerDashboard from './pages/EmployerDashboard';
 import ArtisanDashboard from './pages/ArtisanDashboard';*/}
 
@@ -58,7 +59,8 @@ const App = () => {
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
           <Route path="/employer-details/:userId/:username" element={<EmployerDetailForm />} />
 
-  
+          <Route path="/artisan-finger-print" element={<ArtisanFingerprint />} />
+          
           <Route path="/artisan-search" element={<ArtisanSearchPage />} />
 
           <Route path="/manager-dashboard" element={<ManagerDashboard />} />

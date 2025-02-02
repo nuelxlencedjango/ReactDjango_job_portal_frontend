@@ -38,7 +38,7 @@ const ArtisanSearch = () => {
     <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <h3 className="text-2xl font-bold text-gray-800 mb-6">Search Artisans</h3>
-        <h5 className="text-2xl font-bold text-gray-800 mb-6">Use one of the below details to search</h5>
+        <h5 className="text-gray-200 mb-6">Use one of the below details to search</h5>
 
         {/* Search Form */}
         <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 mb-6">
@@ -133,7 +133,7 @@ const ArtisanSearch = () => {
                     {/* Fingerprint Link */}
                     <div className="flex-shrink-0">
                       <Link
-                        to={`/add-fingerprint/${artisan.id}`}
+                        to={`/artisan-finger-print/${artisan.id}`}
                         className="p-2 bg-green-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         Add Fingerprint
