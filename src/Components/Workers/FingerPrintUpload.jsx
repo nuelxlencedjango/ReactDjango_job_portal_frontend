@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import Cookies from 'js-cookie'; // For CSRF token
+import Cookies from 'js-cookie';
+import api from './api'; 
 
 const FingerprintUpload = () => {
-  const { artisanId } = useParams(); // Get artisan ID from the URL
+  const { artisanId } = useParams();
   const [fingerprintImage, setFingerprintImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [preview, setPreview] = useState(''); // For image preview
+  const [preview, setPreview] = useState('');
 
-  // Handle Fingerprint Image Change (File Upload)
+  // Handle image change
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setFingerprintImage(file);
-      setPreview(URL.createObjectURL(file)); // Set image preview
+      setPreview(URL.createObjectURL(file)); // Set preview
     }
   };
 
-  // Handle Fingerprint Image Upload
+  // Handle the fingerprint upload
   const handleUpload = async () => {
     if (!fingerprintImage) {
       setMessage('Please upload an image.');
@@ -29,14 +29,10 @@ const FingerprintUpload = () => {
     const formData = new FormData();
     formData.append('fingerprint_image', fingerprintImage);
 
-    // Debugging: Log FormData contents
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-
     setLoading(true);
     try {
-      const response = await axios.post(
+      // Send the request using the custom axios instance
+      const response = await api.post(
         `/acct/upload-fingerprint/${artisanId}/`,
         formData,
         {
@@ -46,21 +42,13 @@ const FingerprintUpload = () => {
           },
         }
       );
-
+      
       setMessage('Fingerprint uploaded successfully!');
     } catch (error) {
       setMessage('Error uploading fingerprint.');
       console.error('Error uploading fingerprint:', error);
-
-      // Debugging: Log the full error response
       if (error.response) {
         console.error('Error response data:', error.response.data);
-        console.error('Error response status:', error.response.status);
-        console.error('Error response headers:', error.response.headers);
-      } else if (error.request) {
-        console.error('Error request:', error.request);
-      } else {
-        console.error('Error message:', error.message);
       }
     } finally {
       setLoading(false);
@@ -70,10 +58,7 @@ const FingerprintUpload = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-8">
-        {/* Page Title */}
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          Upload Fingerprint for Artisan
-        </h1>
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Upload Fingerprint for Artisan</h1>
 
         {/* Image Upload Section */}
         <div className="mb-8">
