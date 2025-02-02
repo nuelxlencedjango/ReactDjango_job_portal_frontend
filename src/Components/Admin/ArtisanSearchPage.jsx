@@ -1,10 +1,4 @@
 
-
-
-
-
-
-// src/components/ArtisanSearch.jsx
 import React, { useState } from "react";
 import api from "../../api";
 
@@ -28,7 +22,7 @@ const ArtisanSearch = () => {
         phone_number: phoneNumber,
       });
 
-      // Fetch data from the Django backend using the authenticated API instance
+      // data from  using the authenticated API instance
       const response = await api.get(`/administrator/artisans/search/?${params}`);
       console.log('users data:', response.data)
       setResults(response.data);
@@ -49,7 +43,7 @@ const ArtisanSearch = () => {
         <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 mb-6">
           <input
             type="text"
-            placeholder="Name"
+            placeholder="First Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -71,7 +65,7 @@ const ArtisanSearch = () => {
           <button
             onClick={handleSearch}
             disabled={loading}
-            className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            className="p-2 bg-green-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
             {loading ? "Searching..." : "Search"}
           </button>
@@ -102,7 +96,7 @@ const ArtisanSearch = () => {
                   className="p-4 bg-gray-50 rounded-lg shadow-sm"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    {/* Profile Image */}
+                    
                     {artisan.profile_image && (
                       <img
                         src={artisan.profile_image}
