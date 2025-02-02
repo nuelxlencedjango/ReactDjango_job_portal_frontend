@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import api from './api'; 
+import api from "../../api";
 
 const FingerprintUpload = () => {
   const { artisanId } = useParams();
