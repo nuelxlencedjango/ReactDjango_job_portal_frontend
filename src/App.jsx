@@ -21,7 +21,7 @@ import Payment from './Components/CartContent/Payment';
 
 
 import ManagerDashboard from './Components/Admin/Dashboard';
-import  ArtisanFingerprint  from './Components/Workers/FingerPrintUpload';
+import  ArtisanFingerprintUpload  from './Components/Workers/FingerPrintUpload';
 {/*import EmployerDashboard from './pages/EmployerDashboard';
 import ArtisanDashboard from './pages/ArtisanDashboard';*/}
 
@@ -60,7 +60,7 @@ const App = () => {
           <Route path="/employer-details/:userId/:username" element={<EmployerDetailForm />} />
 
          
-          <Route path="/artisan-finger-print/:artisanId" element={<FingerprintUpload />} />
+          <Route path="/artisan-finger-print/:artisanId" element={<ArtisanFingerprintUpload />} />
 
           <Route path="/artisan-search" element={<ArtisanSearchPage />} />
 
