@@ -9,6 +9,7 @@ const FingerprintUpload = () => {
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(''); // For image preview
 
+  console.log('artisan id:', artisanId)
   // Handle Fingerprint Image Change (File Upload)
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -31,7 +32,7 @@ const FingerprintUpload = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `/acct/upload-fingerprint/${artisanId}/`,
+        `/acct/upload-fingerprint/${artisanId}/`, 
         formData,
         {
           headers: {
