@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import Cookies from 'js-cookie';
 import api from "../../api";
 
 const FingerprintUpload = () => {
   const { artisanId } = useParams();
+  const navigate = useNavigate(); // Initialize useNavigate
   const [fingerprintImage, setFingerprintImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -29,10 +30,10 @@ const FingerprintUpload = () => {
     const formData = new FormData();
     formData.append('fingerprint_image', fingerprintImage);
 
-      // Debugging: Log FormData contents
-  for (let [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
+    // Debugging: Log FormData contents
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
 
     setLoading(true);
     try {
@@ -50,6 +51,9 @@ const FingerprintUpload = () => {
       );
       
       setMessage('Fingerprint uploaded successfully!');
+      
+     
+      navigate('/artisan-search'); 
     } catch (error) {
       setMessage('Error uploading fingerprint.');
       console.error('Error uploading fingerprint:', error);
@@ -147,5 +151,3 @@ const FingerprintUpload = () => {
 };
 
 export default FingerprintUpload;
-
-
