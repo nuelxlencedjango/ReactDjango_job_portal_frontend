@@ -17,7 +17,7 @@ import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
 import ArtisanDashboard from "./Components/Dashboard/ArtisanDashboard";
 import Payment from './Components/CartContent/Payment';
-
+import PaymentConfirmation from './Components/CartContent/PaymentConfirmation';
 
 
 import ManagerDashboard from './Components/Admin/Dashboard';
@@ -66,8 +66,10 @@ const App = () => {
 
           <Route path="/manager-dashboard" element={<ManagerDashboard />} />
 
+          <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
+
           {/*
-          <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+         
         <Route path="/artisan-dashboard" element={<ArtisanDashboard />} /
           */}
 

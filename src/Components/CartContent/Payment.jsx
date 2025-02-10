@@ -8,11 +8,11 @@ const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const totalAmount = location.state?.totalAmount || 0; // Get the totalAmount from the Cart component
+  const totalAmount = location.state?.totalAmount || 0; 
   const first_name = location.state?.first_name || "";
   const last_name = location.state?.last_name || "";
   const email = location.state?.email || "";
-  const phone_number = location.state?.phone_number || ""; // Make sure you get phone_number
+  const phone_number = location.state?.phone_number || ""; 
 
   const [amount, setAmount] = useState(totalAmount);
   const [userFirstName, setUserFirstName] = useState(first_name);
@@ -31,15 +31,15 @@ const PaymentPage = () => {
 
   // Flutterwave configuration
   const config = {
-    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", // Replace with your actual public key
+    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", 
     tx_ref: "iwanwok_" + Math.floor(Math.random() * 1000000000 + 1),
     amount: amount,
     currency: "NGN",
-    redirect_url: "https://www.i-wan-wok.com/payment_confirmation/",
+    redirect_url: "https://react-django-job-portal-frontend.vercel.app/payment_confirmation/",
     customer: {
-      email: userEmail, // Replace with dynamic email from form
-      phone_number: userPhone, // Replace with dynamic phone number from form
-      name: `${userFirstName} ${userLastName}`, // Concatenate first name and last name
+      email: userEmail, 
+      phone_number: userPhone, 
+      name: `${userFirstName} ${userLastName}`, 
     },
     customizations: {
       title: "Iwan_wok",
@@ -52,7 +52,7 @@ const PaymentPage = () => {
 
   // Form submission handler
   const onSubmit = (data) => {
-    console.log(data); // Form data (email, phoneNumber, fullname, etc.)
+    console.log(data); 
 
     // Trigger Flutterwave payment
     handleFlutterPayment({
@@ -60,7 +60,7 @@ const PaymentPage = () => {
         console.log(response);
         closePaymentModal(); // Close the payment modal
         alert("Payment was successfully completed!");
-        navigate("/payment_confirmation"); // Redirect to a confirmation page
+        navigate("/payment_confirmation");
       },
       onClose: () => {
         alert("Payment closed!");
@@ -104,7 +104,7 @@ const PaymentPage = () => {
           </h3>
         </div>
 
-        {/* Button and Link on the Same Line */}
+      
         <div className="flex justify-between items-center">
           <Link
             to="/cart"
