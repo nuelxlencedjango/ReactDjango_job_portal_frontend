@@ -44,7 +44,7 @@ const PaymentPage = () => {
     tx_ref: txRef, // Use the generated transaction reference
     amount: amount,
     currency: "NGN",
-    redirect_url: "https://react-django-job-portal-frontend.vercel.app/payment_confirmation/",
+    redirect_url: "https://i-wanwok-backend.up.railway.app/payment_confirmation/",
     customer: {
       email: userEmail,
       phone_number: userPhone,
