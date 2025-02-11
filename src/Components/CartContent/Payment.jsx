@@ -21,7 +21,7 @@ const PaymentPage = () => {
   const [userLastName, setUserLastName] = useState(last_name);
   const [userEmail, setUserEmail] = useState(email);
   const [userPhone, setUserPhone] = useState(phone_number);
-  const [txRef, setTxRef] = useState(""); // Store the transaction reference
+  const [txRef, setTxRef] = useState(""); // transaction reference
 
   // Update the amount and user details if they change
   useEffect(() => {
