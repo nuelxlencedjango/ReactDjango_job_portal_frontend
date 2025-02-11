@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import Cookies from "js-cookie";
-import api from "../../api"; // Your axios instance
+import api from "../../api";
 
 const PaymentPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -23,7 +23,7 @@ const PaymentPage = () => {
   const [userPhone, setUserPhone] = useState(phone_number);
   const [txRef, setTxRef] = useState(""); // transaction reference
 
-  // Update the amount and user details if they change
+  // transaction details
   useEffect(() => {
     setAmount(totalAmount);
     setUserFirstName(first_name);
@@ -38,13 +38,53 @@ const PaymentPage = () => {
     setTxRef(ref);
   }, []);
 
-  // Flutterwave configuration
-  const config = {
+  // Save payment information to the database
+  const savePaymentInformation = async (status = "Pending") => {
+    const token = Cookies.get("access_token");
+    if (!token) {
+      alert("You need to log in to complete this action.");
+      navigate("/login");
+      return false;
+    }
+
+    try {
+      const response = await api.post(
+        "/employer/payment-details/",
+        {
+          tx_ref: txRef,
+          amount: amount,
+          customer_name: `${userFirstName} ${userLastName}`,
+          customer_email: userEmail,
+          customer_phone: userPhone,
+          status: status, 
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        console.log("Payment information saved:", response.data);
+        return true; 
+      } else {
+        console.error("Failed to save payment information:", response.data);
+        return false; 
+      }
+    } catch (error) {
+      console.error("Error saving payment information:", error.response?.data || error);
+      return false; 
+    }
+  };
+
+  // Initialize Flutterwave payment
+  const handleFlutterPayment = useFlutterwave({
     public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
-    tx_ref: txRef, // Use the generated transaction reference
+    tx_ref: txRef, // generated transaction reference
     amount: amount,
     currency: "NGN",
-    redirect_url: "https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/",
+    redirect_url: "https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/", // Backend URL for confirmation
     customer: {
       email: userEmail,
       phone_number: userPhone,
@@ -54,13 +94,40 @@ const PaymentPage = () => {
       title: "Iwan_wok",
       description: "Payment for the services requested",
     },
+  });
+
+  // Form submission handler
+  const onSubmit = async (data) => {
+    console.log(data);
+
+    // Save payment information to the database with status "pending"
+    const isSaved = await savePaymentInformation("Pending");
+    if (!isSaved) {
+      alert("Failed to save payment information. Please try again.");
+      return;
+    }
+
+    // Trigger Flutterwave payment after successful saving of payment info
+    handleFlutterPayment({
+      callback: async (response) => {
+        console.log(response);
+        closePaymentModal(); // Close the payment modal
+
+        if (response.status === "successful") {
+          // After the payment, you need to update the status on the backend
+          await markPaymentAsSuccessful(txRef);
+        } else {
+          alert("Payment was not successful. Please try again.");
+        }
+      },
+      onClose: () => {
+        alert("Payment closed!");
+      },
+    });
   };
 
-  // Initialize Flutterwave payment
-  const handleFlutterPayment = useFlutterwave(config);
-
-  // Mark cart items as paid
-  const markCartItemsAsPaid = async () => {
+  // Mark payment as successful in the backend
+  const markPaymentAsSuccessful = async (tx_ref) => {
     const token = Cookies.get("access_token");
     if (!token) {
       alert("You need to log in to complete this action.");
@@ -70,8 +137,8 @@ const PaymentPage = () => {
 
     try {
       const response = await api.post(
-        "/employer/mark_cart_as_paid/",
-        { tx_ref: txRef }, // Send the transaction reference to the backend
+        "/employer/mark_payment_successful/",
+        { tx_ref: tx_ref },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -80,40 +147,15 @@ const PaymentPage = () => {
       );
 
       if (response.status === 200) {
-        console.log("Cart items marked as paid:", response.data);
+        console.log("Payment marked as successful:", response.data);
+        alert("Payment was successfully completed!");
+        navigate("/"); // Redirect to home or any other page
       } else {
-        console.error("Failed to mark cart items as paid:", response.data);
+        console.error("Failed to mark payment as successful:", response.data);
       }
     } catch (error) {
-      console.error("Error marking cart items as paid:", error.response?.data || error);
+      console.error("Error marking payment as successful:", error.response?.data || error);
     }
-  };
-
-  // Form submission handler
-  const onSubmit = (data) => {
-    console.log(data);
-
-    // Trigger Flutterwave payment
-    handleFlutterPayment({
-      callback: (response) => {
-        console.log(response);
-        closePaymentModal(); // Close the payment modal
-
-        if (response.status === "successful") {
-          // Mark cart items as paid
-          markCartItemsAsPaid();
-
-          // Redirect to the home page
-          alert("Payment was successfully completed!");
-          navigate("/");
-        } else {
-          alert("Payment was not successful. Please try again.");
-        }
-      },
-      onClose: () => {
-        alert("Payment closed!");
-      },
-    });
   };
 
   return (
