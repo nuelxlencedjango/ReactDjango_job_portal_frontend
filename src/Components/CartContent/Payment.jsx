@@ -2,25 +2,28 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+import Cookies from "js-cookie";
+import api from "../../api"; // Your axios instance
 
 const PaymentPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const totalAmount = location.state?.totalAmount || 0; 
+  const totalAmount = location.state?.totalAmount || 0;
   const first_name = location.state?.first_name || "";
   const last_name = location.state?.last_name || "";
   const email = location.state?.email || "";
-  const phone_number = location.state?.phone_number || ""; 
+  const phone_number = location.state?.phone_number || "";
 
   const [amount, setAmount] = useState(totalAmount);
   const [userFirstName, setUserFirstName] = useState(first_name);
   const [userLastName, setUserLastName] = useState(last_name);
   const [userEmail, setUserEmail] = useState(email);
   const [userPhone, setUserPhone] = useState(phone_number);
+  const [txRef, setTxRef] = useState(""); // Store the transaction reference
 
-  // Update the amount if the totalAmount changes
+  // Update the amount and user details if they change
   useEffect(() => {
     setAmount(totalAmount);
     setUserFirstName(first_name);
@@ -29,17 +32,23 @@ const PaymentPage = () => {
     setUserPhone(phone_number);
   }, [totalAmount, first_name, last_name, email, phone_number]);
 
+  // Generate a unique transaction reference
+  useEffect(() => {
+    const ref = "iwanwok_" + Math.floor(Math.random() * 1000000000 + 1);
+    setTxRef(ref);
+  }, []);
+
   // Flutterwave configuration
   const config = {
-    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", 
-    tx_ref: "iwanwok_" + Math.floor(Math.random() * 1000000000 + 1),
+    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
+    tx_ref: txRef, // Use the generated transaction reference
     amount: amount,
     currency: "NGN",
     redirect_url: "https://react-django-job-portal-frontend.vercel.app/payment_confirmation/",
     customer: {
-      email: userEmail, 
-      phone_number: userPhone, 
-      name: `${userFirstName} ${userLastName}`, 
+      email: userEmail,
+      phone_number: userPhone,
+      name: `${userFirstName} ${userLastName}`,
     },
     customizations: {
       title: "Iwan_wok",
@@ -50,17 +59,56 @@ const PaymentPage = () => {
   // Initialize Flutterwave payment
   const handleFlutterPayment = useFlutterwave(config);
 
+  // Mark cart items as paid
+  const markCartItemsAsPaid = async () => {
+    const token = Cookies.get("access_token");
+    if (!token) {
+      alert("You need to log in to complete this action.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await api.post(
+        "/employer/mark_cart_as_paid/",
+        { tx_ref: txRef }, // Send the transaction reference to the backend
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Cart items marked as paid:", response.data);
+      } else {
+        console.error("Failed to mark cart items as paid:", response.data);
+      }
+    } catch (error) {
+      console.error("Error marking cart items as paid:", error.response?.data || error);
+    }
+  };
+
   // Form submission handler
   const onSubmit = (data) => {
-    console.log(data); 
+    console.log(data);
 
     // Trigger Flutterwave payment
     handleFlutterPayment({
       callback: (response) => {
         console.log(response);
         closePaymentModal(); // Close the payment modal
-        alert("Payment was successfully completed!");
-        navigate("/payment_confirmation");
+
+        if (response.status === "successful") {
+          // Mark cart items as paid
+          markCartItemsAsPaid();
+
+          // Redirect to the home page
+          alert("Payment was successfully completed!");
+          navigate("/");
+        } else {
+          alert("Payment was not successful. Please try again.");
+        }
       },
       onClose: () => {
         alert("Payment closed!");
@@ -79,21 +127,21 @@ const PaymentPage = () => {
         {/* User Details */}
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2">Full Name</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={`${userFirstName} ${userLastName}`}
-            className="w-full p-2 border rounded" 
-            readOnly 
+            className="w-full p-2 border rounded"
+            readOnly
           />
         </div>
 
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2">Email</label>
-          <input 
-            type="text" 
-            value={userEmail} 
-            className="w-full p-2 border rounded" 
-            readOnly 
+          <input
+            type="text"
+            value={userEmail}
+            className="w-full p-2 border rounded"
+            readOnly
           />
         </div>
 
@@ -104,7 +152,7 @@ const PaymentPage = () => {
           </h3>
         </div>
 
-      
+        {/* Buttons */}
         <div className="flex justify-between items-center">
           <Link
             to="/cart"

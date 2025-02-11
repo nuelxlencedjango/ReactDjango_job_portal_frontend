@@ -190,22 +190,22 @@ export default Artisans;*/}
 
 
 
-
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import api from '../../api';  // Your axios instance
+import api from '../../api'; // Your axios instance
 import DryIcon from '@mui/icons-material/Dry';
+import { ClipLoader } from 'react-spinners'; // For the spinning loading effect
 
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [cartStatus, setCartStatus] = useState({});
+  const [loading, setLoading] = useState(false); // For fetching artisans
+  const [addingToCart, setAddingToCart] = useState(false); // For adding to cart
+  const [cartStatus, setCartStatus] = useState({}); // Track cart status for each artisan
   const navigate = useNavigate();
 
-  // Fetch artisans when component mounts or when service_title changes
+  // Fetch artisans when the component mounts or when service_title changes
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
@@ -218,7 +218,7 @@ const Artisans = () => {
           Cookies.remove('access_token');
           navigate('/login');
         } else {
-          console.error("Error fetching artisans:", error);
+          console.error('Error fetching artisans:', error);
         }
       } finally {
         setLoading(false);
@@ -228,35 +228,49 @@ const Artisans = () => {
     fetchArtisans();
   }, [service_title, navigate]);
 
-  // Check if artisan is already in the cart
+  // Check if an artisan is already in the cart
   const checkIfArtisanInCart = async (email) => {
-    const status = cartStatus[email];
-    return status !== undefined ? status : false;
+    const token = Cookies.get('access_token');
+    if (token) {
+      try {
+        const response = await api.get(`/employer/check-artisan/${email}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return response.data.in_cart;
+      } catch (error) {
+        console.error('Error checking artisan in cart:', error);
+        return false;
+      }
+    }
+    return false;
   };
 
-  // Handle order click and add artisan to cart
+  // Handle the "Add to Cart" button click
   const handleOrderClick = async (email, artisanId, artisan) => {
+    const token = Cookies.get('access_token');
     if (!email) {
-      console.error('Missing artisan email.');
+      alert('Missing artisan email.');
       return;
     }
 
-    // Retrieve the access token from cookies
-    const accessToken = Cookies.get('access_token');
-
-    if (!accessToken) {
-      console.error('Access token is missing');
+    // Check if the user is authenticated
+    if (!token) {
+      alert('Please log in to add artisans to your cart.');
+      navigate('/login');
       return;
     }
 
     try {
+      setAddingToCart(true); // Start loading spinner
       const response = await api.post(
-        '/employer/add_to_cart/',  // Adjust the endpoint as needed
+        '/employer/add_to_cart/',
         { artisan_email: email },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,  // Add token to the Authorization header
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -264,10 +278,12 @@ const Artisans = () => {
         alert('Service added to your cart!');
         navigate('/service-details', { state: { artisan, service: artisan.service } });
       } else {
-        alert(response.data.detail);  // Handle already in cart case
+        alert(response.data.detail); // Handle already in cart case
       }
     } catch (error) {
-      console.error("Error adding to cart:", error.response?.data || error);
+      console.error('Error adding to cart:', error.response?.data || error);
+    } finally {
+      setAddingToCart(false); // Stop loading spinner
     }
   };
 
@@ -292,7 +308,7 @@ const Artisans = () => {
     const isInCart = cartStatus[email];
     return {
       text: isInCart ? 'Already in the cart' : 'Add to cart',
-      disabled: isInCart,
+      disabled: isInCart || addingToCart, // Disable button if adding to cart is in progress
     };
   };
 
@@ -302,12 +318,17 @@ const Artisans = () => {
         Available {service_title}s for your service
       </h1>
 
-      {loading && <div className="loading-indicator">Loading...</div>}
+      {/* Loading spinner for fetching artisans */}
+      {loading && (
+        <div className="flex justify-center items-center">
+          <ClipLoader color="#36D7B7" size={50} />
+        </div>
+      )}
 
+      {/* Artisans grid */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 py-10">
         {artisans.map((artisan) => {
           const { text, disabled } = getButtonTextAndDisabled(artisan.user?.email);
-
           const uniqueKey = artisan.id || artisan.user?.email || artisan.user?.id;
 
           return (
@@ -315,14 +336,15 @@ const Artisans = () => {
               key={uniqueKey}
               className="p-4 bg-white rounded-lg shadow-lg flex flex-col items-center relative transition-transform transform hover:scale-105"
             >
+              {/* Icons */}
               <div className="absolute top-2 left-4">
                 <DryIcon className="text-black-500" style={{ fontSize: 24 }} />
               </div>
-
               <div className="absolute top-2 right-4">
                 <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
               </div>
 
+              {/* Artisan profile image */}
               <div className="flex justify-center w-full mb-4">
                 {artisan.profile_image ? (
                   <img
@@ -335,6 +357,7 @@ const Artisans = () => {
                 )}
               </div>
 
+              {/* Artisan details */}
               <h2 className="text-lg font-semibold mb-2">
                 {artisan.user?.first_name} {artisan.user?.last_name}
               </h2>
@@ -349,12 +372,17 @@ const Artisans = () => {
                 <p className="text-red-600">Pay: ${artisan.pay}</p>
               </div>
 
+              {/* Add to Cart button */}
               <button
-                onClick={() => handleOrderClick(artisan.user?.email, artisan.id, artisan)} 
+                onClick={() => handleOrderClick(artisan.user?.email, artisan.id, artisan)}
                 className="mt-auto bg-green-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:bg-green-600"
                 disabled={disabled}
               >
-                {text}
+                {addingToCart ? (
+                  <ClipLoader color="#ffffff" size={20} /> // Spinner inside the button
+                ) : (
+                  text
+                )}
               </button>
             </div>
           );
