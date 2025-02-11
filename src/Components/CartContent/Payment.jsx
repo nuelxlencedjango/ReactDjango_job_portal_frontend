@@ -29,8 +29,8 @@ const PaymentPage = () => {
     setUserFirstName(first_name);
     setUserLastName(last_name);
     setUserEmail(email);
-    setUserPhone(phone_number);
-  }, [totalAmount, first_name, last_name, email, phone_number]);
+    //setUserPhone(phone_number);
+  }, [totalAmount, first_name, last_name, email]);
 
   // Generate a unique transaction reference
   useEffect(() => {
@@ -53,9 +53,9 @@ const PaymentPage = () => {
         {
           tx_ref: txRef,
           amount: amount,
-          customer_name: `${userFirstName} ${userLastName}`,
-          customer_email: userEmail,
-          customer_phone: userPhone,
+          //customer_name: `${userFirstName} ${userLastName}`,
+          //customer_email: userEmail,
+          //customer_phone: userPhone,
           status: status, 
         },
         {
