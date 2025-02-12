@@ -84,7 +84,7 @@ const PaymentPage = () => {
     tx_ref: txRef, // generated transaction reference
     amount: amount,
     currency: "NGN",
-    redirect_url: "https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/", // Backend URL for confirmation
+    redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/?access_token=${Cookies.get("access_token")}`, // Backend URL for confirmation
     customer: {
       email: userEmail,
       phone_number: userPhone,
