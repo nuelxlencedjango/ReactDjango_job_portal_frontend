@@ -66,10 +66,9 @@ const PaymentPage = () => {
     }
   };
 
-  // Use Flutterwave SDK
   const handleFlutterPayment = useFlutterwave({
     public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
-    tx_ref: txRef, // generated transaction reference
+    tx_ref: txRef,  // Transaction reference
     amount: amount,
     currency: "NGN",
     redirect_url: "https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/",  // Keep this as your endpoint
@@ -84,11 +83,8 @@ const PaymentPage = () => {
     },
     callback: async (response) => {
       closePaymentModal();
-      
-      // Check response status before proceeding with backend request
       if (response.status === "successful") {
         const token = Cookies.get("access_token");
-        
         try {
           const res = await api.post(
             "/employer/payment_confirmation/",
@@ -103,9 +99,9 @@ const PaymentPage = () => {
               },
             }
           );
-
+  
           if (res.status === 200) {
-            console.log('Payment confirmed successfully', res.data);
+            console.log("Payment confirmed successfully", res.data);
             alert("Payment was successfully completed!");
             navigate("/"); // Redirect to home or another page
           } else {
@@ -120,8 +116,10 @@ const PaymentPage = () => {
     },
     onClose: () => {
       alert("Payment closed!");
-    }
+    },
   });
+  
+  
 
   // Form submission handler
   const onSubmit = async (data) => {
