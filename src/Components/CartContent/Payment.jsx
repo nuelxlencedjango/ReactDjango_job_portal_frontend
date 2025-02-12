@@ -66,59 +66,58 @@ const PaymentPage = () => {
     }
   };
 
-  // Replace the original redirect_url with a custom logic for confirmation
-const handleFlutterPayment = useFlutterwave({
-  public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
-  tx_ref: txRef, // generated transaction reference
-  amount: amount,
-  currency: "NGN",
-  redirect_url: "https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/",  // Keep this as your endpoint
-  customer: {
-    email: userEmail,
-    phone_number: userPhone,
-    name: `${userFirstName} ${userLastName}`,
-  },
-  customizations: {
-    title: "Iwan_wok",
-    description: "Payment for the services requested",
-  },
-  callback: async (response) => {
-    closePaymentModal();
-
-    // Fetch the token from Cookies (assuming you're using JWT)
-    const token = Cookies.get("access_token");
-
-    // Send token and payment status to the backend for confirmation
-    try {
-      const res = await api.post(
-        "/employer/payment_confirmation/",
-        {
-          status: response.status, 
-          tx_ref: txRef, 
-          transaction_id: response.transaction_id, 
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,  // Include token in Authorization header
+  const handleFlutterPayment = useFlutterwave({
+    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
+    tx_ref: txRef,
+    amount: amount,
+    currency: "NGN",
+    redirect_url: "https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/",
+    customer: {
+      email: userEmail,
+      phone_number: userPhone,
+      name: `${userFirstName} ${userLastName}`,
+    },
+    customizations: {
+      title: "Iwan_wok",
+      description: "Payment for the services requested",
+    },
+    callback: async (response) => {
+      closePaymentModal();
+  
+      const token = Cookies.get("access_token");
+      
+      // Send token and payment status to the backend for confirmation
+      try {
+        const res = await api.post(
+          "/employer/payment_confirmation/",
+          {
+            status: response.status,
+            tx_ref: txRef,
+            transaction_id: response.transaction_id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
           }
+        );
+  
+        if (res.status === 200) {
+          console.log('Payment confirmed successfully', res.data);
+          alert("Payment was successfully completed!");
+          navigate("/"); // Redirect to home or another page
+        } else {
+          alert("Payment confirmation failed.");
         }
-      );
-
-      if (res.status === 200) {
-        console.log('Payment confirmed successfully', res.data);
-        alert("Payment was successfully completed!");
-        navigate("/"); // Redirect to home or another page
-      } else {
-        alert("Payment confirmation failed.");
+      } catch (error) {
+        console.error("Error confirming payment:", error);
       }
-    } catch (error) {
-      console.error("Error confirming payment:", error);
+    },
+    onClose: () => {
+      alert("Payment closed!");
     }
-  },
-  onClose: () => {
-    alert("Payment closed!");
-  }
-});
+  });
+  
 
   // Form submission handler
   const onSubmit = async (data) => {
