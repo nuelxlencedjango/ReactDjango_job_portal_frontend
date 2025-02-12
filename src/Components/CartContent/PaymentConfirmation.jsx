@@ -28,7 +28,7 @@ const PaymentStatusPage = () => {
       }
 
       try {
-        const response = await api.get("/employer/payment_confirmation/", {
+        const response = await api.get("https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/", {
           params: {
             status: status,
             tx_ref: tx_ref,
@@ -100,3 +100,6 @@ const PaymentStatusPage = () => {
 };
 
 export default PaymentStatusPage;
+
+
+
