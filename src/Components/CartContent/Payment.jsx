@@ -66,7 +66,7 @@ const PaymentPage = () => {
     }
   };
 
-
+  // Replace the original redirect_url with a custom logic for confirmation
 const handleFlutterPayment = useFlutterwave({
   public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
   tx_ref: txRef, // generated transaction reference
@@ -120,21 +120,67 @@ const handleFlutterPayment = useFlutterwave({
   }
 });
 
-const onSubmit = async (data) => {
-  console.log(data);
+  // Form submission handler
+  const onSubmit = async (data) => {
+    console.log(data);
 
-  // Save payment information to the database with status "pending"
-  const isSaved = await savePaymentInformation("Pending");
-  if (!isSaved) {
-    alert("Failed to save payment information. Please try again.");
-    return;
-  }
+    // Save payment information to the database with status "pending"
+    const isSaved = await savePaymentInformation("Pending");
+    if (!isSaved) {
+      alert("Failed to save payment information. Please try again.");
+      return;
+    }
 
-  // Trigger payment after successful saving of payment info
-  handleFlutterPayment();  // Just call it directly
-};
+    // Trigger payment after successful saving of payment info
+    handleFlutterPayment({
+      callback: async (response) => {
+        console.log(response);
+        closePaymentModal(); // Close the payment modal
 
+        if (response.status === "successful") {
+          // After the payment, you need to update the status on the backend
+          await markPaymentAsSuccessful(txRef);
+        } else {
+          alert("Payment was not successful. Please try again.");
+        }
+      },
+      onClose: () => {
+        alert("Payment closed!");
+      },
+    });
+  };
 
+  // Mark payment as successful in the backend
+  const markPaymentAsSuccessful = async (tx_ref) => {
+    const token = Cookies.get("access_token");
+    if (!token) {
+      alert("You need to log in to complete this action.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await api.post(
+        "/employer/mark_payment_successful/",
+        { tx_ref: tx_ref },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Payment marked as successful:", response.data);
+        alert("Payment was successfully completed!");
+        navigate("/"); // Redirect to home or any other page
+      } else {
+        console.error("Failed to mark payment as successful:", response.data);
+      }
+    } catch (error) {
+      console.error("Error marking payment as successful:", error.response?.data || error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
