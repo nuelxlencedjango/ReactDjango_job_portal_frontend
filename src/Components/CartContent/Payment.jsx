@@ -73,7 +73,7 @@ const handleFlutterPayment = useFlutterwave({
   tx_ref: txRef,
   amount: amount,
   currency: "NGN",
-  redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/?token=${Cookies.get("access_token")}`, // Include token in the URL
+  redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/`, // Include token in the URL
   customer: {
     email: userEmail,
     phone_number: userPhone,
