@@ -78,7 +78,7 @@ const PaymentPage = () => {
     }
   };
 
-  // Initialize Flutterwave payment
+  // Initialize  payment
   const handleFlutterPayment = useFlutterwave({
     public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
     tx_ref: txRef, // generated transaction reference
@@ -107,7 +107,7 @@ const PaymentPage = () => {
       return;
     }
 
-    // Trigger Flutterwave payment after successful saving of payment info
+    // Trigger payment after successful saving of payment info
     handleFlutterPayment({
       callback: async (response) => {
         console.log(response);
