@@ -67,13 +67,12 @@ const savePaymentInformation = async (status = "Pending") => {
     return false; 
   }
 };
-
 const handleFlutterPayment = useFlutterwave({
   public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
   tx_ref: txRef,
   amount: amount,
   currency: "NGN",
-  redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/?token=${Cookies.get("access_token")}`, // Include token in the URL
+  redirect_url: "https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/",  // Keep this as your endpoint
   customer: {
     email: userEmail,
     phone_number: userPhone,
@@ -86,11 +85,37 @@ const handleFlutterPayment = useFlutterwave({
   callback: async (response) => {
     closePaymentModal();
 
-    if (response.status === "successful") {
-      alert("Payment was successfully completed!");
-      navigate("/"); // Redirect to home or another page
-    } else {
-      alert("Payment was not successful. Please try again.");
+    const token = Cookies.get("access_token");
+    if (!token) {
+      alert("You need to log in to complete this action.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const res = await api.post(
+        "/employer/payment_confirmation/",
+        {
+          status: response.status, 
+          tx_ref: txRef, 
+          transaction_id: response.transaction_id, 
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,  
+          }
+        }
+      );
+
+      if (res.status === 200) {
+        console.log('Payment confirmed successfully', res.data);
+        alert("Payment was successfully completed!");
+        navigate("/"); // Redirect to home or another page
+      } else {
+        alert("Payment confirmation failed.");
+      }
+    } catch (error) {
+      console.error("Error confirming payment:", error);
     }
   },
   onClose: () => {
