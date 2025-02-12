@@ -23,15 +23,6 @@ const PaymentPage = () => {
   const [userPhone, setUserPhone] = useState(phone_number);
   const [txRef, setTxRef] = useState(""); // transaction reference
 
-  // transaction details
-  useEffect(() => {
-    setAmount(totalAmount);
-    setUserFirstName(first_name);
-    setUserLastName(last_name);
-    setUserEmail(email);
-    //setUserPhone(phone_number);
-  }, [totalAmount, first_name, last_name, email]);
-
   // Generate a unique transaction reference
   useEffect(() => {
     const ref = "iwanwok_" + Math.floor(Math.random() * 1000000000 + 1);
@@ -53,9 +44,6 @@ const PaymentPage = () => {
         {
           tx_ref: txRef,
           amount: amount,
-          //customer_name: `${userFirstName} ${userLastName}`,
-          //customer_email: userEmail,
-          //customer_phone: userPhone,
           status: status, 
         },
         {
@@ -78,13 +66,13 @@ const PaymentPage = () => {
     }
   };
 
-  // Initialize  payment
+  // Initialize payment
   const handleFlutterPayment = useFlutterwave({
     public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
     tx_ref: txRef, // generated transaction reference
     amount: amount,
     currency: "NGN",
-    redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/?access_token=${Cookies.get("access_token")}`, // Backend URL for confirmation
+    redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/`, // Backend URL for confirmation
     customer: {
       email: userEmail,
       phone_number: userPhone,
