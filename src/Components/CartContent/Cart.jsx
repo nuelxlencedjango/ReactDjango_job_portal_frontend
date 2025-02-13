@@ -101,7 +101,7 @@ const Cart = () => {
         <div className="text-center">
           <p className="text-gray-600 text-xl mb-4">Your cart is empty.</p>
           <Link
-            to="/services"
+            to="/"
             className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300"
           >
             Browse Services
