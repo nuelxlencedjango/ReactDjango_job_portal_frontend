@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import api from "../../api";
 import Cookies from "js-cookie";
 import { useNavigate, Link } from "react-router-dom";
-import DryIcon from "@mui/icons-material/Dry";
 import { FaTrash, FaPlus } from "react-icons/fa";
 
 const Cart = () => {
@@ -29,10 +28,12 @@ const Cart = () => {
 
         console.log("Response data:", response.data);
 
-        if (response.data.cart === null) {
+        if (response.data.cart === null || response.data.cart.length === 0) {
           setCartItems([]);
         } else {
-          setCartItems(response.data.cart.items || []);
+          // Flatten the items array from all carts
+          const allItems = response.data.cart.flatMap((cart) => cart.items);
+          setCartItems(allItems);
         }
 
         setUserData(response.data.user || {});
