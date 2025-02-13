@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import Cookies from "js-cookie";
 import api from "../../api";
 
 const PaymentPage = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -64,66 +66,6 @@ const PaymentPage = () => {
     }
   };
 
-  const handleFlutterPayment = useFlutterwave({
-    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
-    tx_ref: txRef,
-    amount: amount,
-    currency: "NGN",
-    redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/`, // Include token in the URL
-    customer: {
-      email: userEmail,
-      phone_number: userPhone,
-      name: `${userFirstName} ${userLastName}`,
-    },
-    customizations: {
-      title: "Iwan_wok",
-      description: "Payment for the services requested",
-    },
-    callback: async (response) => {
-      closePaymentModal();
-
-      if (response.status === "successful") {
-        alert("Payment was successfully completed!");
-        navigate("/"); // Redirect to home or another page
-      } else {
-        alert("Payment was not successful. Please try again.");
-      }
-    },
-    onClose: () => {
-      alert("Payment closed!");
-    },
-  });
-
-  // Form submission handler
-  const onSubmit = async (data) => {
-    console.log(data);
-
-    // Save payment information to the database with status "pending"
-    const isSaved = await savePaymentInformation("Pending");
-    if (!isSaved) {
-      alert("Failed to save payment information. Please try again.");
-      return;
-    }
-
-    // Trigger payment after successful saving of payment info
-    handleFlutterPayment({
-      callback: async (response) => {
-        console.log(response);
-        closePaymentModal(); // Close the payment modal
-
-        if (response.status === "successful") {
-          // After the payment, you need to update the status on the backend
-          await markPaymentAsSuccessful(txRef);
-        } else {
-          alert("Payment was not successful. Please try again.");
-        }
-      },
-      onClose: () => {
-        alert("Payment closed!");
-      },
-    });
-  };
-
   // Mark payment as successful in the backend
   const markPaymentAsSuccessful = async (tx_ref) => {
     const token = Cookies.get("access_token");
@@ -156,13 +98,73 @@ const PaymentPage = () => {
     }
   };
 
+  // Handle Flutterwave payment
+  const handleFlutterPayment = useFlutterwave({
+    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
+    tx_ref: txRef,
+    amount: amount,
+    currency: "NGN",
+    redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/`, // Include token in the URL
+    customer: {
+      email: userEmail,
+      phone_number: userPhone,
+      name: `${userFirstName} ${userLastName}`,
+    },
+    customizations: {
+      title: "Iwan_wok",
+      description: "Payment for the services requested",
+    },
+    callback: async (response) => {
+      closePaymentModal();
+      if (response.status === "successful") {
+        alert("Payment was successfully completed!");
+        await markPaymentAsSuccessful(txRef);
+      } else {
+        alert("Payment was not successful. Please try again.");
+      }
+    },
+    onClose: () => {
+      alert("Payment closed!");
+    },
+  });
+
+  // Form submission handler
+  const onSubmit = async () => {
+    // Save payment information with status "pending"
+    const isSaved = await savePaymentInformation("Pending");
+    if (!isSaved) {
+      alert("Failed to save payment information. Please try again.");
+      return;
+    }
+
+    // Trigger payment after successful saving of payment info
+    handleFlutterPayment({
+      callback: async (response) => {
+        console.log(response);
+        closePaymentModal(); // Close the payment modal
+
+        if (response.status === "successful") {
+          // After the payment, you need to update the status on the backend
+          await markPaymentAsSuccessful(txRef);
+        } else {
+          alert("Payment was not successful. Please try again.");
+        }
+      },
+      onClose: () => {
+        alert("Payment closed!");
+      },
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <form
         className="bg-white p-6 rounded shadow-md w-full max-w-lg"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-2xl font-bold mb-6 text-center">Total Amount: ₦{amount.toFixed(2)}</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          Total Amount: ₦{amount.toFixed(2)}
+        </h1>
 
         {/* User Details */}
         <div className="mb-4">
