@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import api from "../../api"; 
+import api from "../../api";
 
 const PaymentStatusPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  //  query parameters from the URL
+  // Extract query parameters from the URL
   const queryParams = new URLSearchParams(location.search);
-  const status = queryParams.get("status"); 
-  const tx_ref = queryParams.get("tx_ref"); 
-  const transaction_id = queryParams.get("transaction_id"); 
+  const status = queryParams.get("status");
+  const tx_ref = queryParams.get("tx_ref");
+  const transaction_id = queryParams.get("transaction_id");
 
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch payment confirmation from the backend
   useEffect(() => {
+    // If any required query param is missing, show error
+    if (!status || !tx_ref || !transaction_id) {
+      setError("Missing payment parameters.");
+      setLoading(false);
+      return;
+    }
+
     const confirmPayment = async () => {
       const token = Cookies.get("access_token");
       if (!token) {
@@ -28,18 +34,12 @@ const PaymentStatusPage = () => {
       }
 
       try {
-        const response = await api.get("https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/", {
-          params: {
-            status: status,
-            tx_ref: tx_ref,
-            transaction_id: transaction_id,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const response = await api.get("/employer/payment_confirmation/", {
+          params: { status, tx_ref, transaction_id },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (response.status === 200) {
+        if (response.status === 200 && response.data.status === "successful") {
           setPaymentStatus("successful");
         } else {
           setPaymentStatus("failed");
@@ -57,7 +57,7 @@ const PaymentStatusPage = () => {
   }, [status, tx_ref, transaction_id, navigate]);
 
   if (loading) {
-    return <div className="text-center mt-8">Loading payment status...</div>;
+    return <div className="text-center mt-8">Verifying payment status, please wait...</div>;
   }
 
   if (error) {
@@ -100,9 +100,3 @@ const PaymentStatusPage = () => {
 };
 
 export default PaymentStatusPage;
-
-
-
-
-
-
