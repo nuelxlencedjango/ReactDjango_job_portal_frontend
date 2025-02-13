@@ -21,7 +21,7 @@ const PaymentPage = () => {
   const [userLastName, setUserLastName] = useState(last_name);
   const [userEmail, setUserEmail] = useState(email);
   const [userPhone, setUserPhone] = useState(phone_number);
-  const [txRef, setTxRef] = useState(""); // transaction reference
+  const [txRef, setTxRef] = useState(""); // Transaction reference
 
   // Generate a unique transaction reference
   useEffect(() => {
@@ -66,45 +66,13 @@ const PaymentPage = () => {
     }
   };
 
-  // Mark payment as successful in the backend
-  const markPaymentAsSuccessful = async (tx_ref) => {
-    const token = Cookies.get("access_token");
-    if (!token) {
-      alert("You need to log in to complete this action.");
-      navigate("/login");
-      return;
-    }
-
-    try {
-      const response = await api.post(
-        "/employer/mark_payment_successful/",
-        { tx_ref: tx_ref },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        console.log("Payment marked as successful:", response.data);
-        alert("Payment was successfully completed!");
-        navigate("/"); // Redirect to home or any other page
-      } else {
-        console.error("Failed to mark payment as successful:", response.data);
-      }
-    } catch (error) {
-      console.error("Error marking payment as successful:", error.response?.data || error);
-    }
-  };
-
   // Handle Flutterwave payment
   const handleFlutterPayment = useFlutterwave({
     public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
     tx_ref: txRef,
     amount: amount,
     currency: "NGN",
-    redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/`, // Include token in the URL
+    redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/`, // Redirect to backend for confirmation
     customer: {
       email: userEmail,
       phone_number: userPhone,
@@ -116,11 +84,14 @@ const PaymentPage = () => {
     },
     callback: async (response) => {
       closePaymentModal();
+
       if (response.status === "successful") {
         alert("Payment was successfully completed!");
-        await markPaymentAsSuccessful(txRef);
+        // Redirect to frontend's payment confirmation page
+        navigate(`/payment-confirmation?status=success&tx_ref=${txRef}`);
       } else {
         alert("Payment was not successful. Please try again.");
+        navigate(`/payment-confirmation?status=failed&tx_ref=${txRef}`);
       }
     },
     onClose: () => {
@@ -138,22 +109,7 @@ const PaymentPage = () => {
     }
 
     // Trigger payment after successful saving of payment info
-    handleFlutterPayment({
-      callback: async (response) => {
-        console.log(response);
-        closePaymentModal(); // Close the payment modal
-
-        if (response.status === "successful") {
-          // After the payment, you need to update the status on the backend
-          await markPaymentAsSuccessful(txRef);
-        } else {
-          alert("Payment was not successful. Please try again.");
-        }
-      },
-      onClose: () => {
-        alert("Payment closed!");
-      },
-    });
+    handleFlutterPayment();
   };
 
   return (
