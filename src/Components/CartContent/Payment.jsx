@@ -68,11 +68,11 @@ const PaymentPage = () => {
 
   // Handle Flutterwave payment
   const handleFlutterPayment = useFlutterwave({
-    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X",
-    tx_ref: txRef,
-    amount: amount,
-    currency: "NGN",
-    redirect_url: `https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/`, // Redirect to backend for confirmation
+    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", // Replace with your public key
+    tx_ref: txRef, // Unique transaction reference
+    amount: amount, // Payment amount
+    currency: "NGN", // Currency
+    redirect_url: "https://your-backend-url/payment_confirmation/", // Redirect URL
     customer: {
       email: userEmail,
       phone_number: userPhone,
@@ -83,22 +83,20 @@ const PaymentPage = () => {
       description: "Payment for the services requested",
     },
     callback: async (response) => {
-      closePaymentModal();
-
+      closePaymentModal(); // Close the payment modal
       if (response.status === "successful") {
         alert("Payment was successfully completed!");
-        // Redirect to frontend's payment confirmation page
-        navigate(`/payment-confirmation?status=success&tx_ref=${txRef}`);
+        await markPaymentAsSuccessful(txRef); // Update payment status in backend
+        navigate(`/payment-confirmation?status=success&tx_ref=${txRef}`); // Redirect to success page
       } else {
         alert("Payment was not successful. Please try again.");
-        navigate(`/payment-confirmation?status=failed&tx_ref=${txRef}`);
+        navigate(`/payment-confirmation?status=failed&tx_ref=${txRef}`); // Redirect to failure page
       }
     },
     onClose: () => {
       alert("Payment closed!");
     },
   });
-
   // Form submission handler
   const onSubmit = async () => {
     // Save payment information with status "pending"
