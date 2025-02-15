@@ -1,11 +1,12 @@
-
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useForm } from "react-hook-form"; // <-- Import handleSubmit
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import Cookies from "js-cookie";
 import api from "../../api";
 
 const PaymentPage = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm(); // <-- Destructure handleSubmit here
   const location = useLocation();
   const navigate = useNavigate();
   const totalAmount = location.state?.totalAmount || 0;
@@ -134,7 +135,7 @@ const PaymentPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <form
         className="bg-white p-6 rounded shadow-md w-full max-w-lg"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit)} // <-- Now handleSubmit is available
       >
         <h1 className="text-2xl font-bold mb-6 text-center">
           Total Amount: ₦{amount.toFixed(2)}
