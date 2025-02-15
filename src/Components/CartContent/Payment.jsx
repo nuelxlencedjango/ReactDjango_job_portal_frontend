@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../api";
 import Cookies from "js-cookie";
-import { TailSpin } from "react-loader-spinner"; // For loading spinner
+//import { TailSpin } from "react-loader-spinner"; 
+import { ClipLoader } from 'react-spinners'
 
 const PaymentConfirmation = () => {
   const location = useLocation();
@@ -62,7 +63,7 @@ const PaymentConfirmation = () => {
       <div className="bg-white p-8 rounded-lg shadow-md text-center">
         {isLoading ? (
           <div className="flex flex-col items-center">
-            <TailSpin color="#3B82F6" height={50} width={50} />
+            <ClipLoader color="#3B82F6" height={50} width={50} />
             <p className="mt-4 text-gray-700">Processing payment...</p>
           </div>
         ) : (
