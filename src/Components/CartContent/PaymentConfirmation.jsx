@@ -18,10 +18,10 @@ const PaymentConfirmation = () => {
       try {
         const response = await api.post("/employer/payment-details/", {
           tx_ref: txRef,
-          amount: amount,
+          amount: parseFloat(amount), // Ensure amount is a number
           status: status,
         });
-
+  
         if (response.status === 201) {
           setPaymentDetails(response.data);
         } else {
@@ -33,7 +33,7 @@ const PaymentConfirmation = () => {
         setIsLoading(false);
       }
     };
-
+  
     submitPaymentDetails();
   }, [txRef, amount, status]);
 
