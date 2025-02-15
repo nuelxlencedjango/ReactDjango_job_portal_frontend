@@ -23,7 +23,7 @@ const PaymentPage = () => {
   const [userPhone, setUserPhone] = useState(phone_number);
   const [txRef, setTxRef] = useState(""); // Transaction reference
 
-  // Generate a unique transaction reference
+  // Generate a unique transaction reference 
   useEffect(() => {
     const ref = "iwanwok_" + Math.floor(Math.random() * 1000000000 + 1);
     setTxRef(ref);
@@ -40,6 +40,7 @@ const PaymentPage = () => {
       email: userEmail,
       phone_number: userPhone,
       name: `${userFirstName} ${userLastName}`,
+      
     },
     customizations: {
       title: "Iwan_wok",
@@ -62,7 +63,7 @@ const PaymentPage = () => {
         // Trigger backend API to update cart and items
         await api.post("/payment/process/", {
           tx_ref: txRef, // Pass tx_ref (the reference you generated)
-          transaction_id: response.transaction_id, // Pass transaction_id 
+          transaction_id: response.id, // Pass transaction_id 
           status: response.status,
           amount: amount,
         });
