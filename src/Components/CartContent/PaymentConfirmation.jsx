@@ -8,6 +8,7 @@ const PaymentConfirmation = () => {
   const status = queryParams.get("status");
   const txRef = queryParams.get("tx_ref");
   const amount = queryParams.get("amount");
+  console.log('amount',amount, 'txtRef:', txRef,"status:",status)
 
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +19,7 @@ const PaymentConfirmation = () => {
       try {
         const response = await api.post("/employer/payment-details/", {
           tx_ref: txRef,
-          amount: parseFloat(amount), // Ensure amount is a number
+          amount: parseFloat(amount), 
           status: status,
         });
   
