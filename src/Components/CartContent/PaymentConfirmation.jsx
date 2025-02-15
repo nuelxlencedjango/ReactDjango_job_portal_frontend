@@ -16,7 +16,7 @@ const PaymentConfirmation = () => {
   useEffect(() => {
     const submitPaymentDetails = async () => {
       try {
-        const response = await api.post("/api/payment-details/", {
+        const response = await api.post("/employer/payment-details/", {
           tx_ref: txRef,
           amount: amount,
           status: status,
