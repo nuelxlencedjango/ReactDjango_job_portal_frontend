@@ -7,24 +7,35 @@ const PaymentConfirmation = () => {
   const queryParams = new URLSearchParams(location.search);
   const status = queryParams.get("status");
   const txRef = queryParams.get("tx_ref");
+  const amount = queryParams.get("amount");
 
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Submit payment details to the backend
   useEffect(() => {
-    const fetchPaymentDetails = async () => {
+    const submitPaymentDetails = async () => {
       try {
-        const response = await api.get(`/api/payment-details/?tx_ref=${txRef}`);
-        setPaymentDetails(response.data);
+        const response = await api.post("/api/payment-details/", {
+          tx_ref: txRef,
+          amount: amount,
+          status: status,
+        });
+
+        if (response.status === 201) {
+          setPaymentDetails(response.data);
+        } else {
+          console.error("Failed to submit payment details:", response.data);
+        }
       } catch (error) {
-        console.error("Error fetching payment details:", error);
+        console.error("Error submitting payment details:", error.response?.data || error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchPaymentDetails();
-  }, [txRef]);
+    submitPaymentDetails();
+  }, [txRef, amount, status]);
 
   if (isLoading) {
     return <div>Loading...</div>;
