@@ -1,112 +1,62 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { useLocation } from "react-router-dom";
 import api from "../../api";
 
-const PaymentStatusPage = () => {
+const PaymentConfirmation = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-
-  // Extract query parameters from the URL
   const queryParams = new URLSearchParams(location.search);
   const status = queryParams.get("status");
-  const tx_ref = queryParams.get("tx_ref");
-  const transaction_id = queryParams.get("transaction_id");
+  const txRef = queryParams.get("tx_ref");
 
-  const [paymentStatus, setPaymentStatus] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [paymentDetails, setPaymentDetails] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // If any required query param is missing, show error
-    if (!status || !tx_ref || !transaction_id) {
-      setError("Missing payment parameters.");
-      setLoading(false);
-      return;
-    }
-
-    const confirmPayment = async () => {
-      const token = Cookies.get("access_token");
-      if (!token) {
-        setError("Please log in to confirm payment.");
-        setTimeout(() => navigate("/login"), 1000);
-        return;
-      }
-
+    const fetchPaymentDetails = async () => {
       try {
-        const response = await api.get("/employer/payment_confirmation/", {
-          params: { status, tx_ref, transaction_id },
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (response.status === 200 && response.data.status === "successful") {
-          setPaymentStatus("successful");
-        } else {
-          setPaymentStatus("failed");
-        }
+        const response = await api.get(`/api/payment-details/?tx_ref=${txRef}`);
+        setPaymentDetails(response.data);
       } catch (error) {
-        console.error("Error confirming payment:", error.response?.data || error);
-        setError("An error occurred while confirming payment.");
-        setPaymentStatus("failed");
+        console.error("Error fetching payment details:", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
-    confirmPayment();
-  }, [status, tx_ref, transaction_id, navigate]);
+    fetchPaymentDetails();
+  }, [txRef]);
 
-  if (loading) {
-    return <div className="text-center mt-8">Verifying payment status, please wait...</div>;
-  }
-
-  if (error) {
-    return (
-      <div className="text-center mt-8 text-red-500">
-        <p>{error}</p>
-        <button
-          onClick={() => navigate("/cart")}
-          className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 mt-4"
-        >
-          Go to Cart
-        </button>
-      </div>
-    );
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-lg text-center">
-        {paymentStatus === "successful" ? (
-          <>
-            <h1 className="text-2xl font-bold mb-4 text-green-600">Payment Successful!</h1>
-            <p className="text-gray-700 mb-4">
-              Your payment has been processed successfully. Thank you for your purchase!
-            </p>
-            <button
-              onClick={() => setTimeout(() => navigate("/"), 1000)}
-              className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-300"
-            >
-              Go to Homepage
-            </button>
-          </>
-        ) : (
-          <>
-            <h1 className="text-2xl font-bold mb-4 text-red-600">Payment Failed</h1>
-            <p className="text-gray-700 mb-4">
-              Unfortunately, your payment was not successful. Please try again or contact support.
-            </p>
-            <button
-              onClick={() => setTimeout(() => navigate("/cart"), 1000)}
-              className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-all duration-300"
-            >
-              Go to Cart
-            </button>
-          </>
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          Payment {status === "success" ? "Successful" : "Failed"}
+        </h1>
+
+        {paymentDetails && (
+          <div className="space-y-4">
+            <p><strong>Transaction Reference:</strong> {paymentDetails.tx_ref}</p>
+            <p><strong>Amount:</strong> ₦{paymentDetails.amount.toFixed(2)}</p>
+            <p><strong>Status:</strong> {paymentDetails.status}</p>
+            <p><strong>Date:</strong> {new Date(paymentDetails.created_at).toLocaleString()}</p>
+          </div>
         )}
+
+        <div className="mt-6 text-center">
+          <a
+            href="/"
+            className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-300"
+          >
+            Return Home
+          </a>
+        </div>
       </div>
     </div>
   );
 };
 
-export default PaymentStatusPage;
+export default PaymentConfirmation;
