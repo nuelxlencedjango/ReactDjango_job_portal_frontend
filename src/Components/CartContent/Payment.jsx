@@ -28,9 +28,10 @@ const PaymentPage = () => {
     callback: (response) => {
       closePaymentModal();
       if (response.status === "successful") {
-        navigate(`/payment-confirmation?status=success&tx_ref=${txRef}&amount=${totalAmount}`);
+        console.log('Flutterwave response:', response);
+        navigate(`/payment-confirmation?status=success&tx_ref=${txRef}&amount=${totalAmount}&transaction_id=${response.transaction_id}`);
       } else {
-        navigate(`/payment-confirmation?status=failed&tx_ref=${txRef}&amount=${totalAmount}`);
+        navigate(`/payment-confirmation?status=failed&tx_ref=${txRef}&amount=${totalAmount}&transaction_id=${response.transaction_id}`);
       }
     },
     onClose: () => alert("Payment closed!"),
