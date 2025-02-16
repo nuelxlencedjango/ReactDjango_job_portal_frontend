@@ -4,18 +4,10 @@ import api from "../../api";
 
 const PaymentConfirmation = () => {
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const status = queryParams.get("status");
-  const txRef = queryParams.get("tx_ref");
-  const amount = queryParams.get("amount");
-  const transactionId = queryParams.get("transaction_id"); // Extract transaction_id
+  const { state } = location;
+  const { status, tx_ref, amount, transaction_id } = state || {};
 
-  console.log('Query Params:', {
-    status,
-    txRef,
-    amount,
-    transactionId,
-  });
+  console.log('Location State:', state); // Debug location.state
 
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,10 +17,10 @@ const PaymentConfirmation = () => {
     const submitPaymentDetails = async () => {
       try {
         const response = await api.post("/employer/payment-details/", {
-          tx_ref: txRef,
+          tx_ref: tx_ref,
           amount: parseFloat(amount), // Ensure amount is a number
           status: status,
-          transaction_id: transactionId, // Include transaction_id
+          transaction_id: transaction_id, // Include transaction_id
         });
 
         if (response.status === 201) {
@@ -43,8 +35,13 @@ const PaymentConfirmation = () => {
       }
     };
 
-    submitPaymentDetails();
-  }, [txRef, amount, status, transactionId]);
+    if (tx_ref && amount && status && transaction_id) {
+      submitPaymentDetails();
+    } else {
+      console.error("Missing required fields in state:", { tx_ref, amount, status, transaction_id });
+      setIsLoading(false);
+    }
+  }, [tx_ref, amount, status, transaction_id]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -60,7 +57,7 @@ const PaymentConfirmation = () => {
         {paymentDetails && (
           <div className="space-y-4">
             <p><strong>Transaction Reference:</strong> {paymentDetails.tx_ref}</p>
-            <p><strong>Transaction ID:</strong> {paymentDetails.transaction_id}</p> {/* Display transaction_id */}
+            <p><strong>Transaction ID:</strong> {paymentDetails.transaction_id}</p>
             <p><strong>Amount:</strong> ₦{paymentDetails.amount.toFixed(2)}</p>
             <p><strong>Status:</strong> {paymentDetails.status}</p>
             <p><strong>Date:</strong> {new Date(paymentDetails.created_at).toLocaleString()}</p>
