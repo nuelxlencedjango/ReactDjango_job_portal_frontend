@@ -20,42 +20,20 @@ const PaymentPage = () => {
     tx_ref: txRef,
     amount: totalAmount,
     currency: "NGN",
-    redirect_url: "https://i-wanwok-backend.up.railway.app/employer/payment_confirmation/", // Backend URL to handle the payment status
+    redirect_url: "https://react-django-job-portal-frontend.vercel.app/payment-confirmation/", // Redirect to frontend page
     customer: { email, phone_number, name: `${first_name} ${last_name}` },
     customizations: { title: "Iwan_wok", description: "Payment for the services requested" },
     callback: (response) => {
       closePaymentModal();
       if (response.status === "successful") {
         console.log('Flutterwave response:', response);
-        // Redirect to the confirmation page with payment details
-        navigate(`/payment-confirmation`, {
-          state: {
-            status: "success",
-            tx_ref: txRef,
-            amount: totalAmount, // Send the amount to the confirmation page
-            transaction_id: response.transaction_id,
-          },
-        });
+        navigate(`/payment-confirmation?status=success&tx_ref=${txRef}&amount=${totalAmount}&transaction_id=${response.transaction_id}`);
       } else {
-        navigate(`/payment-confirmation`, {
-          state: {
-            status: "failed",
-            tx_ref: txRef,
-            amount: totalAmount, // Send the amount to the confirmation page
-            transaction_id: response.transaction_id,
-          },
-        });
+        navigate(`/payment-confirmation?status=failed&tx_ref=${txRef}&amount=${totalAmount}&transaction_id=${response.transaction_id}`);
       }
     },
     onClose: () => alert("Payment closed!"),
   });
-
-  const handlePayNow = () => {
-    // Navigate to a loading or confirmation page in frontend while waiting for payment completion
-    navigate('/payment-loading');
-    // Proceed with Flutterwave payment
-    handleFlutterPayment();
-  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
@@ -65,7 +43,7 @@ const PaymentPage = () => {
         </h1>
 
         <button
-          onClick={handlePayNow}
+          onClick={handleFlutterPayment}
           className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 w-full"
         >
           Pay Now
