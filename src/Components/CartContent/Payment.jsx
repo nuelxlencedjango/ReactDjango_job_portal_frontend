@@ -19,7 +19,7 @@ const PaymentPage = () => {
   const handleFlutterPayment = useFlutterwave({
     public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", // Replace with your public key
     tx_ref: txRef,
-    amount: totalAmount,
+    amount: totalAmount, 
     currency: "NGN",
     redirect_url: "https://react-django-job-portal-frontend.vercel.app/payment-confirmation/", // Redirect to frontend page
     customer: { email, phone_number, name: `${first_name} ${last_name}` },
@@ -31,7 +31,7 @@ const PaymentPage = () => {
       const paymentResponse = {
         status: response.status,
         transaction_id: response.transaction_id,
-        amount: totalAmount,
+        amount: response.amount, 
         tx_ref: txRef
       };
   
@@ -46,7 +46,7 @@ const PaymentPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Total Amount: ₦{totalAmount.toFixed(2)}
+          Total Amount: ₦{totalAmount.toFixed(2)} 
         </h1>
 
         <button
