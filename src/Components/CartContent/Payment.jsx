@@ -20,7 +20,7 @@ const PaymentPage = () => {
     tx_ref: txRef,
     amount: totalAmount,
     currency: "NGN",
-    redirect_url: "https://react-django-job-portal-frontend.vercel.app/payment-confirmation/", // Redirect to frontend page
+    redirect_url: "https://i-wanwok-backend.up.railway.app/employer/payment-confirmation/", // Redirect to frontend page
     customer: { email, phone_number, name: `${first_name} ${last_name}` },
     customizations: { title: "Iwan_wok", description: "Payment for the services requested" },
     callback: (response) => {
