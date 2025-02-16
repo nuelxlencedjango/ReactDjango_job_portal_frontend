@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation,Link } from "react-router-dom";
+
 import api from "../../api";
 
 const PaymentConfirmation = () => {
@@ -65,12 +66,19 @@ const PaymentConfirmation = () => {
         )}
 
         <div className="mt-6 text-center">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-300"
           >
-            Return Home
-          </a>
+            view order details
+          </Link>
+          <Link
+            to="/"
+            className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-300"
+          >
+            request another service
+          </Link>
+
         </div>
       </div>
     </div>

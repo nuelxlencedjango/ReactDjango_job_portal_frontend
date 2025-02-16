@@ -1,68 +1,86 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+import React, { useState } from "react";
+import Cookies from "js-cookie"; // Import Cookies library
+import api from "../../api";
 
 const PaymentPage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const cart_code = Cookies.get("cart_code"); // Retrieve cart_code from cookies
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const { totalAmount = 0, first_name = "", last_name = "", email = "", phone_number = "" } = location.state || {};
-  const [txRef, setTxRef] = useState("");
+  const initiatePayment = async () => {
+    setLoading(true);
+    setError("");
 
-  // Generate a unique transaction reference
-  useEffect(() => {
-    setTxRef("iwanwok_" + Math.floor(Math.random() * 1000000000 + 1));
-  }, []);
+    try {
+      // Send a POST request to the backend
+      const response = await api.post("employer/payment-details/", {
+        cart_code, // Send cart_code to the backend
+      });
 
-  console.log('Total Amount from User:', totalAmount); // Debug totalAmount
-
-  // Handle Flutterwave payment
-  const handleFlutterPayment = useFlutterwave({
-    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", // Replace with your public key
-    tx_ref: txRef,
-    amount: totalAmount,
-    currency: "NGN",
-    redirect_url: "https://react-django-job-portal-frontend.vercel.app/payment-confirmation/", // Redirect to frontend page
-    customer: { email, phone_number, name: `${first_name} ${last_name}` },
-    customizations: { title: "Iwan_wok", description: "Payment for the services requested" },
-    callback: (response) => {
-      closePaymentModal();
-      if (response.status === "successful") {
-        console.log('Flutterwave response:', response);
-        navigate(`/payment-confirmation`, {
-          state: {
-            status: "success",
-            tx_ref: txRef,
-            amount: totalAmount, // Pass totalAmount from the user
-            transaction_id: response.transaction_id,
-          },
-        });
+      // Check if the response contains the Flutterwave payment link
+      if (response.data && response.data.data && response.data.data.link) {
+        // Redirect the user to the Flutterwave payment page
+        window.location.href = response.data.data.link;
       } else {
-        navigate(`/payment-confirmation`, {
-          state: {
-            status: "failed",
-            tx_ref: txRef,
-            amount: totalAmount, // Pass totalAmount from the user
-            transaction_id: response.transaction_id,
-          },
-        });
+        setError("Failed to initiate payment. Please try again.");
       }
-    },
-    onClose: () => alert("Payment closed!"),
-  });
+    } catch (err) {
+      setError(
+        err.response?.data?.error ||
+          "An error occurred while initiating the payment."
+      );
+      console.error("Payment error:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Total Amount: ₦{totalAmount.toFixed(2)}
-        </h1>
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-lg text-center">
+        <h1 className="text-2xl font-bold mb-6">Complete Your Payment</h1>
 
+        {/* Display error message */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+
+        {/* Pay Now button */}
         <button
-          onClick={handleFlutterPayment}
-          className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 w-full"
+          onClick={initiatePayment}
+          disabled={loading}
+          className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 w-full flex items-center justify-center"
         >
-          Pay Now
+          {loading ? (
+            <>
+              {/* Loading spinner */}
+              <svg
+                className="animate-spin h-5 w-5 mr-3 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Processing...
+            </>
+          ) : (
+            "Pay Now"
+          )}
         </button>
       </div>
     </div>

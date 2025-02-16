@@ -180,16 +180,11 @@ const Cart = () => {
 
           {/* Order Summary Section */}
           <div className="sticky top-20 bg-white p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 w-full lg:w-1/3 max-h-[400px] overflow-y-auto">
-            <div className="w-full h-32 mb-4">
-              <img
-                src="https://via.placeholder.com/300x200"
-                alt="Order Summary"
-                className="rounded-lg object-cover w-full h-full"
-              />
-            </div>
+           
             <h2 className="text-xl font-semibold mb-4 text-gray-800">
               Order Summary
             </h2>
+            <hr />
             <div className="flex justify-between items-center mb-4">
               <p className="text-gray-700 text-lg">Total Items:</p>
               <p className="font-bold text-lg">{cartItems.length}</p>
@@ -198,11 +193,12 @@ const Cart = () => {
               <p className="text-gray-700 text-lg">Total Amount: </p>
               <p className="font-bold text-lg">₦{calculateTotal().toFixed(2)}</p>
             </div>
+            <hr />
 
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-5">
               <button
                 onClick={handleProceedToCheckout}
-                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-105"
+                className="bg-green-600 text-white px-10 py-3 rounded-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-105"
               >
                 Proceed to Checkout
               </button>
