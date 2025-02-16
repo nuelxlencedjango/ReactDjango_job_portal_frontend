@@ -1,30 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import api from "../../api";
+import api from "../../api"; 
 
 const PaymentConfirmation = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+
+  // Extract query parameters from the URL
   const status = queryParams.get("status");
   const txRef = queryParams.get("tx_ref");
   const amount = queryParams.get("amount");
-  console.log('amount',amount, 'txtRef:', txRef,"status:",status)
+  const transactionId = queryParams.get("transaction_id");
+
+  console.log('Amount:', amount, 'Tx Ref:', txRef, 'Status:', status, 'Transaction ID:', transactionId);
 
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Submit payment details to the backend
+  // Function to submit payment details to the backend
   useEffect(() => {
     const submitPaymentDetails = async () => {
+      if (!txRef || !amount || !status || !transactionId) {
+        console.error("Missing payment details in the URL");
+        return;
+      }
+
       try {
+        // Convert amount to a float to ensure it's treated as a number
         const response = await api.post("/employer/payment-details/", {
           tx_ref: txRef,
-          amount: parseFloat(amount), 
+          amount: parseFloat(amount), // Ensuring amount is parsed as a number
           status: status,
+          transaction_id: transactionId,
         });
-  
+
         if (response.status === 201) {
-          setPaymentDetails(response.data);
+          setPaymentDetails(response.data); // Set payment details from the response
         } else {
           console.error("Failed to submit payment details:", response.data);
         }
@@ -34,10 +45,11 @@ const PaymentConfirmation = () => {
         setIsLoading(false);
       }
     };
-  
-    submitPaymentDetails();
-  }, [txRef, amount, status]);
 
+    submitPaymentDetails();
+  }, [txRef, amount, status, transactionId]);
+
+  // Loading state before data is fetched
   if (isLoading) {
     return <div>Loading...</div>;
   }
