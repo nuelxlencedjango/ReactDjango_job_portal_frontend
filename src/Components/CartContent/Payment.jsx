@@ -17,7 +17,7 @@ const PaymentPage = () => {
 
   // Handle Flutterwave payment
   const handleFlutterPayment = useFlutterwave({
-    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", 
+    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", // Replace with your public key
     tx_ref: txRef,
     amount: totalAmount,
     currency: "NGN",
@@ -26,15 +26,21 @@ const PaymentPage = () => {
     customizations: { title: "Iwan_wok", description: "Payment for the services requested" },
     callback: (response) => {
       closePaymentModal();
-      if (response.status === "successful") {
-        console.log('Flutterwave response:', response);
-        navigate(`/payment-confirmation?status=success&tx_ref=${txRef}&amount=${totalAmount}&transaction_id=${response.transaction_id}`);
-      } else {
-        navigate(`/payment-confirmation?status=failed&tx_ref=${txRef}&amount=${totalAmount}&transaction_id=${response.transaction_id}`);
-      }
+      
+      // Serialize the response object to pass it in the URL query parameters
+      const paymentResponse = {
+        status: response.status,
+        transaction_id: response.transaction_id,
+        amount: totalAmount,
+        tx_ref: txRef
+      };
+  
+      // Redirect to payment confirmation page with the serialized response data
+      navigate(`/payment-confirmation?status=${paymentResponse.status}&tx_ref=${paymentResponse.tx_ref}&amount=${paymentResponse.amount}&transaction_id=${paymentResponse.transaction_id}`);
     },
     onClose: () => alert("Payment closed!"),
   });
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
