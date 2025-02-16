@@ -5,17 +5,14 @@ import api from "../../api";
 const PaymentConfirmation = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  
+  // Extract the values from the query string
   const status = queryParams.get("status");
   const txRef = queryParams.get("tx_ref");
   const amount = queryParams.get("amount");
   const transactionId = queryParams.get("transaction_id");
 
-  console.log('Query Params:', {
-    status,
-    txRef,
-    amount,
-    transactionId,
-  });
+  console.log('Payment Confirmation - amount:', amount, 'txRef:', txRef, 'status:', status, 'transaction_id:', transactionId);
 
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,9 +23,9 @@ const PaymentConfirmation = () => {
       try {
         const response = await api.post("/employer/payment-details/", {
           tx_ref: txRef,
-          amount: parseFloat(amount), // Ensure amount is a number
+          amount: amount, // Ensure amount is parsed properly as a number
           status: status,
-          transaction_id: transactionId, // Include transaction_id
+          transaction_id: transactionId,
         });
 
         if (response.status === 201) {
@@ -60,7 +57,6 @@ const PaymentConfirmation = () => {
         {paymentDetails && (
           <div className="space-y-4">
             <p><strong>Transaction Reference:</strong> {paymentDetails.tx_ref}</p>
-            <p><strong>Transaction ID:</strong> {paymentDetails.transaction_id}</p>
             <p><strong>Amount:</strong> ₦{paymentDetails.amount.toFixed(2)}</p>
             <p><strong>Status:</strong> {paymentDetails.status}</p>
             <p><strong>Date:</strong> {new Date(paymentDetails.created_at).toLocaleString()}</p>
