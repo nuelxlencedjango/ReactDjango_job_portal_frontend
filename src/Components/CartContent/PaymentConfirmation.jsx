@@ -1,41 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import api from "../../api"; 
+import api from "../../api";
 
 const PaymentConfirmation = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-
-  // Extract query parameters from the URL
   const status = queryParams.get("status");
   const txRef = queryParams.get("tx_ref");
   const amount = queryParams.get("amount");
   const transactionId = queryParams.get("transaction_id");
 
-  console.log('Amount:', amount, 'Tx Ref:', txRef, 'Status:', status, 'Transaction ID:', transactionId);
+  console.log('Query Params:', {
+    status,
+    txRef,
+    amount,
+    transactionId,
+  });
 
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Function to submit payment details to the backend
+  // Submit payment details to the backend
   useEffect(() => {
     const submitPaymentDetails = async () => {
-      if (!txRef || !amount || !status || !transactionId) {
-        console.error("Missing payment details in the URL");
-        return;
-      }
-
       try {
-        // Convert amount to a float to ensure it's treated as a number
         const response = await api.post("/employer/payment-details/", {
           tx_ref: txRef,
-          amount: parseFloat(amount), // Ensuring amount is parsed as a number
+          amount: parseFloat(amount), // Ensure amount is a number
           status: status,
-          transaction_id: transactionId,
+          transaction_id: transactionId, // Include transaction_id
         });
 
         if (response.status === 201) {
-          setPaymentDetails(response.data); // Set payment details from the response
+          setPaymentDetails(response.data);
         } else {
           console.error("Failed to submit payment details:", response.data);
         }
@@ -49,7 +46,6 @@ const PaymentConfirmation = () => {
     submitPaymentDetails();
   }, [txRef, amount, status, transactionId]);
 
-  // Loading state before data is fetched
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -64,6 +60,7 @@ const PaymentConfirmation = () => {
         {paymentDetails && (
           <div className="space-y-4">
             <p><strong>Transaction Reference:</strong> {paymentDetails.tx_ref}</p>
+            <p><strong>Transaction ID:</strong> {paymentDetails.transaction_id}</p>
             <p><strong>Amount:</strong> ₦{paymentDetails.amount.toFixed(2)}</p>
             <p><strong>Status:</strong> {paymentDetails.status}</p>
             <p><strong>Date:</strong> {new Date(paymentDetails.created_at).toLocaleString()}</p>
