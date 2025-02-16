@@ -1,50 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import api from "../../api";
 
 const PaymentConfirmation = () => {
   const location = useLocation();
-  const { state } = location;
-  const { status, tx_ref, amount, transaction_id } = state || {};
+  const { status, tx_ref, amount, transaction_id } = location.state || {};
+  
+  console.log("Payment Confirmation - amount:", amount, "txRef:", tx_ref, "status:", status, "transaction_id:", transaction_id);
 
-  console.log('Location State:', state); // Debug location.state
-
-  const [paymentDetails, setPaymentDetails] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Submit payment details to the backend
-  useEffect(() => {
-    const submitPaymentDetails = async () => {
-      try {
-        const response = await api.post("/employer/payment-details/", {
-          tx_ref: tx_ref,
-          amount: parseFloat(amount), // Ensure amount is a number
-          status: status,
-          transaction_id: transaction_id, // Include transaction_id
-        });
-
-        if (response.status === 201) {
-          setPaymentDetails(response.data);
-        } else {
-          console.error("Failed to submit payment details:", response.data);
-        }
-      } catch (error) {
-        console.error("Error submitting payment details:", error.response?.data || error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (tx_ref && amount && status && transaction_id) {
-      submitPaymentDetails(); // Silently submit payment details to the backend
-    } else {
-      console.error("Missing required fields in state:", { tx_ref, amount, status, transaction_id });
-      setIsLoading(false);
-    }
-  }, [tx_ref, amount, status, transaction_id]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (!status || !tx_ref || !amount || !transaction_id) {
+    return <div>Error: Missing payment information</div>;
   }
 
   return (
@@ -54,15 +18,12 @@ const PaymentConfirmation = () => {
           Payment {status === "success" ? "Successful" : "Failed"}
         </h1>
 
-        {paymentDetails && (
-          <div className="space-y-4">
-            <p><strong>Transaction Reference:</strong> {paymentDetails.tx_ref}</p>
-            <p><strong>Transaction ID:</strong> {paymentDetails.transaction_id}</p>
-            <p><strong>Amount:</strong> ₦{paymentDetails.amount.toFixed(2)}</p>
-            <p><strong>Status:</strong> {paymentDetails.status}</p>
-            <p><strong>Date:</strong> {new Date(paymentDetails.created_at).toLocaleString()}</p>
-          </div>
-        )}
+        <div className="space-y-4">
+          <p><strong>Transaction Reference:</strong> {tx_ref}</p>
+          <p><strong>Amount:</strong> ₦{parseFloat(amount).toFixed(2)}</p>
+          <p><strong>Status:</strong> {status}</p>
+          <p><strong>Transaction ID:</strong> {transaction_id}</p>
+        </div>
 
         <div className="mt-6 text-center">
           <a
