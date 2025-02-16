@@ -13,7 +13,9 @@ const PaymentPage = () => {
   useEffect(() => {
     setTxRef("iwanwok_" + Math.floor(Math.random() * 1000000000 + 1));
   }, []);
-  console.log('total:',totalAmount)
+
+  console.log('Total Amount from User:', totalAmount); // Debug totalAmount
+
   // Handle Flutterwave payment
   const handleFlutterPayment = useFlutterwave({
     public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", // Replace with your public key
@@ -27,12 +29,11 @@ const PaymentPage = () => {
       closePaymentModal();
       if (response.status === "successful") {
         console.log('Flutterwave response:', response);
-        console.log('Total Amount:', totalAmount); // Verify totalAmount
         navigate(`/payment-confirmation`, {
           state: {
             status: "success",
             tx_ref: txRef,
-            amount: totalAmount, // Pass totalAmount here
+            amount: totalAmount, // Pass totalAmount from the user
             transaction_id: response.transaction_id,
           },
         });
@@ -41,7 +42,7 @@ const PaymentPage = () => {
           state: {
             status: "failed",
             tx_ref: txRef,
-            amount: totalAmount,
+            amount: totalAmount, // Pass totalAmount from the user
             transaction_id: response.transaction_id,
           },
         });
@@ -69,5 +70,3 @@ const PaymentPage = () => {
 };
 
 export default PaymentPage;
-
-
