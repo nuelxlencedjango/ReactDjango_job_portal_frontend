@@ -7,7 +7,7 @@ const PaymentConfirmation = () => {
   const { state } = location;
   const { status, tx_ref, amount, transaction_id } = state || {};
 
-  console.log('State:', { status, tx_ref, amount, transaction_id }); // Debug state
+  console.log('Location State:', state); // Debug location.state
 
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +36,7 @@ const PaymentConfirmation = () => {
     };
 
     if (tx_ref && amount && status && transaction_id) {
-      submitPaymentDetails();
+      submitPaymentDetails(); // Silently submit payment details to the backend
     } else {
       console.error("Missing required fields in state:", { tx_ref, amount, status, transaction_id });
       setIsLoading(false);
