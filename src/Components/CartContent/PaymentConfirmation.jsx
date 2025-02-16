@@ -23,7 +23,7 @@ const PaymentConfirmation = () => {
       try {
         const response = await api.post("/employer/payment-details/", {
           tx_ref: txRef,
-          amount: amount, // Ensure amount is parsed properly as a number
+          amount: response.data?.amount || totalAmount,
           status: status,
           transaction_id: transactionId,
         });
@@ -77,3 +77,5 @@ const PaymentConfirmation = () => {
 };
 
 export default PaymentConfirmation;
+
+
