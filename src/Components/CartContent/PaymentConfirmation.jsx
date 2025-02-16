@@ -9,7 +9,7 @@ const PaymentConfirmation = () => {
   // Extract the values from the query string
   const status = queryParams.get("status");
   const txRef = queryParams.get("tx_ref");
-  const amount = queryParams.get("amount");
+  const amount = queryParams.get('amount');
   const transactionId = queryParams.get("transaction_id");
 
   console.log('Payment Confirmation - amount:', amount, 'txRef:', txRef, 'status:', status, 'transaction_id:', transactionId);
