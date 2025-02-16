@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 
-
 const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -16,9 +15,9 @@ const PaymentPage = () => {
     setTxRef("iwanwok_" + Math.floor(Math.random() * 1000000000 + 1));
   }, []);
 
-
+  // Handle Flutterwave payment
   const handleFlutterPayment = useFlutterwave({
-    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", // Replace with your public key
+    public_key: "FLWPUBK_TEST-6941e4117be9902646d54ec0509e804c-X", 
     tx_ref: txRef,
     amount: totalAmount,
     currency: "NGN",
@@ -29,7 +28,6 @@ const PaymentPage = () => {
       closePaymentModal();
       if (response.status === "successful") {
         console.log('Flutterwave response:', response);
-        // Passing amount in the query params when redirecting
         navigate(`/payment-confirmation?status=success&tx_ref=${txRef}&amount=${totalAmount}&transaction_id=${response.transaction_id}`);
       } else {
         navigate(`/payment-confirmation?status=failed&tx_ref=${txRef}&amount=${totalAmount}&transaction_id=${response.transaction_id}`);
@@ -37,7 +35,6 @@ const PaymentPage = () => {
     },
     onClose: () => alert("Payment closed!"),
   });
-  
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
