@@ -7,7 +7,7 @@ const PaymentConfirmation = () => {
   const { state } = location;
   const { status, tx_ref, amount, transaction_id } = state || {};
 
-  console.log('State:', { status, tx_ref, amount, transaction_id }); 
+  console.log('State:', { status, tx_ref, amount, transaction_id }); // Debug state
 
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,9 +18,9 @@ const PaymentConfirmation = () => {
       try {
         const response = await api.post("/employer/payment-details/", {
           tx_ref: tx_ref,
-          amount: parseFloat(amount), 
+          amount: parseFloat(amount), // Ensure amount is a number
           status: status,
-          transaction_id: transaction_id, 
+          transaction_id: transaction_id, // Include transaction_id
         });
 
         if (response.status === 201) {
