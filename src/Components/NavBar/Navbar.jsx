@@ -19,7 +19,7 @@ const Navbar = () => {
                         
                         {/* logo image */}
                         <Link to={'/'}><img src={logo} alt="Logo" className="w-14 h-14 mr-2 rounded-full" /></Link>
-                        <h1 className='logo text-[25px] text-green-500'><strong><Link to={'/'}>I-won-wok</Link></strong></h1>
+                        <h1 className='logo text-[25px] text-green-500'><strong><Link to={'/'}>I-wan-wok</Link></strong></h1>
                     </div>
                     <div className="hidden md:flex gap-8">
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/'}>Jobs</Link></li>
@@ -29,6 +29,7 @@ const Navbar = () => {
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/'}>Blog</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/login'}>Login</Link></li>  
                         <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/signup'}>Register</Link></li>
+                        <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/cart'}>Cart</Link></li>
 
 
                         
@@ -50,6 +51,8 @@ const Navbar = () => {
                             <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/'}>Blog</Link></li>
                             <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/login'}>Login</Link></li> 
                             <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/signup'}>Register</Link></li>
+                            <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/cart'}>Cart</Link></li>
+                             <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/cart'}>Cart</Link></li>
    
 
                             <li className='menuList text-[#6f6f6f] hover:text-blue-600'><Link to={'/dashboard'}>Dashboard</Link></li>
