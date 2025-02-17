@@ -43,7 +43,7 @@ const PaymentConfirmation = () => {
     try {
       console.log("Sending payment details to backend...");
       const response = await api.post(
-        "https://your-actual-backend-url.com/api/confirm-payment/", // Replace with your actual backend URL
+        "employer/confirm-payment/", 
         {
           tx_ref,
           status,
