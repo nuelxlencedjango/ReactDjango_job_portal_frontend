@@ -5,7 +5,7 @@
 
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie"; // Import Cookies library
+import Cookies from "js-cookie"; 
 import api from "../../api";
 
 const PaymentPage = () => {
@@ -50,7 +50,7 @@ const PaymentPage = () => {
     console.log("Headers:", {
       Authorization: `Bearer ${token}`,
     });
-    
+
 
     try {
       

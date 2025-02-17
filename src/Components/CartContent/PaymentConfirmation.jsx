@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import api from "../../api";
-import Cookies from "js-cookie"; 
-import { Link } from "react-router-dom"; 
+import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 const PaymentConfirmation = () => {
   const location = useLocation();
@@ -24,6 +24,8 @@ const PaymentConfirmation = () => {
     const status = queryParams.get("status");
     const transaction_id = queryParams.get("transaction_id");
 
+    console.log("Extracted Params:", { tx_ref, status, transaction_id });
+
     // Ensure all required parameters are present
     if (tx_ref && status && transaction_id) {
       setPaymentInfo({ tx_ref, status, transaction_id });
@@ -39,8 +41,9 @@ const PaymentConfirmation = () => {
 
   const verifyPayment = async (tx_ref, status, transaction_id) => {
     try {
+      console.log("Sending payment details to backend...");
       const response = await api.post(
-        "https://your-backend-url.com/api/confirm-payment/",
+        "https://your-actual-backend-url.com/api/confirm-payment/", // Replace with your actual backend URL
         {
           tx_ref,
           status,
@@ -48,10 +51,12 @@ const PaymentConfirmation = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
         }
       );
+
+      console.log("Backend Response:", response.data);
 
       if (response.data.message === "Payment Successful") {
         setSuccess(true); // Mark payment as successful
