@@ -43,7 +43,7 @@ const PaymentConfirmation = () => {
     try {
       console.log("Sending payment details to backend...");
       const response = await api.post(
-        "employer/payment_confirmation//", 
+        "employer/payment_confirmation/", 
         {
           tx_ref,
           status,
