@@ -49,7 +49,7 @@ const PaymentPage = () => {
     console.log("Headers:", {
       Authorization: `Bearer ${token}`,
     });
-    
+
     try {
       
       // Send a POST request to the backend with the access token
@@ -153,3 +153,58 @@ const PaymentPage = () => {
 };
 
 export default PaymentPage;
+
+
+
+
+
+const initiatePayment = async () => {
+  setLoading(true);
+  setError("");
+
+  const cartCode = Cookies.get("cart_code");
+  const token = Cookies.get("access_token");
+
+  if (!cartCode) {
+    setError("No Cart code missing. Please try again.");
+    setLoading(false);
+    navigate("/cart");
+    return;
+  }
+
+  if (!token) {
+    setError("You are not authenticated. Please log in.");
+    setLoading(false);
+    navigate("/login");
+    return;
+  }
+
+  try {
+    // Send a POST request to the backend to initiate payment
+    const response = await api.post(
+      "https://your-backend-url.com/employer/payment-details/",
+      {
+        cart_code: cartCode,
+        totalAmount,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // Check if the response contains the Flutterwave payment link
+    if (response.data && response.data.payment_link) {
+      // Redirect the user to the Flutterwave payment page
+      window.location.href = response.data.payment_link;
+    } else {
+      setError("Failed to initiate payment. Please try again.");
+    }
+
+  } catch (err) {
+    setError("An error occurred while initiating the payment.");
+  } finally {
+    setLoading(false);
+  }
+};
