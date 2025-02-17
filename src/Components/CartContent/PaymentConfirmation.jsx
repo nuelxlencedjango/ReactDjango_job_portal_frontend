@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useLocation,Link } from "react-router-dom";
-
+import { useLocation, Link } from "react-router-dom";
 import api from "../../api";
 
 const PaymentConfirmation = () => {
+  const [statusMessage, setStatusMessage] = useState('Verifying your payment...');
+  const [statusSubMessage, setStatusSubMessage] = useState('Please wait while we verify your payment.');
+
   const location = useLocation();
   const { state } = location;
   const { status, tx_ref, amount, transaction_id } = state || {};
@@ -26,11 +28,17 @@ const PaymentConfirmation = () => {
 
         if (response.status === 201) {
           setPaymentDetails(response.data);
+          setStatusMessage('Payment Verification Successful');
+          setStatusSubMessage('Your payment has been verified successfully.');
         } else {
           console.error("Failed to submit payment details:", response.data);
+          setStatusMessage('Payment Verification Failed');
+          setStatusSubMessage('Something went wrong while verifying your payment.');
         }
       } catch (error) {
         console.error("Error submitting payment details:", error.response?.data || error);
+        setStatusMessage('Payment Verification Failed');
+        setStatusSubMessage('There was an issue verifying your payment. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -40,6 +48,8 @@ const PaymentConfirmation = () => {
       submitPaymentDetails();
     } else {
       console.error("Missing required fields in state:", { tx_ref, amount, status, transaction_id });
+      setStatusMessage('Payment Verification Failed');
+      setStatusSubMessage('Invalid payment data.');
       setIsLoading(false);
     }
   }, [tx_ref, amount, status, transaction_id]);
@@ -55,8 +65,13 @@ const PaymentConfirmation = () => {
           Payment {status === "success" ? "Successful" : "Failed"}
         </h1>
 
+        <div className="space-y-4">
+          <p>{statusMessage}</p>
+          <p>{statusSubMessage}</p>
+        </div>
+
         {paymentDetails && (
-          <div className="space-y-4">
+          <div className="space-y-4 mt-6">
             <p><strong>Transaction Reference:</strong> {paymentDetails.tx_ref}</p>
             <p><strong>Transaction ID:</strong> {paymentDetails.transaction_id}</p>
             <p><strong>Amount:</strong> ₦{paymentDetails.amount.toFixed(2)}</p>
@@ -70,15 +85,14 @@ const PaymentConfirmation = () => {
             to="/"
             className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-300"
           >
-            view order details
+            View Order Details
           </Link>
           <Link
             to="/"
-            className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-300"
+            className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 ml-4"
           >
-            request another service
+            Request Another Service
           </Link>
-
         </div>
       </div>
     </div>

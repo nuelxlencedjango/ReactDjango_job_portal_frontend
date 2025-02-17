@@ -23,6 +23,9 @@ const PaymentPage = () => {
     setError("");
 
     const cartCode = Cookies.get("cart_code");
+      // Retrieve the access token from cookies
+      const token = Cookies.get("access_token");
+      console.log('access token:', token)
 
     if (!cartCode) {
         setError("No Cart code missing. Please try again.");
@@ -33,9 +36,7 @@ const PaymentPage = () => {
 
     console.log("cart code:", cartCode);
 
-    // Retrieve the access token from cookies
-    const token = Cookies.get("access_token");
-    
+  
     // Check if the access token is present
     if (!token) {
       setError("You are not authenticated. Please log in.");
@@ -45,7 +46,10 @@ const PaymentPage = () => {
     }
     console.log("cart code",Cookies.get("cart_code"))
    
-
+    console.log("Headers:", {
+      Authorization: `Bearer ${token}`,
+    });
+    
     try {
       
       // Send a POST request to the backend with the access token
@@ -71,7 +75,7 @@ const PaymentPage = () => {
       } else {
         setError("Failed to initiate payment. Please try again.");
       }
-      
+
     } catch (err) {
       setError(
         err.response?.data?.error ||
