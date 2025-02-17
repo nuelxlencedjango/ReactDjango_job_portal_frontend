@@ -22,9 +22,20 @@ const PaymentPage = () => {
     setLoading(true);
     setError("");
 
+    const cartCode = Cookies.get("cart_code");
+
+    if (!cartCode) {
+        setError("No Cart code missing. Please try again.");
+        setLoading(false);
+        navigate("/cart"); 
+        return;
+      }
+
+    console.log("cart code:", cartCode);
+
     // Retrieve the access token from cookies
     const token = Cookies.get("access_token");
-    console.log('token:', token)
+    
     // Check if the access token is present
     if (!token) {
       setError("You are not authenticated. Please log in.");
@@ -32,19 +43,25 @@ const PaymentPage = () => {
       navigate("/login"); // Redirect to the login page
       return;
     }
+    console.log("cart code",Cookies.get("cart_code"))
+   
 
     try {
+      
       // Send a POST request to the backend with the access token
       const response = await api.post(
-        "employer/payment-details/", 
+        "https://i-wanwok-backend.up.railway.app/employer/payment-details/", 
         {
           cart_code: Cookies.get("cart_code"), 
+          totalAmount,
+          
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
         }
+        
       );
 
       // Check if the response contains the Flutterwave payment link
@@ -54,6 +71,7 @@ const PaymentPage = () => {
       } else {
         setError("Failed to initiate payment. Please try again.");
       }
+      
     } catch (err) {
       setError(
         err.response?.data?.error ||

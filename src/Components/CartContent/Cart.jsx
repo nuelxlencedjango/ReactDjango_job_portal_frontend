@@ -34,6 +34,9 @@ const Cart = () => {
           // Flatten the items array from all carts
           const allItems = response.data.cart.flatMap((cart) => cart.items);
           setCartItems(allItems);
+
+          // Save cart_code in cookies for use in the next page
+           Cookies.set("cart_code", response.data.cart[0]?.cart_code);   
         }
 
         setUserData(response.data.user || {});
@@ -211,3 +214,5 @@ const Cart = () => {
 };
 
 export default Cart;
+
+
