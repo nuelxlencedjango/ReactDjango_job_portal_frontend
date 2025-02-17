@@ -17,8 +17,17 @@ import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
 import ArtisanDashboard from "./Components/Dashboard/ArtisanDashboard";
 import Payment from './Components/CartContent/Payment';
+import PaymentConfirmation from './Components/CartContent/PaymentConfirmation';
 
 
+import ManagerDashboard from './Components/Admin/Dashboard';
+import  ArtisanFingerprintUpload  from './Components/Workers/FingerPrintUpload';
+{/*import EmployerDashboard from './pages/EmployerDashboard';
+import ArtisanDashboard from './pages/ArtisanDashboard';*/}
+
+
+
+import ArtisanSearchPage from './Components/Admin/ArtisanSearchPage';
 
 
 import AOS from 'aos';
@@ -42,13 +51,30 @@ const App = () => {
           <Route path="/api/artisans-by-service/:service_title" element={<ArtisanList />} />
           <Route path="/cart" element={<Cart />} />
 
-          <Route path='/payment' element={<Payment />}/>
-          
-
+          <Route path="/payment" element={<Payment />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUP />} />
+
+
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
           <Route path="/employer-details/:userId/:username" element={<EmployerDetailForm />} />
+
+         
+          <Route path="/artisan-finger-print/:artisanId" element={<ArtisanFingerprintUpload />} />
+
+          <Route path="/artisan-search" element={<ArtisanSearchPage />} />
+
+          <Route path="/manager-dashboard" element={<ManagerDashboard />} />
+
+          <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
+
+          
+
+          {/*
+         
+        <Route path="/artisan-dashboard" element={<ArtisanDashboard />} /
+          */}
+
           <Route path='/service-details' element ={< ServiceDetails />} /> 
           <Route path="/available-jobs" element={<AvailableJobs />} />
           <Route path="*" element={<NotFound />} />
@@ -70,6 +96,5 @@ const App = () => {
 };
 
 export default App;
-
 
 
