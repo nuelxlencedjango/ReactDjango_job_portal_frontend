@@ -1,9 +1,20 @@
+
+
+
+
+
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Import Cookies library
 import api from "../../api";
 
 const PaymentPage = () => {
-  const cart_code = Cookies.get("cart_code"); // Retrieve cart_code from cookies
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Retrieve state passed from the Cart component
+  const { totalAmount, first_name, last_name, email } = location.state || {};
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -11,11 +22,30 @@ const PaymentPage = () => {
     setLoading(true);
     setError("");
 
+    // Retrieve the access token from cookies
+    const token = Cookies.get("access_token");
+    console.log('token:', token)
+    // Check if the access token is present
+    if (!token) {
+      setError("You are not authenticated. Please log in.");
+      setLoading(false);
+      navigate("/login"); // Redirect to the login page
+      return;
+    }
+
     try {
-      // Send a POST request to the backend
-      const response = await api.post("employer/payment-details/", {
-        cart_code, // Send cart_code to the backend
-      });
+      // Send a POST request to the backend with the access token
+      const response = await api.post(
+        "employer/payment-details/", 
+        {
+          cart_code: Cookies.get("cart_code"), 
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        }
+      );
 
       // Check if the response contains the Flutterwave payment link
       if (response.data && response.data.data && response.data.data.link) {
@@ -39,6 +69,19 @@ const PaymentPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-6 rounded shadow-md w-full max-w-lg text-center">
         <h1 className="text-2xl font-bold mb-6">Complete Your Payment</h1>
+
+        {/* Display user details */}
+        <div className="mb-6 text-left">
+          <p className="text-gray-700">
+            <strong>Name:</strong> {first_name} {last_name}
+          </p>
+          <p className="text-gray-700">
+            <strong>Email:</strong> {email}
+          </p>
+          <p className="text-gray-700">
+            <strong>Total Amount:</strong> ₦{totalAmount?.toFixed(2)}
+          </p>
+        </div>
 
         {/* Display error message */}
         {error && (
