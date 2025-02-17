@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios"; // Ensure axios is installed
-import { Link } from "react-router-dom"; // For navigation links
+import api from "../../api";
+
+import { Link } from "react-router-dom"; 
 
 const PaymentConfirmation = () => {
   const location = useLocation();
@@ -10,8 +11,11 @@ const PaymentConfirmation = () => {
     status: "",
     transaction_id: "",
   });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(""); // Error state
+  const [success, setSuccess] = useState(false); // Success state
+
+  const token = Cookies.get("access_token");
 
   useEffect(() => {
     // Extract query parameters from URL
@@ -35,8 +39,8 @@ const PaymentConfirmation = () => {
 
   const verifyPayment = async (tx_ref, status, transaction_id) => {
     try {
-      const response = await axios.post(
-        "https://your-backend-url.com/api/confirm-payment/", // Replace with your backend endpoint
+      const response = await api.post(
+        "https://your-backend-url.com/api/confirm-payment/",
         {
           tx_ref,
           status,
@@ -44,13 +48,13 @@ const PaymentConfirmation = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Include auth token if required
+            Authorization: `Bearer ${token}`, 
           },
         }
       );
 
       if (response.data.message === "Payment Successful") {
-        console.log("Payment verified and cart updated successfully.");
+        setSuccess(true); // Mark payment as successful
       } else {
         setError("Payment verification failed.");
       }
@@ -58,7 +62,7 @@ const PaymentConfirmation = () => {
       console.error("Error verifying payment:", error);
       setError("An error occurred while verifying the payment.");
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading
     }
   };
 
@@ -77,47 +81,45 @@ const PaymentConfirmation = () => {
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center">
         <h1 className="text-3xl font-bold mb-6">
-          Payment {paymentInfo.status === "successful" ? "Successful" : "Failed"}
+          Payment {success ? "Successful" : "Failed"}
         </h1>
         {error && (
           <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
             {error}
           </div>
         )}
-        <div className="space-y-4 text-left">
-          <div>
-            <p className="text-sm text-gray-600">Transaction Reference</p>
-            <p className="text-lg font-semibold text-gray-800">{paymentInfo.tx_ref}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">Transaction ID</p>
-            <p className="text-lg font-semibold text-gray-800">{paymentInfo.transaction_id}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">Status</p>
-            <p
-              className={`text-lg font-semibold ${
-                paymentInfo.status === "successful" ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              {paymentInfo.status}
-            </p>
-          </div>
-        </div>
-        <div className="mt-8 space-y-4">
-          <Link
-            to="/request-service" // Replace with your route
-            className="block w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300 text-center"
-          >
-            Request Another Service
-          </Link>
-          <Link
-            to={`/transaction-details/${paymentInfo.transaction_id}`} // Replace with your route
-            className="block w-full bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition duration-300 text-center"
-          >
-            See Transaction Details
-          </Link>
-        </div>
+        {success && (
+          <>
+            <div className="space-y-4 text-left">
+              <div>
+                <p className="text-sm text-gray-600">Transaction Reference</p>
+                <p className="text-lg font-semibold text-gray-800">{paymentInfo.tx_ref}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Transaction ID</p>
+                <p className="text-lg font-semibold text-gray-800">{paymentInfo.transaction_id}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Status</p>
+                <p className="text-lg font-semibold text-green-600">Successful</p>
+              </div>
+            </div>
+            <div className="mt-8 space-y-4">
+              <Link
+                to="/request-service" // Replace with your route
+                className="block w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300 text-center"
+              >
+                Request Another Service
+              </Link>
+              <Link
+                to={`/transaction-details/${paymentInfo.transaction_id}`} // Replace with your route
+                className="block w-full bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition duration-300 text-center"
+              >
+                See Transaction Details
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,125 +1,159 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import axios from "axios"; // Ensure axios is installed
-import { Link } from "react-router-dom"; // For navigation links
 
-const PaymentConfirmation = () => {
+
+
+
+
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"; // Import Cookies library
+import api from "../../api";
+
+const PaymentPage = () => {
   const location = useLocation();
-  const [paymentInfo, setPaymentInfo] = useState({
-    tx_ref: "",
-    status: "",
-    transaction_id: "",
-  });
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(""); // Error state
-  const [success, setSuccess] = useState(false); // Success state
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    // Extract query parameters from URL
-    const queryParams = new URLSearchParams(location.search);
-    const tx_ref = queryParams.get("tx_ref");
-    const status = queryParams.get("status");
-    const transaction_id = queryParams.get("transaction_id");
+  // Retrieve state passed from the Cart component
+  const { totalAmount, first_name, last_name, email } = location.state || {};
 
-    // Ensure all required parameters are present
-    if (tx_ref && status && transaction_id) {
-      setPaymentInfo({ tx_ref, status, transaction_id });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-      // Send payment details to the backend for verification
-      verifyPayment(tx_ref, status, transaction_id);
-    } else {
-      console.error("Missing required fields in the payment confirmation state.");
-      setError("Missing required payment details.");
+  const initiatePayment = async () => {
+    setLoading(true);
+    setError("");
+
+    const cartCode = Cookies.get("cart_code");
+      // Retrieve the access token from cookies
+      const token = Cookies.get("access_token");
+      console.log('access token:', token)
+
+    if (!cartCode) {
+        setError("No Cart code missing. Please try again.");
+        setLoading(false);
+        navigate("/cart"); 
+        return;
+      }
+
+    console.log("cart code:", cartCode);
+
+  
+    // Check if the access token is present
+    if (!token) {
+      setError("You are not authenticated. Please log in.");
       setLoading(false);
+      navigate("/login"); 
+      return;
     }
-  }, [location]);
 
-  const verifyPayment = async (tx_ref, status, transaction_id) => {
+    console.log("cart code",Cookies.get("cart_code"))
+   
+    console.log("Headers:", {
+      Authorization: `Bearer ${token}`,
+    });
+    
+
     try {
-      const response = await axios.post(
-        "https://your-backend-url.com/api/confirm-payment/", // Replace with your backend endpoint
+      
+      // Send a POST request to the backend with the access token
+      const response = await api.post(
+        "https://i-wanwok-backend.up.railway.app/employer/payment-details/", 
         {
-          tx_ref,
-          status,
-          transaction_id,
+          cart_code: Cookies.get("cart_code"), 
+          totalAmount,
+          
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Include auth token if required
+            Authorization: `Bearer ${token}`,
           },
         }
+        
       );
 
-      if (response.data.message === "Payment Successful") {
-        setSuccess(true); // Mark payment as successful
+      // Check if the response contains the Flutterwave payment link
+      if (response.data && response.data.data && response.data.data.link) {
+        // Redirect the user to the Flutterwave payment page
+        window.location.href = response.data.data.link;
       } else {
-        setError("Payment verification failed.");
+        setError("Failed to initiate payment. Please try again.");
       }
-    } catch (error) {
-      console.error("Error verifying payment:", error);
-      setError("An error occurred while verifying the payment.");
+
+    } catch (err) {
+      setError(
+        err.response?.data?.error ||
+          "An error occurred while initiating the payment."
+      );
+      console.error("Payment error:", err.message);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          <p className="mt-4 text-gray-700">Verifying payment details...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center">
-        <h1 className="text-3xl font-bold mb-6">
-          Payment {success ? "Successful" : "Failed"}
-        </h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-lg text-center">
+        <h1 className="text-2xl font-bold mb-6">Complete Your Payment</h1>
+
+        {/* Display user details */}
+        <div className="mb-6 text-left">
+          <p className="text-gray-700">
+            <strong>Name:</strong> {first_name} {last_name}
+          </p>
+          <p className="text-gray-700">
+            <strong>Email:</strong> {email}
+          </p>
+          <p className="text-gray-700">
+            <strong>Total Amount:</strong> ₦{totalAmount?.toFixed(2)}
+          </p>
+        </div>
+
+        {/* Display error message */}
         {error && (
           <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
             {error}
           </div>
         )}
-        {success && (
-          <>
-            <div className="space-y-4 text-left">
-              <div>
-                <p className="text-sm text-gray-600">Transaction Reference</p>
-                <p className="text-lg font-semibold text-gray-800">{paymentInfo.tx_ref}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Transaction ID</p>
-                <p className="text-lg font-semibold text-gray-800">{paymentInfo.transaction_id}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Status</p>
-                <p className="text-lg font-semibold text-green-600">Successful</p>
-              </div>
-            </div>
-            <div className="mt-8 space-y-4">
-              <Link
-                to="/request-service" // Replace with your route
-                className="block w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300 text-center"
+
+        {/* Pay Now button */}
+        <button
+          onClick={initiatePayment}
+          disabled={loading}
+          className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-105 w-full flex items-center justify-center"
+        >
+          {loading ? (
+            <>
+              {/* Loading spinner */}
+              <svg
+                className="animate-spin h-5 w-5 mr-3 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
               >
-                Request Another Service
-              </Link>
-              <Link
-                to={`/transaction-details/${paymentInfo.transaction_id}`} // Replace with your route
-                className="block w-full bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition duration-300 text-center"
-              >
-                See Transaction Details
-              </Link>
-            </div>
-          </>
-        )}
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Processing...
+            </>
+          ) : (
+            "Pay Now"
+          )}
+        </button>
       </div>
     </div>
   );
 };
 
-export default PaymentConfirmation;
+export default PaymentPage;
+
+
