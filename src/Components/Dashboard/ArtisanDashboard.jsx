@@ -1,14 +1,17 @@
 
+
+
+
 import React, { useState } from 'react';
 
 const Values = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // State to toggle sidebar
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to toggle sidebar
 
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <div
-        className={`bg-gray-800 text-white w-64 p-6 transform transition-transform duration-300 ease-in-out ${
+        className={`bg-gray-800 text-white w-64 p-6 transform transition-transform duration-300 ease-in-out fixed md:relative md:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -35,7 +38,7 @@ const Values = () => {
 
         {/* Sidebar Content */}
         <div className="flex flex-col h-full">
-          {/* Main Sidebar Content (Placeholder) */}
+        
           <div className="flex-1">
             <h2 className="text-lg font-semibold mb-4">Dashboard</h2>
             <ul>
@@ -62,7 +65,7 @@ const Values = () => {
             {/* User Profile Logo */}
             <div className="flex flex-col items-center mb-4">
               <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center mb-2">
-                <span className="text-xl">👤</span> {/* Replace with an image if available */}
+                <span className="text-xl">👤</span> 
               </div>
               <h2 className="text-sm font-semibold">User</h2>
               <p className="text-xs text-gray-400">Artisan</p>
@@ -71,7 +74,7 @@ const Values = () => {
             {/* Logout Button */}
             <button
               className="w-full bg-lime-400 text-black py-2 px-4 rounded-lg hover:bg-red-600 hover:text-white transition duration-300"
-              onClick={() => alert('Logged out!')} // Replace with actual logout logic
+            
             >
               Log Out
             </button>
@@ -133,7 +136,7 @@ const Values = () => {
           <h2 className="text-xl font-semibold mb-4">Artisan Performance</h2>
           <div className="bg-white p-6 rounded-lg shadow-md">
             <p className="text-gray-600">Performance metrics loading......</p>
-            {/* Add a chart or table here later */}
+            
           </div>
         </div>
       </div>
