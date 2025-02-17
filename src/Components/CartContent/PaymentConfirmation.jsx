@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import api from "../../api";
-
+import Cookies from "js-cookie"; 
 import { Link } from "react-router-dom"; 
 
 const PaymentConfirmation = () => {
