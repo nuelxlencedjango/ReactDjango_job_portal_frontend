@@ -123,7 +123,7 @@ const PaymentConfirmation = () => {
         <div className="mt-8 flex justify-between space-x-4">
           <Link
             to="/request-service" // Replace with your route
-            className="w-full sm:w-auto bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 text-center"
+            className="w-full sm:w-auto bg-green-500 text-white py-1 rounded-lg hover:bg-green-600 transition duration-300 text-center"
           >
             Request Another Service
           </Link>
