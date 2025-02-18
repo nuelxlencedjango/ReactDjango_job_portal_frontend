@@ -107,22 +107,33 @@ const PaymentConfirmation = () => {
                 <p className="text-lg font-semibold text-green-600">Successful</p>
               </div>
             </div>
-            <div className="mt-8 flex justify-between space-x-4">
-              <Link
-                to="/request-service" // Replace with your route
-                className="w-full sm:w-auto bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 text-center"
-              >
-                Request Another Service
-              </Link>
-              <Link
-                to={`/transaction-details/${paymentInfo.transaction_id}`} // Replace with your route
-                className="w-full sm:w-auto bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition duration-300 text-center"
-              >
-                See Transaction Details
-              </Link>
-            </div>
           </>
         )}
+        {!success && (
+          <div className="space-y-4 text-left">
+            <p className="text-sm text-gray-600">Transaction Reference</p>
+            <p className="text-lg font-semibold text-gray-800">{paymentInfo.tx_ref}</p>
+            <p className="text-sm text-gray-600">Transaction ID</p>
+            <p className="text-lg font-semibold text-gray-800">{paymentInfo.transaction_id}</p>
+            <p className="text-lg font-semibold text-red-600">Payment Failed</p>
+          </div>
+        )}
+        
+        {/* Links are always visible */}
+        <div className="mt-8 flex justify-between space-x-4">
+          <Link
+            to="/request-service" // Replace with your route
+            className="w-full sm:w-auto bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 text-center"
+          >
+            Request Another Service
+          </Link>
+          <Link
+            to={`/transaction-details/${paymentInfo.transaction_id}`} // Replace with your route
+            className="w-full sm:w-auto bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition duration-300 text-center"
+          >
+            See Transaction Details
+          </Link>
+        </div>
       </div>
     </div>
   );
