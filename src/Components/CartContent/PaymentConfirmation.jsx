@@ -107,16 +107,16 @@ const PaymentConfirmation = () => {
                 <p className="text-lg font-semibold text-green-600">Successful</p>
               </div>
             </div>
-            <div className="mt-8 space-y-4">
+            <div className="mt-8 flex justify-between space-x-4">
               <Link
                 to="/request-service" // Replace with your route
-                className="block w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300 text-center"
+                className="w-full sm:w-auto bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 text-center"
               >
                 Request Another Service
               </Link>
               <Link
                 to={`/transaction-details/${paymentInfo.transaction_id}`} // Replace with your route
-                className="block w-full bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition duration-300 text-center"
+                className="w-full sm:w-auto bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition duration-300 text-center"
               >
                 See Transaction Details
               </Link>
