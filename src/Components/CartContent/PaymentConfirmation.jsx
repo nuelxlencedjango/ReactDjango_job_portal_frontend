@@ -44,7 +44,7 @@ const PaymentConfirmation = () => {
       console.log("Sending payment details to backend...");
       const response = await api.post(
         `employer/payment_confirmation/?tx_ref=${tx_ref}&status=${status}&transaction_id=${transaction_id}`,
-        {}, 
+        {}, // Empty body (since parameters are in the URL)
         {
           headers: {
             Authorization: `Bearer ${token}`,
