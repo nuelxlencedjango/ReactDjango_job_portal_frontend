@@ -42,6 +42,8 @@ const PaymentConfirmation = () => {
   const verifyPayment = async (tx_ref, status, transaction_id) => {
     try {
       console.log("Sending payment details to backend...");
+      console.log("Query Params:", { tx_ref, status, transaction_id });
+  
       const response = await api.post(
         `employer/payment_confirmation/?tx_ref=${tx_ref}&status=${status}&transaction_id=${transaction_id}`,
         {}, // Empty body (since parameters are in the URL)
@@ -55,7 +57,7 @@ const PaymentConfirmation = () => {
       console.log("Backend Response:", response.data);
   
       if (response.data.message === "Payment Successful") {
-        setSuccess(true); // Mark payment as successful
+        setSuccess(true); 
       } else {
         setError("Payment verification failed.");
       }
