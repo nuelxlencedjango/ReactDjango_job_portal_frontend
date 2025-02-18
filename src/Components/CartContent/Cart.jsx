@@ -59,7 +59,7 @@ const Cart = () => {
         return;
       }
 
-      await api.delete(`/employer/cart-items/${itemId}/`, {
+      await api.delete(`/employer/cart-item-delete/${itemId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
