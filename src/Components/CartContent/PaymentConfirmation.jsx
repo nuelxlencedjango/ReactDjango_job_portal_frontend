@@ -123,13 +123,13 @@ const PaymentConfirmation = () => {
         {/* Links with reduced size */}
         <div className="mt-6 flex justify-between space-x-2">
           <Link
-            to="/request-service" // Replace with your route
+            to="/" // 
             className="w-full sm:w-auto bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300 text-center text-sm"
           >
             Request Another Service
           </Link>
           <Link
-            to={`/transaction-details/${paymentInfo.transaction_id}`} // Replace with your route
+            to={`/transaction-client-details/${paymentInfo.transaction_id}`} // 
             className="w-full sm:w-auto bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition duration-300 text-center text-sm"
           >
             See Transaction Details
