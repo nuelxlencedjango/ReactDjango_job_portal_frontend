@@ -5,9 +5,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import api from '../../api'; // Your axios instance
+import api from '../../api'; 
 import DryIcon from '@mui/icons-material/Dry';
-import { ClipLoader } from 'react-spinners'; // For the spinning loading effect 
+import { ClipLoader } from 'react-spinners'; 
+import { GiMechanicGarage } from "react-icons/gi";
 
 const Artisans = () => {
   const { service_title } = useParams();
@@ -150,10 +151,10 @@ const Artisans = () => {
             >
               {/* Icons */}
               <div className="absolute top-2 left-4">
-                <DryIcon className="text-black-500" style={{ fontSize: 24 }} />
+                <GiMechanicGarage className="text-black-500" style={{ fontSize: 24 }} />
               </div>
               <div className="absolute top-2 right-4">
-                <DryIcon className="text-green-500" style={{ fontSize: 24 }} />
+                <GiMechanicGarage className="text-green-500" style={{ fontSize: 24 }} />
               </div>
 
               {/* Artisan profile image */}
