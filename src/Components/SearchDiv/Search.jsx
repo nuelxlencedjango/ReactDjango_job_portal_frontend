@@ -14,7 +14,7 @@ const JobSearch = ({ messages }) => {
         industry: ''
     });
 
-    const navigate = useNavigate(); // Navigation
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         fetchLocations();
@@ -73,7 +73,7 @@ const JobSearch = ({ messages }) => {
             const response = await axios.get(`https://i-wanwok-backend.up.railway.app/api/artisans-search/?${queryParams}`);
             
             // Navigate to result
-            navigate('/results', { state: { searchParams: formState, results: response.data } }); 
+            navigate('/artisan-search-results', { state: { searchParams: formState, results: response.data } }); 
         } catch (error) {
             console.error('Error fetching search results:', error);
            

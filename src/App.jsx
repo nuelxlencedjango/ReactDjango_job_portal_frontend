@@ -22,8 +22,8 @@ import PaymentConfirmation from './Components/CartContent/PaymentConfirmation';
 
 import ManagerDashboard from './Components/Admin/Dashboard';
 import  ArtisanFingerprintUpload  from './Components/Workers/FingerPrintUpload';
-{/*import EmployerDashboard from './pages/EmployerDashboard';
-import ArtisanDashboard from './pages/ArtisanDashboard';*/}
+import ArtisanSearchResults from './Components/SearchDiv/SearchResults';
+{/*import ArtisanDashboard from './pages/ArtisanDashboard';*/}
 
 
 
@@ -70,10 +70,10 @@ const App = () => {
 
           
 
-          {/*
+     
          
-        <Route path="/artisan-dashboard" element={<ArtisanDashboard />} /
-          */}
+        <Route path="/artisan-search-results" element={<ArtisanSearchResults />} />
+      
 
           <Route path='/service-details' element ={< ServiceDetails />} /> 
           <Route path="/available-jobs" element={<AvailableJobs />} />
