@@ -138,18 +138,18 @@
   /* Add this to your CSS file or inside a <style> tag in your component */
 
 .select-location {
-  color: black; /* Change text color */
-  background-color: white; /* Change background color */
-  padding: 0.5rem; /* Add padding for better visibility */
+  color: black; 
+  background-color: white;
+  padding: 0.5rem; 
 }
 
 select {
-  color: black; /* Change select text color */
-  background-color: white; /* Change select background color */
-  border: 1px solid #6B7280; /* Border color */
-  padding: 0.5rem; /* Padding */
-  font-size: 1rem; /* Font size */
-  appearance: none; /* Remove default styling */
+  color: black; 
+  background-color: white; 
+  border: 1px solid #6B7280;
+  padding: 0.5rem; 
+  font-size: 1rem; 
+  appearance: none; 
   -webkit-appearance: none;
   -moz-appearance: none;
 }
@@ -161,7 +161,7 @@ select::-ms-expand {
 
 select {
   background-image: none;
-  background-color: #fff; /* Ensure background is white */
+  background-color: #fff; 
 }
 
 
@@ -202,9 +202,9 @@ select {
 }
 
 .toggle-buttons button:hover {
-  background-color: #007bff;
+  background-color: green;
   color: #fff;
-  border-color: #007bff;
+  border-color: green;
 }
 
 .registration-form label {
@@ -236,7 +236,7 @@ select {
 }
 
 .registration-form button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; 
 }
 .forminfo-{
   margin-top: 20px !important;
@@ -343,7 +343,7 @@ select {
 }
 
 .continue-button:hover {
-  background-color: #0056b3;
+  background-color: green;
 }
 /*end checkout page*/
 

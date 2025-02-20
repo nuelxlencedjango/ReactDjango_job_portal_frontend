@@ -6,15 +6,17 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import api from '../../api'; 
-import DryIcon from '@mui/icons-material/Dry';
+
 import { ClipLoader } from 'react-spinners'; 
 import { GiMechanicGarage } from "react-icons/gi";
+import { FaCircleQuestion } from "react-icons/fa6";
+
 
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
-  const [loading, setLoading] = useState(false); // For fetching artisans
-  const [addingToCart, setAddingToCart] = useState(false); // For adding to cart
+  const [loading, setLoading] = useState(false); // fetching artisans
+  const [addingToCart, setAddingToCart] = useState(false); // adding to cart
   const [cartStatus, setCartStatus] = useState({}); // Track cart status for each artisan
   const navigate = useNavigate();
 
@@ -76,7 +78,7 @@ const Artisans = () => {
     }
 
     try {
-      setAddingToCart(true); // Start loading spinner
+      setAddingToCart(true); //  loading spinner
       const response = await api.post(
         '/employer/add_to_cart/',
         { artisan_email: email },
@@ -126,8 +128,8 @@ const Artisans = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 mt-32" data-aos="fade-up">
-      <h1 className="text-2xl font-semibold mb-4 mt-20 artisanlist-heading display-center">
+    <div className="container mx-auto px-4 mt-20" data-aos="fade-up">
+      <h1 className="text-2xl font-semibold mb-4 mt-10 artisanlist-heading display-center">
         Available {service_title}s for your service
       </h1>
 
@@ -151,10 +153,10 @@ const Artisans = () => {
             >
               {/* Icons */}
               <div className="absolute top-2 left-4">
-                <GiMechanicGarage className="text-black-500" style={{ fontSize: 24 }} />
+                <FaCircleQuestion className="text-red-600 font-bold" style={{ fontSize: 24 }} />
               </div>
               <div className="absolute top-2 right-4">
-                <GiMechanicGarage className="text-green-500" style={{ fontSize: 24 }} />
+                <GiMechanicGarage className="text-green-500 font-bold" style={{ fontSize: 24 }} />
               </div>
 
               {/* Artisan profile image */}
@@ -176,13 +178,14 @@ const Artisans = () => {
               </h2>
 
               <div className="flex justify-between w-full mb-2">
-                <p className="text-gray-600">Location: {artisan.location?.location}</p>
-                <p className="text-gray-600">Service: {artisan.service?.title}</p>
+                <p className="text-black-300">Location: <span className='font-semibold'>{artisan.location?.location}</span></p>
+                <p className="text-gray-500">Service: <span className='font-semibold'>{artisan.service?.title} </span></p>
               </div>
 
               <div className="flex justify-between w-full mb-2">
-                <p className="text-gray-600">Experience: {artisan.experience} years</p>
-                <p className="text-red-600">Pay: ${artisan.pay}</p>
+                <p className="text-gray-500">Experience: <span className='font-semibold'>{artisan.experience} years </span></p>
+                
+                <p className="">Pay: <span className='text-red-600 font-bold'>${artisan.pay}</span></p>
               </div>
 
               {/* Add to Cart button */}
