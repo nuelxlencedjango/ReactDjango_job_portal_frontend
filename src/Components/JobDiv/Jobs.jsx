@@ -3,7 +3,7 @@ import axios from 'axios';
 import { BiTimeFive } from 'react-icons/bi';
 import Search from '../SearchDiv/Search.jsx';
 import { Link } from 'react-router-dom';
-
+import { GiMechanicGarage } from "react-icons/gi";
 const Jobs = () => {
   const [data, setData] = useState([]);
 

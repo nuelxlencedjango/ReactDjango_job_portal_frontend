@@ -115,7 +115,7 @@ const ArtisanDetailsForm = () => {
     
 
     return (
-        <div className="min-h-screen mt-0 flex flex-col items-center justify-center bg-gray-100 py-6">
+        <div className="min-h-screen mt-0 flex flex-col items-center justify-center bg-gray-100 py-6" data-aos="fade-right">
             <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md mb-10 mt-10">
                 <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">Hi, {username} ! Please fill in the rest</h1> 
                 {errors.general && (

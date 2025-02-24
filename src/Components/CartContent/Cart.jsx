@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../api";
 import Cookies from "js-cookie";
 import { useNavigate, Link } from "react-router-dom";
-import DryIcon from "@mui/icons-material/Dry";  // Assuming you're using DryIcon
+import { FaTrash, FaPlus } from "react-icons/fa";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -12,25 +12,37 @@ const Cart = () => {
 
   useEffect(() => {
     const fetchCartData = async () => {
-      const token = Cookies.get("access_token");
-
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
+      setLoading(true);
       try {
-        setLoading(true);
-        const response = await api.get("/employer/cart-items/", {
+        const token = Cookies.get("access_token");
+        if (!token) {
+          navigate("/login");
+          return;
+        }
+
+        const response = await api.get("employer/cart-items/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        setCartItems(response.data.cart_items || []);
-        setUserData(response.data.user_data || {});
+        console.log("Response data:", response.data);
+
+        if (response.data.cart === null || response.data.cart.length === 0) {
+          setCartItems([]);
+        } else {
+          // Flatten the items array from all carts
+          const allItems = response.data.cart.flatMap((cart) => cart.items);
+          setCartItems(allItems);
+
+          // Save cart_code in cookies for use in the next page
+           Cookies.set("cart_code", response.data.cart[0]?.cart_code);   
+        }
+
+        setUserData(response.data.user || {});
       } catch (error) {
         console.error("Error fetching cart data:", error);
+        alert("An error occurred while fetching your cart. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -40,28 +52,42 @@ const Cart = () => {
   }, [navigate]);
 
   const handleRemoveFromCart = async (itemId) => {
-    const token = Cookies.get("access_token");
-
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
     try {
-      await api.delete(`/employer/cart/${itemId}/`, {
+      const token = Cookies.get("access_token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      await api.delete(`/employer/cart-item-delete/${itemId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-      alert("Item removed from cart!");
     } catch (error) {
       console.error("Error removing item from cart:", error);
     }
   };
 
-  const calculateTotal = () =>
-    cartItems.reduce((total, item) => total + item.artisan.pay, 0);
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => {
+      const pay = parseFloat(item.artisan?.pay) || 0;
+      return total + pay;
+    }, 0);
+  };
+
+  const handleProceedToCheckout = () => {
+    navigate("/payment", {
+      state: {
+        totalAmount: calculateTotal(),
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+        email: userData.email,
+      },
+    });
+  };
 
   return (
     <div className="container mx-auto px-4 mt-10 mb-20">
@@ -69,112 +95,124 @@ const Cart = () => {
         Welcome, {userData.first_name || "User"}!
       </p>
 
-      <h1 className="text-2xl font-bold text-center mb-10">Your Cart</h1>
+      <h1 className="text-3xl font-bold text-center mb-10 text-gray-800">Your Cart</h1>
 
-      {loading && <div>Loading...</div>}
-
-      {!loading && cartItems.length === 0 && (
-        <p className="text-gray-600 text-center">Your cart is empty.</p>
-      )}
-
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Left Section */}
-        <div className="flex-grow">
-          {cartItems.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-            >
-              <div className="flex flex-col items-center sm:items-start">
-                {item.artisan.profile_img ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      ) : cartItems.length === 0 ? (
+        <div className="text-center">
+          <p className="text-gray-600 text-xl mb-4">Your cart is empty.</p>
+          <Link
+            to="/"
+            className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300"
+          >
+            Browse Services
+          </Link>
+        </div>
+      ) : (
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Cart Items Section */}
+          <div className="flex-1">
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="flex flex-col sm:flex-row items-center justify-between p-6 bg-gray-50 rounded-lg shadow-md mb-6 hover:shadow-lg transition-all duration-300"
+              >
+                {/* Artisan Image and Details */}
+                <div className="flex items-center w-full sm:w-auto">
                   <img
-                    src={item.artisan.profile_image}
-                    alt={`${item.artisan.first_name}'s profile`}
-                    className="w-16 h-16 rounded-full object-cover"
+                    src={item.artisan?.profile_image || "/default-avatar.png"}
+                    alt="Artisan"
+                    className="w-20 h-20 rounded-full object-cover mr-4"
+                    onError={(e) => {
+                      e.target.src = "/default-avatar.png";
+                    }}
                   />
-                ) : (
-                  <div className="w-16 h-16 rounded-full bg-gray-300"></div>
-                )}
-                <p className="text-center sm:text-left text-lg font-medium mt-1">
-                  {item.artisan.first_name} {item.artisan.last_name}
-                </p>
-              </div>
-
-              <div className="artisan-main flex flex-col sm:flex-row flex-grow justify-between px-4 items-center mt-2 sm:mt-0 relative sm:px-1">
-                <span className="job-icon text-gray-600 sm:ml-2">
-                  {item.artisan.service}
-                </span>
-
-                <div className="absolute cart-icon-wrapper top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <DryIcon className="cart-icon text-gray-400" style={{ fontSize: 18 }} />
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-800">
+                      {item.artisan?.service || "N/A"}
+                    </h2>
+                    <p className="text-sm text-gray-600">
+                      {item.artisan?.first_name || "Unknown"}{" "}
+                      {item.artisan?.last_name}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Location: {item.artisan?.location || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Experience: {item.artisan?.experience || "N/A"} years
+                    </p>
+                    <p className="text-sm text-gray-800 font-bold">
+                      Pay: ₦{item.artisan?.pay || "0.00"}
+                    </p>
+                  </div>
                 </div>
 
-                <span className="pay-icon text-gray-600 sm:mr-2">
-                  Pay: ${item.artisan.pay}
-                </span>
+                {/* Actions (Remove and Add Buttons) */}
+                <div className="flex items-center gap-4 mt-4 sm:mt-0">
+                  <button
+                    onClick={() => handleRemoveFromCart(item.id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 flex items-center gap-2"
+                  >
+                    <FaTrash className="text-sm" /> Remove
+                  </button>
+                  <Link
+                    to={`/api/artisans-by-service/${encodeURIComponent(
+                      item.artisan.service || ""
+                    )}`}
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 flex items-center gap-2"
+                  >
+                    <FaPlus className="text-sm" /> Add
+                  </Link>
+                </div>
               </div>
+            ))}
 
-              <div className="buttons-container">
-                <button
-                  onClick={() => handleRemoveFromCart(item.id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 mr-2"
-                >
-                  Remove
-                </button>
-
-                <Link
-                  to={`/artisans/artisans-by-service/${encodeURIComponent(item.artisan.service)}`}
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-black-600 color-white transition-all duration-300 transform hover:scale-110"
-                >
-                  Add
-                </Link>
-              </div>
+            {/* Total Price */}
+            <div className="text-right mt-8">
+              <h3 className="text-2xl font-bold text-gray-800">
+                Total: ₦
+                {Number.isFinite(calculateTotal())
+                  ? calculateTotal().toFixed(2)
+                  : "0.00"}
+              </h3>
             </div>
-          ))}
+          </div>
 
-          {cartItems.length > 0 && (
-            <div className="text-right mt-4 text-xl font-bold">
-              Total: ${calculateTotal()}
-            </div>
-          )}
-        </div>
-
-        {/* Order Summary */}
-        {cartItems.length > 0 && (
-          <div className="sticky top-20 bg-gray-100 p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 w-full lg:w-1/3 mt-10 max-h-[400px] overflow-y-auto">
-            <div className="w-full h-32 mb-4">
-              <img
-                src="https://via.placeholder.com/300x200"
-                alt="Order Summary"
-                className="rounded-lg object-cover w-full h-full"
-              />
-            </div>
-
-            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+          {/* Order Summary Section */}
+          <div className="sticky top-20 bg-white p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 w-full lg:w-1/3 max-h-[400px] overflow-y-auto">
+           
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+              Order Summary
+            </h2>
+            <hr />
             <div className="flex justify-between items-center mb-4">
               <p className="text-gray-700 text-lg">Total Items:</p>
               <p className="font-bold text-lg">{cartItems.length}</p>
             </div>
             <div className="flex justify-between items-center mb-4">
-              <p className="text-gray-700 text-lg">Total Amount:</p>
-              <p className="font-bold text-lg">${calculateTotal()}</p>
+              <p className="text-gray-700 text-lg">Total Amount: </p>
+              <p className="font-bold text-lg">₦{calculateTotal().toFixed(2)}</p>
             </div>
-            <div className="flex justify-end">
-              <Link
-                to={{     
-                  pathname: "/payment",
-                  state: { totalAmount: calculateTotal() },  
-                }}
-                className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110"
+            <hr />
+
+            <div className="flex justify-end mt-5">
+              <button
+                onClick={handleProceedToCheckout}
+                className="bg-green-600 text-white px-10 py-3 rounded-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-105"
               >
-                Checkout
-              </Link> 
+                Proceed to Checkout
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Cart;
+
+

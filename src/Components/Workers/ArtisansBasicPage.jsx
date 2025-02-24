@@ -113,7 +113,7 @@ const BasicDetailsForm = () => {
 
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-0">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-0" data-aos="fade-up">
       <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md relative mb-10">
         <h1 className="text-1xl font-bold text-gray-800 text-center mb-6">Sign Up For Workers - Step 1</h1>
         {errors.general && (

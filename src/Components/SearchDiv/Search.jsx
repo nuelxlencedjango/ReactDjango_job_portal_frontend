@@ -14,7 +14,7 @@ const JobSearch = ({ messages }) => {
         industry: ''
     });
 
-    const navigate = useNavigate(); // Navigation
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         fetchLocations();
@@ -73,7 +73,7 @@ const JobSearch = ({ messages }) => {
             const response = await axios.get(`https://i-wanwok-backend.up.railway.app/api/artisans-search/?${queryParams}`);
             
             // Navigate to result
-            navigate('/results', { state: { searchParams: formState, results: response.data } }); 
+            navigate('/artisan-search-results', { state: { searchParams: formState, results: response.data } }); 
         } catch (error) {
             console.error('Error fetching search results:', error);
            
@@ -88,12 +88,12 @@ const JobSearch = ({ messages }) => {
                 </div>
             ))}
 
-            <h2 className="text-center text-2xl font-semibold mt-28 mb-8 my-2 text-green-500">
+            <h2 className="text-center text-2xl font-semibold mt-20 mb-8 my-2 text-green-500">
                 Easy way to get your work done
             </h2>
           
             <section className="mb-8 bg-gray-100 p-6 rounded-lg">
-                <div className="container mx-auto">
+                <div className="container mx-auto mt-5">
                     <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" onSubmit={handleSubmit}>
                         <div className="relative col-span-1">
                             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
