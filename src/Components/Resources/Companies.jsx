@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 import { Link } from "react-router-dom";
-import { FaTrash, FaPlus } from "react-icons/fa";
+import {  FaPlus } from "react-icons/fa";
 
 const Companies = () => {
   const [companies, setCompanies] = useState([]);
