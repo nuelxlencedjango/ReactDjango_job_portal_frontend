@@ -33,6 +33,7 @@ import ArtisanSearchPage from './Components/Admin/ArtisanSearchPage';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './index.css';
+import CompanyList from './Components/Resources/Companies';
 
 
 
@@ -69,7 +70,7 @@ const App = () => {
           <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
 
           
-
+          <Route path="/company" element={<CompanyList />} /> 
      
          
         <Route path="/artisan-search-results" element={<ArtisanSearchResults />} />
@@ -80,6 +81,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
           <Route path='/artisan-dashboard' element={< ArtisanDashboard />} />
           <Route path="/order-service" element={<ProtectedRoute>
+            
          
 
          {/* <Route path="/register/:userType" element={<RegistrationPage />} />

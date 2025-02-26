@@ -28,7 +28,7 @@ const Navbar = () => {
                     Cookies.remove('refresh_token');
 
                     // Redirect to login page
-                    navigate('/login');
+                    navigate('/');
                 } else {
                     console.error('Refresh token not found.');
                 }
