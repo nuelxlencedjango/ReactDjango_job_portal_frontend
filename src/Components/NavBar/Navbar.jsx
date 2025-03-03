@@ -61,7 +61,7 @@ const Navbar = () => {
                         <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'}>Jobs</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/company'}>Companies</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'}>About</Link></li>
-                        <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'}>Contact Us</Link></li>
+                        <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/contact_us'}>Contact Us</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'}>Blog</Link></li> 
 
                         {/* Conditional rendering for login/register or logout */}
@@ -90,7 +90,7 @@ const Navbar = () => {
                             <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'} onClick={closeMenu}>Jobs</Link></li>
                             <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/company'} onClick={closeMenu}>Companies</Link></li>
                             <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'} onClick={closeMenu}>About</Link></li>
-                            <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'} onClick={closeMenu}>Contact Us</Link></li>
+                            <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/contact_us'} onClick={closeMenu}>Contact Us</Link></li>
                             <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'} onClick={closeMenu}>Blog</Link></li> 
 
                             {/* Conditional rendering for login/register or logout */}

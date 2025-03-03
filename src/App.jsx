@@ -34,6 +34,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './index.css';
 import CompanyList from './Components/Resources/Companies';
+import ContactPage  from './Components/Resources/ContactPage';
 
 
 
@@ -74,7 +75,7 @@ const App = () => {
      
          
         <Route path="/artisan-search-results" element={<ArtisanSearchResults />} />
-      
+        <Route path="/contact_us" element={<ContactPage />} />
 
           <Route path='/service-details' element ={< ServiceDetails />} /> 
           <Route path="/available-jobs" element={<AvailableJobs />} />
