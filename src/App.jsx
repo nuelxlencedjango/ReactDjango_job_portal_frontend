@@ -23,7 +23,7 @@ import PaymentConfirmation from './Components/CartContent/PaymentConfirmation';
 import ManagerDashboard from './Components/Admin/Dashboard';
 import  ArtisanFingerprintUpload  from './Components/Workers/FingerPrintUpload';
 import ArtisanSearchResults from './Components/SearchDiv/SearchResults';
-{/*import ArtisanDashboard from './pages/ArtisanDashboard';*/}
+// {/*import ArtisanDashboard from './pages/ArtisanDashboard';*/}
 
 
 
