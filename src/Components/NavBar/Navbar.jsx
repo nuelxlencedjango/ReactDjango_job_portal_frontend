@@ -60,7 +60,7 @@ const Navbar = () => {
                     <div className="hidden md:flex gap-8">
                         <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'}>Jobs</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/company'}>Companies</Link></li>
-                        <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'}>About</Link></li>
+                        <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/about_us'}>About Us</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/contact_us'}>Contact Us</Link></li>
                         <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'}>Blog</Link></li> 
 
@@ -89,7 +89,7 @@ const Navbar = () => {
                         <ul className="flex flex-col items-center gap-4 mt-4">
                             <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'} onClick={closeMenu}>Jobs</Link></li>
                             <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/company'} onClick={closeMenu}>Companies</Link></li>
-                            <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'} onClick={closeMenu}>About</Link></li>
+                            <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/about_us'} onClick={closeMenu}>About Us</Link></li>
                             <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/contact_us'} onClick={closeMenu}>Contact Us</Link></li>
                             <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/'} onClick={closeMenu}>Blog</Link></li> 
 

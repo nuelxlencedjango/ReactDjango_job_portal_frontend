@@ -45,6 +45,7 @@ const ContactUs = () => {
               </div>
               <span>Phone: +1 (123) 456-7890</span>
             </div>
+
             <div className="info-item">
               <div className="icon-circle">
                 <Link to="https://www.facebook.com/">
@@ -52,34 +53,40 @@ const ContactUs = () => {
                 </Link>
                 
               </div>
-              
+
+              <div className="socials mt-20">
             </div>
-            <div className="info-item">
+            <div className="info-item ml-10">
               <div className="icon-circle">
+                <Link to="https://wa.me/2348120254201">
                 <FaWhatsapp className="icon" />
+                </Link>
               </div>
               <span></span>
             </div>
-            <div className="info-item">
+            <div className="info-item ml-10">
               <div className="icon-circle">
+                <Link to="https://www.instagram.com/iwanwoklimited?igsh=YzljYTk1ODg3Zg==">
                 <FaInstagram className="icon" />
+                </Link>
               </div>
-              x
+              
             </div>
-            <div className="info-item">
+            <div className="info-item ml-10">
               <div className="icon-circle">
                 <FaYoutube className="icon" />
               </div>
             
             </div>
             
-            <div className="info-item">
+            <div className="info-item ml-10">
               <div className="icon-circle">
                 <FaTwitter className="icon" />
               </div>
               
             </div>
           </div>
+        </div>
         </div>
 
         {/* Contact Form Section */}

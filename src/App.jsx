@@ -35,6 +35,7 @@ import 'aos/dist/aos.css';
 import './index.css';
 import CompanyList from './Components/Resources/Companies';
 import ContactPage  from './Components/Resources/ContactPage';
+import AboutUs from './Components/Resources/About';
 
 
 
@@ -72,7 +73,7 @@ const App = () => {
 
           
           <Route path="/company" element={<CompanyList />} /> 
-     
+          <Route path="/about_us" element={<AboutUs />} />  
          
         <Route path="/artisan-search-results" element={<ArtisanSearchResults />} />
         <Route path="/contact_us" element={<ContactPage />} />
@@ -82,6 +83,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
           <Route path='/artisan-dashboard' element={< ArtisanDashboard />} />
           <Route path="/order-service" element={<ProtectedRoute>
+          
             
          
 
