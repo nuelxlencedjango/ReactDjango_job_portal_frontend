@@ -63,10 +63,11 @@ const AboutUs = () => {
           <section className="contact-section">
             <h2>Get in Touch</h2>
             <p>
-              Visit us at <strong>102 Apapa Road, Lagos</strong>, or reach out to us to learn more about how we can help you find the perfect match for your needs.
+              Visit us at <strong>111 Old Apapa Road, Costain, Lagos</strong>, or reach out to us to learn more about how we can help you find the perfect match for your needs.
             </p>
             <p>
-              <strong>Phone:</strong> +234-XXX-XXXX-XXXX<br />
+              <strong>Phone:</strong> +234-705-291-8783 <br />
+              <strong>Whatsapp:</strong> +234-812-025-4201 <br />
               <strong>Email:</strong> info@iwanwok.com
             </p>
           </section>
