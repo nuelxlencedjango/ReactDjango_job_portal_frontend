@@ -6,7 +6,7 @@ const Dashboard = () => {
   const companyLogo = "https://via.placeholder.com/50";
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 transition duration-300" data-aos="fade-up">
       {/* Top Navigation Bar */}
       <div className="bg-white shadow-md">
         <div className="container mx-auto px-4">

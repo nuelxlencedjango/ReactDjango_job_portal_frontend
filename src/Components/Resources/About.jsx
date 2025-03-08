@@ -4,7 +4,7 @@ import aboutUsImage from '../../assets/about.jpg';
 
 const AboutUs = () => {
   return (
-    <div className="about-us-container">
+    <div className="about-us-container transition duration-300" data-aos="fade-up">
       <div className="about-us-header">
         <h1>About I-Wan-Wok Limited</h1>
         <p className="tagline">Connecting Talent with Opportunity</p>

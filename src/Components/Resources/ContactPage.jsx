@@ -24,7 +24,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="contact-us-container">
+    <div className="contact-us-container transition duration-300" data-aos="fade-up">
       <h1>Contact Us</h1>
       <p>We'd love to hear from you! Reach out to us via the details below or send us a message.</p>
       <div className="contact-content">
