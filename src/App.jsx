@@ -23,7 +23,7 @@ import PaymentConfirmation from './Components/CartContent/PaymentConfirmation';
 import ManagerDashboard from './Components/Admin/Dashboard';
 import  ArtisanFingerprintUpload  from './Components/Workers/FingerPrintUpload';
 import ArtisanSearchResults from './Components/SearchDiv/SearchResults';
-{/*import ArtisanDashboard from './pages/ArtisanDashboard';*/}
+//import ArtisanDashboard from './Components/Dashboard/ArtisanDashboard';
 
 
 
@@ -62,7 +62,7 @@ const App = () => {
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
           <Route path="/employer-details/:userId/:username" element={<EmployerDetailForm />} />
 
-         
+          <Route path='/artisan-dashboard' element={< ArtisanDashboard />} />
           <Route path="/artisan-finger-print/:artisanId" element={<ArtisanFingerprintUpload />} />
 
           <Route path="/artisan-search" element={<ArtisanSearchPage />} />
@@ -81,7 +81,7 @@ const App = () => {
           <Route path='/service-details' element ={< ServiceDetails />} /> 
           <Route path="/available-jobs" element={<AvailableJobs />} />
           <Route path="*" element={<NotFound />} />
-          <Route path='/artisan-dashboard' element={< ArtisanDashboard />} />
+        
           <Route path="/order-service" element={<ProtectedRoute>
           
             

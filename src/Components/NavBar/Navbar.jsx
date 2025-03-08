@@ -68,7 +68,7 @@ const Navbar = () => {
                         {isLoggedIn ? (
                             <>
                                 <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/cart'}>Cart</Link></li>
-                                <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/dashboard'}>Dashboard</Link></li>
+                                <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/artisan-dashboard'}>Dashboard</Link></li>
                                 <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right" onClick={handleLogout}>Logout</li> 
                             </>
                         ) : (
@@ -97,7 +97,7 @@ const Navbar = () => {
                             {isLoggedIn ? (
                                 <>
                                     <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/cart'} onClick={closeMenu}>Cart</Link></li>
-                                    <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/dashboard'} onClick={closeMenu}>Dashboard</Link></li>
+                                    <li className='menuList text-[#6f6f6f] hover:text-green-600' data-aos="fade-right"><Link to={'/artisan-dashboard'} onClick={closeMenu}>Dashboard</Link></li>
                                     <li className='menuList text-[#6f6f6f] hover:text-green-600'data-aos="fade-right" onClick={handleLogout}>Logout</li> 
                                 </>
                             ) : (
