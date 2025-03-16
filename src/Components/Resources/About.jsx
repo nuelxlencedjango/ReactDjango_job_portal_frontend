@@ -24,7 +24,7 @@ const AboutUs = () => {
           <section className="who-we-are-section">
             <h2>Who We Are</h2>
             <p>
-              Situated at <strong>102 Apapa Road, Lagos</strong>, I-Wan-Wok Limited is a trusted platform that connects employers with the best artisans and skilled workers. We take pride in our rigorous screening process, ensuring that only the most experienced and professional individuals are part of our network.
+              Situated at <strong>111 Apapa Road, Lagos</strong>, I-Wan-Wok Limited is a trusted platform that connects employers with the best artisans and skilled workers. We take pride in our rigorous screening process, ensuring that only the most experienced and professional individuals are part of our network.
             </p>
             <p>
               With years of experience in various fields, our artisans and professionals are equipped to deliver exceptional results, meeting the highest standards of quality and reliability.

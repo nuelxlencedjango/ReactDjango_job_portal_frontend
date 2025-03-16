@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -11,13 +7,13 @@ import { ClipLoader } from 'react-spinners';
 import { GiMechanicGarage } from "react-icons/gi";
 import { FaCircleQuestion } from "react-icons/fa6";
 
-
 const Artisans = () => {
   const { service_title } = useParams();
   const [artisans, setArtisans] = useState([]);
   const [loading, setLoading] = useState(false); // fetching artisans
   const [addingToCart, setAddingToCart] = useState(false); // adding to cart
   const [cartStatus, setCartStatus] = useState({}); // Track cart status for each artisan
+  const [error, setError] = useState(null); // Track any errors that occur
   const navigate = useNavigate();
 
   // Fetch artisans when the component mounts or when service_title changes
@@ -29,6 +25,7 @@ const Artisans = () => {
         setArtisans(response.data);
         console.log('responses:', response.data);
       } catch (error) {
+        setError('Error fetching artisans. Please try again later.');
         if (error.response && error.response.status === 401) {
           Cookies.remove('access_token');
           navigate('/login');
@@ -78,7 +75,7 @@ const Artisans = () => {
     }
 
     try {
-      setAddingToCart(true); //  loading spinner
+      setAddingToCart(true); // loading spinner
       const response = await api.post(
         '/employer/add_to_cart/',
         { artisan_email: email },
@@ -97,6 +94,7 @@ const Artisans = () => {
       }
     } catch (error) {
       console.error('Error adding to cart:', error.response?.data || error);
+      alert('An error occurred while adding to the cart.');
     } finally {
       setAddingToCart(false); // Stop loading spinner
     }
@@ -127,6 +125,17 @@ const Artisans = () => {
     };
   };
 
+  // Helper function to check if user is logged in
+  const checkIfUserLoggedIn = () => {
+    const token = Cookies.get('access_token');
+    if (!token) {
+      alert('Please log in to add artisans to your cart.');
+      navigate('/login');
+      return false;
+    }
+    return true;
+  };
+
   return (
     <div className="container mx-auto px-4 mt-20" data-aos="fade-up">
       <h1 className="text-2xl font-semibold mb-4 mt-10 artisanlist-heading display-center">
@@ -136,7 +145,14 @@ const Artisans = () => {
       {/* Loading spinner for fetching artisans */}
       {loading && (
         <div className="flex justify-center items-center">
-          <ClipLoader color="#36D7B7" size={50} /> 
+          <ClipLoader color="#36D7B7" size={50} />
+        </div>
+      )}
+
+      {/* Error message */}
+      {error && (
+        <div className="text-red-500 text-center mb-4">
+          {error}
         </div>
       )}
 
@@ -161,7 +177,13 @@ const Artisans = () => {
 
               {/* Artisan profile image */}
               <div className="flex justify-center w-full mb-4">
-                {artisan.profile_image ? (
+                {artisan.profile_image_resized ? (
+                  <img
+                    src={artisan.profile_image_resized}
+                    alt={`${artisan.user?.first_name}'s profile`}
+                    className="w-24 h-24 rounded-full object-cover transition-all duration-300 transform hover:scale-110"
+                  />
+                ) : artisan.profile_image ? (
                   <img
                     src={artisan.profile_image}
                     alt={`${artisan.user?.first_name}'s profile`}
@@ -175,6 +197,10 @@ const Artisans = () => {
               {/* Artisan details */}
               <h2 className="text-lg font-semibold mb-2">
                 {artisan.user?.first_name} {artisan.user?.last_name}
+                {/* Display verified status */}
+                {artisan.is_verified && (
+                  <span className="ml-2 text-green-500 font-semibold">Verified</span>
+                )}
               </h2>
 
               <div className="flex justify-between w-full mb-2">
