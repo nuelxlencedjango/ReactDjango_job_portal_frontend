@@ -129,7 +129,7 @@ const PaymentConfirmation = () => {
             Request Another Service
           </Link>
           <Link
-  to={`/dashboard?transaction_id=${paymentInfo.transaction_id}`} // Redirect to dashboard with transaction_id
+  to={`/employer-dashboard?transaction_id=${paymentInfo.transaction_id}`} 
   className="w-full sm:w-auto bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition duration-300 text-center text-sm"
 >
   See Transaction Details
