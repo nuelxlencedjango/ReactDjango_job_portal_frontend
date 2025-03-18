@@ -11,7 +11,12 @@ const Dashboard = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get("/employer/last-payment/");
+      const token = Cookies.get("token"); // Get the token from cookies
+      const response = await api.get("/employer/last-payment/", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the request headers
+        },
+      });
       setLastPayment(response.data);
     } catch (err) {
       setError("Failed to fetch last payment details.");
