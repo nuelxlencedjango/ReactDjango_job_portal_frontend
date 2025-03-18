@@ -11,9 +11,9 @@ const PaymentConfirmation = () => {
     status: "",
     transaction_id: "",
   });
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(""); // Error state
-  const [success, setSuccess] = useState(false); // Success state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(""); 
+  const [success, setSuccess] = useState(false); 
 
   const token = Cookies.get("access_token");
 
@@ -129,7 +129,7 @@ const PaymentConfirmation = () => {
             Request Another Service
           </Link>
           <Link
-  to={`/employer-dashboard?transaction_id=${paymentInfo.transaction_id}`} 
+  to={`/employer-dashboard`} 
   className="w-full sm:w-auto bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition duration-300 text-center text-sm"
 >
   See Transaction Details
