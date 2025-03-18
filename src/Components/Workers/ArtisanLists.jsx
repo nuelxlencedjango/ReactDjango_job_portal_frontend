@@ -59,7 +59,7 @@ const Artisans = () => {
     return false;
   };
 
-  // Handle the "Add to Cart" button click
+  // Handle the "Add to Cart" button click  
   const handleOrderClick = async (email, artisanId, artisan) => {
     const token = Cookies.get('access_token');
     if (!email) {
@@ -120,7 +120,7 @@ const Artisans = () => {
   const getButtonTextAndDisabled = (email) => {
     const isInCart = cartStatus[email];
     return {
-      text: isInCart ? 'Already in the cart' : 'Add to cart',
+      text: isInCart ? 'Already Requested' : 'Make A Request', 
       disabled: isInCart || addingToCart, // Disable button if adding to cart is in progress
     };
   };

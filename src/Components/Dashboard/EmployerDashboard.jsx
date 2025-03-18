@@ -81,7 +81,7 @@ const Dashboard = () => {
                     href="#"
                     className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
                   >
-                    <span>Order History</span>
+                    <span>Expected Artisan</span>
                   </a>
                 </li>
                 <li>
@@ -89,9 +89,10 @@ const Dashboard = () => {
                     href="#"
                     className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
                   >
-                    <span>Expected Artisan</span>
+                    <span>Order History</span>
                   </a>
                 </li>
+               
                 <li>
                   <a
                     href="#"
@@ -177,7 +178,7 @@ const Dashboard = () => {
                         <p className="font-semibold">{lastPayment.status}</p>
                       </div>
                       <div>
-                        <p className="text-gray-600">Last Modified:</p>
+                        <p className="text-gray-600">Transaction Date:</p>
                         <p className="font-semibold">
                           {new Date(lastPayment.modified_at).toLocaleString()}
                         </p>
