@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 
 const Dashboard = () => {
   const [lastPayment, setLastPayment] = useState(null);
+  const [paymentDetails, setPaymentDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -11,15 +12,33 @@ const Dashboard = () => {
     setLoading(true);
     setError(null);
     try {
-      const token = Cookies.get("token"); // Get the token from cookies
+      const token = Cookies.get("token"); 
       const response = await api.get("/employer/last-payment/", {
         headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the request headers
+          Authorization: `Bearer ${token}`, 
         },
       });
       setLastPayment(response.data);
     } catch (err) {
       setError("Failed to fetch last payment details.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchPaymentDetails = async (transactionId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = Cookies.get("token"); 
+      const response = await api.get(`/employer/payment-details/${transactionId}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+      setPaymentDetails(response.data);
+    } catch (err) {
+      setError("Failed to fetch payment details.");
     } finally {
       setLoading(false);
     }
@@ -74,6 +93,14 @@ const Dashboard = () => {
                     className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300 w-full text-left"
                   >
                     <span>Last Payment</span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => fetchPaymentDetails("some-transaction-id")}
+                    className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300 w-full text-left"
+                  >
+                    <span>See Payment Details</span>
                   </button>
                 </li>
                 <li>
@@ -161,7 +188,7 @@ const Dashboard = () => {
                         <p className="font-semibold">{lastPayment.tx_ref}</p>
                       </div>
                       <div>
-                        <p className="text-gray-600">Cart:</p>
+                        <p className="text-gray-600">Cart No:</p>
                         <p className="font-semibold">{lastPayment.cart}</p>
                       </div>
                       <div>
@@ -180,6 +207,50 @@ const Dashboard = () => {
                         <p className="text-gray-600">Last Modified:</p>
                         <p className="font-semibold">
                           {new Date(lastPayment.modified_at).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Payment Details Section */}
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                  Payment Details
+                </h3>
+
+                {loading && <p className="text-gray-600">Loading...</p>}
+                {error && (
+                  <p className="text-red-500">{error}</p>
+                )}
+                {paymentDetails && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-gray-600">Transaction Reference:</p>
+                        <p className="font-semibold">{paymentDetails.tx_ref}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Cart No:</p>
+                        <p className="font-semibold">{paymentDetails.cart}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Total Amount:</p>
+                        <p className="font-semibold">{paymentDetails.total_amount}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Transaction ID:</p>
+                        <p className="font-semibold">{paymentDetails.transaction_id}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Status:</p>
+                        <p className="font-semibold">{paymentDetails.status}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Last Modified:</p>
+                        <p className="font-semibold">
+                          {new Date(paymentDetails.modified_at).toLocaleString()}
                         </p>
                       </div>
                     </div>
