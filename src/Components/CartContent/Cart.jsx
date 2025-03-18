@@ -1,218 +1,150 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react';
 import api from "../../api";
-import Cookies from "js-cookie";
-import { useNavigate, Link } from "react-router-dom";
-import { FaTrash, FaPlus } from "react-icons/fa";
 
-const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+const Dashboard = () => {
+  const userName = "John Doe";
+  const companyName = "Artisan Pro";
+  const companyLogo = "https://via.placeholder.com/50";
+  const [lastPayment, setLastPayment] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [userData, setUserData] = useState({});
-  const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchCartData = async () => {
-      setLoading(true);
-      try {
-        const token = Cookies.get("access_token");
-        if (!token) {
-          navigate("/login");
-          return;
-        }
-
-        const response = await api.get("employer/cart-items/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        console.log("Response data:", response.data);
-
-        if (response.data.cart === null || response.data.cart.length === 0) {
-          setCartItems([]);
-        } else {
-          // Flatten the items array from all carts
-          const allItems = response.data.cart.flatMap((cart) => cart.items);
-          setCartItems(allItems);
-
-          // Save cart_code in cookies for use in the next page
-           Cookies.set("cart_code", response.data.cart[0]?.cart_code);   
-        }
-
-        setUserData(response.data.user || {});
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-        alert("An error occurred while fetching your cart. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCartData();
-  }, [navigate]);
-
-  const handleRemoveFromCart = async (itemId) => {
+  const fetchLastPayment = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      const token = Cookies.get("access_token");
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
-      await api.delete(`/employer/cart-item-delete/${itemId}/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-    } catch (error) {
-      console.error("Error removing item from cart:", error);
+      const response = await api.get('/api/last-payment/');
+      setLastPayment(response.data);
+    } catch (err) {
+      setError("Failed to fetch last payment details.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => {
-      const pay = parseFloat(item.artisan?.pay) || 0;
-      return total + pay;
-    }, 0);
-  };
-
-  const handleProceedToCheckout = () => {
-    navigate("/payment", {
-      state: {
-        totalAmount: calculateTotal(),
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        email: userData.email,
-      },
-    });
-  };
-
   return (
-    <div className="container mx-auto px-4 mt-10 mb-20">
-      <p className="text-lg font-medium text-gray-700 mb-2">
-        Welcome, {userData.first_name || "User"}!
-      </p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Top Navigation Bar */}
+      <div className="bg-white shadow-md">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center py-4">
+            {/* Company Logo and Name */}
+            <div className="flex items-center">
+              <img
+                src={companyLogo}
+                alt="Company Logo"
+                className="h-12 w-12 rounded-full"
+              />
+              <span className="ml-3 text-2xl font-semibold text-gray-800">
+                {companyName}
+              </span>
+            </div>
 
-      <h1 className="text-3xl font-bold text-center mb-10 text-gray-800">Your Cart</h1>
+            {/* User Name */}
+            <div className="flex items-center">
+              <span className="text-gray-700 mr-2">Welcome,</span>
+              <span className="font-semibold text-gray-800">{userName}</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      ) : cartItems.length === 0 ? (
-        <div className="text-center">
-          <p className="text-gray-600 text-xl mb-4">Your cart is empty.</p>
-          <Link
-            to="/"
-            className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all duration-300"
-          >
-            Browse Services
-          </Link>
-        </div>
-      ) : (
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Cart Items Section */}
-          <div className="flex-1">
-            {cartItems.map((item) => (
-              <div
-                key={item.id}
-                className="flex flex-col sm:flex-row items-center justify-between p-6 bg-gray-50 rounded-lg shadow-md mb-6 hover:shadow-lg transition-all duration-300"
-              >
-                {/* Artisan Image and Details */}
-                <div className="flex items-center w-full sm:w-auto">
-                  <img
-                    src={item.artisan?.profile_image_resized || "/default-avatar.png"}
-                    alt="Artisan"
-                    className="w-20 h-20 rounded-full object-cover mr-4"
-                    onError={(e) => {
-                      e.target.src = "/default-avatar.png";
-                    }}
-                  />
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-800">
-                      {item.artisan?.service || "N/A"}
-                    </h2>
-                    <p className="text-sm text-gray-600">
-                      {item.artisan?.first_name || "Unknown"}{" "}
-                      {item.artisan?.last_name}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Location: {item.artisan?.location || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Experience: {item.artisan?.experience || "N/A"} years
-                    </p>
-                    <p className="text-sm text-gray-800 font-bold">
-                      Pay: ₦{item.artisan?.pay || "0.00"}
-                    </p>
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex">
+          {/* Sidebar */}
+          <div className="w-64 bg-white shadow-md rounded-lg p-4 h-screen">
+            <nav>
+              <ul className="space-y-4">
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
+                  >
+                    <span>Home</span>
+                  </a>
+                </li>
+                <li>
+                  <button
+                    onClick={fetchLastPayment}
+                    className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300 w-full text-left"
+                  >
+                    <span>Last Payment</span>
+                  </button>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
+                  >
+                    <span>Order History</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
+                  >
+                    <span>Expected artisan</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
+                  >
+                    <span>Customer Support</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
+                  >
+                    <span>Logout</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
+                  >
+                    <span>Settings</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          {/* Main Dashboard Content */}
+          <div className="flex-1 ml-6">
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+                Dashboard Overview
+              </h2>
+
+              {/* Display Last Payment Details */}
+              {loading && <p>Loading...</p>}
+              {error && <p className="text-red-500">{error}</p>}
+              {lastPayment && (
+                <div className="mt-6">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Last Payment Details</h3>
+                  <div className="space-y-2">
+                    <p><strong>Transaction Reference:</strong> {lastPayment.tx_ref}</p>
+                    <p><strong>Cart:</strong> {lastPayment.cart}</p>
+                    <p><strong>Total Amount:</strong> {lastPayment.total_amount}</p>
+                    <p><strong>Transaction ID:</strong> {lastPayment.transaction_id}</p>
+                    <p><strong>Status:</strong> {lastPayment.status}</p>
+                    <p><strong>Last Modified:</strong> {new Date(lastPayment.modified_at).toLocaleString()}</p>
                   </div>
                 </div>
-
-                {/* Actions (Remove and Add Buttons) */}
-                <div className="flex items-center gap-4 mt-4 sm:mt-0">
-                  <button
-                    onClick={() => handleRemoveFromCart(item.id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 flex items-center gap-2"
-                  >
-                    <FaTrash className="text-sm" /> Remove
-                  </button>
-                  <Link
-                    to={`/api/artisans-by-service/${encodeURIComponent(
-                      item.artisan.service || ""
-                    )}`}
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 flex items-center gap-2"
-                  >
-                    <FaPlus className="text-sm" /> Add
-                  </Link>
-                </div>
-              </div>
-            ))}
-
-            {/* Total Price */}
-            <div className="text-right mt-8">
-              <h3 className="text-2xl font-bold text-gray-800">
-                Total: ₦
-                {Number.isFinite(calculateTotal())
-                  ? calculateTotal().toFixed(2)
-                  : "0.00"}
-              </h3>
-            </div>
-          </div>
-
-          {/* Order Summary Section */}
-          <div className="sticky top-20 bg-white p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 w-full lg:w-1/3 max-h-[400px] overflow-y-auto">
-           
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">
-              Order Summary
-            </h2>
-            <hr />
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-gray-700 text-lg">Total Items:</p>
-              <p className="font-bold text-lg">{cartItems.length}</p>
-            </div>
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-gray-700 text-lg">Total Amount: </p>
-              <p className="font-bold text-lg">₦{calculateTotal().toFixed(2)}</p>
-            </div>
-            <hr />
-
-            <div className="flex justify-end mt-5">
-              <button
-                onClick={handleProceedToCheckout}
-                className="bg-green-600 text-white px-10 py-3 rounded-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-105"
-              >
-                Proceed to Checkout
-              </button>
+              )}
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
-export default Cart;
-
-
+export default Dashboard;
