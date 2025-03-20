@@ -19,7 +19,6 @@ import ArtisanDashboard from "./Components/Dashboard/ArtisanDashboard";
 import Payment from './Components/CartContent/Payment';
 import PaymentConfirmation from './Components/CartContent/PaymentConfirmation';
 
-
 import ManagerDashboard from './Components/Admin/Dashboard';
 import  ArtisanFingerprintUpload  from './Components/Workers/FingerPrintUpload';
 import ArtisanSearchResults from './Components/SearchDiv/SearchResults';
