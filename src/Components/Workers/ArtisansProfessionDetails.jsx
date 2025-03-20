@@ -35,10 +35,18 @@ const ArtisanDetailsForm = () => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        setFormData(prevData => ({
-            ...prevData,
-            profile_image: file,
-        }));
+        if (file) {
+            const maxSize = 2.1 * 1024 * 1024; // 2.1 MB in bytes
+            if (file.size > maxSize) {
+                setErrors({ ...errors, profile_image: 'Image size should not be too big,please.' });
+            } else {
+                setErrors({ ...errors, profile_image: '' }); // Clear the error
+                setFormData(prevData => ({
+                    ...prevData,
+                    profile_image: file,
+                }));
+            }
+        }
     };
 
     const fetchLocations = async () => {
@@ -265,6 +273,11 @@ const ArtisanDetailsForm = () => {
                                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                                 disabled={loading}
                             />
+                            {errors.profile_image && (
+                                <div className="text-red-500 text-sm mt-2">
+                                    {errors.profile_image}
+                                </div>
+                            )}
                         </div>
 
                         {/* Submit Button */}
@@ -283,7 +296,3 @@ const ArtisanDetailsForm = () => {
 };
 
 export default ArtisanDetailsForm;
-
-
-
-
