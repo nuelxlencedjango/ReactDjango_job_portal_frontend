@@ -51,7 +51,7 @@ const ArtisanDetailsForm = () => {
 
     const fetchLocations = async () => {
         try {
-            const response = await axios.get('https://i-wanwok-backend.up.railway.app/api/location-list/');
+            const response = await axios.get('https://api.i-wan-wok.com/api/location-list/');
             setLocations(response.data);
             console.log("Locations:", response.data);
         } catch (error) {
@@ -62,7 +62,7 @@ const ArtisanDetailsForm = () => {
 
     const fetchServices = async () => {
         try {
-            const response = await axios.get('https://i-wanwok-backend.up.railway.app/api/profession-list/');
+            const response = await axios.get('https://api.i-wan-wok.com/api/profession-list/');
             setServices(response.data);
             console.log("Professions:", response.data);
         } catch (error) {
@@ -108,7 +108,7 @@ const ArtisanDetailsForm = () => {
 
         try {
             setLoading(true);
-            const response = await axios.post('https://i-wanwok-backend.up.railway.app/acct/user-register/', formDataToSend, {
+            const response = await axios.post('https://api.i-wan-wok.com/acct/user-register/', formDataToSend, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 

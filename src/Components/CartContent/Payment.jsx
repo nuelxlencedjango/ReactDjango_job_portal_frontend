@@ -56,7 +56,7 @@ const PaymentPage = () => {
       
       // Send a POST request to the backend with the access token
       const response = await api.post(
-        "https://i-wanwok-backend.up.railway.app/employer/payment-details/", 
+        "https://api.i-wan-wok.com/employer/payment-details/", 
         {
           cart_code: Cookies.get("cart_code"), 
           totalAmount,

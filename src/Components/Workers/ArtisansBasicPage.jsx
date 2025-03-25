@@ -76,7 +76,7 @@ const BasicDetailsForm = () => {
     try {
       // Send a single POST request to register the user and create the artisan profile 
       const response = await axios.post(
-        "https://i-wanwok-backend.up.railway.app/acct/registration/", 
+        "https://api.i-wan-wok.com/acct/registration/", 
         formData,
         {
           headers: {

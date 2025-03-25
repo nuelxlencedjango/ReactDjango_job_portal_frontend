@@ -11,7 +11,7 @@ const OrderForm = ({ artisanId }) => {
         const token = localStorage.getItem('token');  // Get token from localStorage
 
         try {
-            const response = await axios.post('https://i-wanwok-backend.up.railway.app/artisans/order-request/', {
+            const response = await axios.post('https://api.i-wan-wok.com/artisans/order-request/', {
                 artisan: artisanId,
                 description,
             }, {

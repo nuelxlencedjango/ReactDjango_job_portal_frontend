@@ -41,7 +41,7 @@ const ArtisanDetailsForm = () => {
 
     const fetchLocations = async () => {
         try {
-            const response = await axios.get('https://i-wanwok-backend.up.railway.app/api/location-list/'); 
+            const response = await axios.get('https://api.i-wan-wok.com/api/location-list/'); 
             setLocations(response.data);
             console.log("locations :",response.data)
             console.log(response.data.location)
@@ -90,7 +90,7 @@ const ArtisanDetailsForm = () => {
         
     
         try {
-            const response = await axios.post('https://i-wanwok-backend.up.railway.app/acct/user-register/', formDataToSend, {
+            const response = await axios.post('https://api.i-wan-wok.com/acct/user-register/', formDataToSend, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
     

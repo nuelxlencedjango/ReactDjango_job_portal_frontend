@@ -17,7 +17,7 @@ const Artisans = () => {
   useEffect(() => {
     const fetchArtisans = async () => {
       try {
-        const response = await axios.get(`https://i-wanwok-backend.up.railway.app/artisans/artisans-by-service/${service_title}/`);
+        const response = await axios.get(`https://api.i-wan-wok.com/artisans/artisans-by-service/${service_title}/`);
         setArtisans(response.data);
         console.log("Responses:", response);
       } catch (error) {
@@ -42,7 +42,7 @@ const Artisans = () => {
     setIsSubmitting(true);
 
     try {
-      await axios.post('https://i-wanwok-backend.up.railway.app/order-request/', {
+      await axios.post('https://api.i-wan-wok.com/order-request/', {
         ...formData,
         artisan: selectedArtisan.id,
         service: service_title,
