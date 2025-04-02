@@ -341,7 +341,7 @@ const Cart = () => {
         <div className="md:w-2/3">
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
             <h1 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-              <FaShoppingCart /> Your Cart ({cartItems.length})
+              <FaShoppingCart /> Your Service Request ({cartItems.length})
             </h1>
 
             {cartItems.length === 0 ? (
@@ -349,7 +349,7 @@ const Cart = () => {
                 <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                   <FaShoppingCart className="text-gray-400 text-3xl" />
                 </div>
-                <h2 className="text-xl font-medium text-gray-700 mb-2">Your cart is empty</h2>
+                <h2 className="text-xl font-medium text-gray-700 mb-2">Your service request is empty</h2>
                 <p className="text-gray-500 mb-6">Browse our services to find artisans</p>
                 <Link
                   to="/"
@@ -416,7 +416,7 @@ const Cart = () => {
         {cartItems.length > 0 && (
           <div className="md:w-1/3">
             <div className="bg-white rounded-xl shadow-sm p-6 sticky top-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Order Summary</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-4">Service Summary</h2>
               
               <div className="space-y-4">
                 <div className="flex justify-between">

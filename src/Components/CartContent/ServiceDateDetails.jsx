@@ -1,19 +1,20 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import api from '../../api';  // Your Axios instance
-import { FaUser, FaMapMarkerAlt } from 'react-icons/fa';
+import api from '../../api';  
+import { 
+  FaUser, 
+  FaMapMarkerAlt, 
+  FaHome, 
+  FaPhone, 
+  FaCalendarAlt,
+  FaIdCard 
+} from 'react-icons/fa';
 import { ImFileText } from "react-icons/im";
 
 const ServiceDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const { artisan, service } = location.state || {};
-
-  if (!artisan || !service) {
-    return <div>No details available</div>;
-  }
 
   const [formData, setFormData] = useState({
     description: '',
@@ -29,19 +30,16 @@ const ServiceDetails = () => {
   const [loading, setLoading] = useState(false);
   const [locations, setLocations] = useState([]);
 
+  if (!artisan || !service) {
+    return <div className="p-4 text-center">No details available</div>;
+  }
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-    setErrors(prevErrors => ({
-      ...prevErrors,
-      [name]: ''
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  // Fetch Locations (Automatically includes the token via interceptors)
   const fetchLocations = async () => {
     try {
       const response = await api.get('/api/location-list/');
@@ -51,7 +49,6 @@ const ServiceDetails = () => {
     }
   };
 
-  // Validate the form fields
   const validateForm = () => {
     const newErrors = {};
     if (!formData.description) newErrors.description = "Description is required";
@@ -64,144 +61,157 @@ const ServiceDetails = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
   const handleNext = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     setLoading(true);
     try {
-      const response = await api.post(
-        '/employer/job-details/',
-        formData
-      );
+      const response = await api.post('/employer/job-details/', formData);
       if (response.status === 201) {
-        alert("Job details have been submitted successfully.");
         navigate('/cart');
-      } else {
-        throw new Error("Unexpected response status from API.");
       }
     } catch (error) {
-      console.error("API Error:", error.response || error);
       setErrors({
-        general: error.response?.data?.message || "Failed to submit job details. Please try again."
+        general: error.response?.data?.message || "Failed to submit job details"
       });
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchLocations();
-  }, []);
+  useEffect(() => { fetchLocations(); }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-10">
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md relative mb-10">
-        <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">Detail Of The Job</h1>
+    <div className="flex items-center justify-center bg-gray-100 p-4">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md relative">
+        <h1 className="text-xl font-bold text-gray-800 text-center mb-4">Job Details</h1>
 
         {errors.general && (
-          <div className="mb-4 text-red-500 text-md text-center">
+          <div className="mb-3 text-red-500 text-sm text-center">
             {errors.general}
           </div>
         )}
 
         {loading && (
           <div className="absolute inset-0 bg-gray-100 bg-opacity-75 flex items-center justify-center z-10">
-            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-gray-500" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
           </div>
         )}
 
-        <div className="bg-gray-200 p-4 rounded-md">
-          <form onSubmit={handleNext} className="space-y-6">
+        <div className="bg-gray-200 p-3 rounded-md">
+          <form onSubmit={handleNext} className="space-y-4">
             {/* Artisan Name */}
             <div className="relative">
-              <label htmlFor="artisan" className="text-gray-500 mb-1 px-1 block">Artisan's Name </label>
-              <FaUser className="absolute left-3 top-3/4 transform -translate-y-1/2 text-gray-400" />
-              <input type="text" name="artisan" value={formData.artisan}
-                className="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-md"
+              <label className="text-gray-500 text-sm block mb-1">Artisan's Name</label>
+              <FaUser className="absolute left-3 top-9 text-gray-400" />
+              <input 
+                type="text" 
+                value={formData.artisan}
                 readOnly
+                className="w-full py-1.5 pl-9 pr-3 border border-gray-300 rounded-md"
               />
             </div>
 
             {/* Description */}
             <div className="relative">
-              <label htmlFor="description" className="text-gray-500 mb-1 px-1 block">Describe the service you want</label>
-              <ImFileText className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <textarea name="description" placeholder="Description"
-                value={formData.description} onChange={handleInputChange}
-                className="w-full py-12 pl-10 pr-4 border border-gray-300 rounded-md"
-                rows="3"
+              <label className="text-gray-500 text-sm block mb-1">Service Description</label>
+              <ImFileText className="absolute left-3 top-9 text-gray-400" />
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                className="w-full py-1.5 pl-9 pr-3 border border-gray-300 rounded-md"
+                rows="2"
+                placeholder="Describe your service needs"
               />
-              {errors.description && <div className="text-red-500 text-sm">{errors.description}</div>}
+              {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
             </div>
 
             {/* Location */}
             <div className="relative">
-              <label htmlFor="location" className="text-gray-500 mb-1 px-1 block">Select Location</label>
-              <FaMapMarkerAlt className="absolute left-3 top-3/4 transform -translate-y-1/2 text-gray-400" />
+              <label className="text-gray-500 text-sm block mb-1">Location</label>
+              <FaMapMarkerAlt className="absolute left-3 top-9 text-gray-400" />
               <select
                 name="location"
                 value={formData.location}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-2 border ${errors.location ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                className={`w-full py-1.5 pl-9 pr-3 border ${errors.location ? 'border-red-500' : 'border-gray-300'} rounded-md`}
               >
-                <option value="">Select Location</option>
+                <option value="">Select location</option>
                 {locations.map(location => (
                   <option key={location.id} value={location.id}>{location.location}</option>
                 ))}
               </select>
-              {errors.location && <div className="text-red-500 text-sm">{errors.location}</div>}
+              {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location}</p>}
             </div>
 
             {/* Address */}
             <div className="relative">
-              <label htmlFor="address" className="text-gray-500 mb-1 px-1 block">Address</label>
-              <input type="text" name="address" placeholder="Address"
-                value={formData.address} onChange={handleInputChange}
-                className={`w-full py-2 pl-10 pr-4 border ${errors.address ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+              <label className="text-gray-500 text-sm block mb-1">Address</label>
+              <FaHome className="absolute left-3 top-9 text-gray-400" />
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                className={`w-full py-1.5 pl-9 pr-3 border ${errors.address ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                placeholder="Full address"
               />
-              {errors.address && <div className="text-red-500 text-sm">{errors.address}</div>}
+              {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
             </div>
 
             {/* Contact Person */}
             <div className="relative">
-              <label htmlFor="contact_person" className="text-gray-500 mb-1 px-1 block">Contact Person</label>
-              <FaUser className="absolute left-3 top-3/4 transform -translate-y-1/2 text-gray-400" />
-              <input type="text" name="contact_person" placeholder="Contact Person"
-                value={formData.contact_person} onChange={handleInputChange}
-                className={`w-full py-2 pl-10 pr-4 border ${errors.contact_person ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+              <label className="text-gray-500 text-sm block mb-1">Contact Person</label>
+              <FaIdCard className="absolute left-3 top-9 text-gray-400" />
+              <input
+                type="text"
+                name="contact_person"
+                value={formData.contact_person}
+                onChange={handleInputChange}
+                className={`w-full py-1.5 pl-9 pr-3 border ${errors.contact_person ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                placeholder="Contact name"
               />
-              {errors.contact_person && <div className="text-red-500 text-sm">{errors.contact_person}</div>}
+              {errors.contact_person && <p className="text-red-500 text-xs mt-1">{errors.contact_person}</p>}
             </div>
 
             {/* Contact Phone */}
             <div className="relative">
-              <label htmlFor="contact_person_phone" className="text-gray-500 mb-1 px-1 block">Phone Number</label>
-              <input type="tel" name="contact_person_phone" placeholder="Contact Phone"
-                value={formData.contact_person_phone} onChange={handleInputChange}
-                className={`w-full py-2 pl-10 pr-4 border ${errors.contact_person_phone ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+              <label className="text-gray-500 text-sm block mb-1">Phone Number</label>
+              <FaPhone className="absolute left-3 top-9 text-gray-400" />
+              <input
+                type="tel"
+                name="contact_person_phone"
+                value={formData.contact_person_phone}
+                onChange={handleInputChange}
+                className={`w-full py-1.5 pl-9 pr-3 border ${errors.contact_person_phone ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                placeholder="Phone number"
               />
-              {errors.contact_person_phone && <div className="text-red-500 text-sm">{errors.contact_person_phone}</div>}
+              {errors.contact_person_phone && <p className="text-red-500 text-xs mt-1">{errors.contact_person_phone}</p>}
             </div>
 
             {/* Expected Date */}
             <div className="relative">
-              <label htmlFor="expectedDate" className="text-gray-500 mb-1 px-1 block">Expected Date</label>
-              <input type="date" name="expectedDate" placeholder="Expected Date"
-                value={formData.expectedDate} onChange={handleInputChange}
-                className={`w-full py-2 pl-10 pr-4 border ${errors.expectedDate ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+              <label className="text-gray-500 text-sm block mb-1">Expected Date</label>
+              <FaCalendarAlt className="absolute left-3 top-9 text-gray-400" />
+              <input
+                type="date"
+                name="expectedDate"
+                value={formData.expectedDate}
+                onChange={handleInputChange}
+                className={`w-full py-1.5 pl-9 pr-3 border ${errors.expectedDate ? 'border-red-500' : 'border-gray-300'} rounded-md`}
               />
-              {errors.expectedDate && <div className="text-red-500 text-sm">{errors.expectedDate}</div>}
+              {errors.expectedDate && <p className="text-red-500 text-xs mt-1">{errors.expectedDate}</p>}
             </div>
 
-            {/* Submit Button */}
-            <button type="submit" disabled={loading} className="w-full py-3 bg-green-500 text-white font-bold rounded-md hover:bg-green-600">
+            <button
+              type="submit" 
+              disabled={loading}
+              className="w-full py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+            >
               {loading ? 'Processing...' : 'Submit'}
             </button>
-
           </form>
         </div>
       </div>
