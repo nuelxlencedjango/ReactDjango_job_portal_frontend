@@ -42,14 +42,14 @@ const Navbar = () => {
                 localStorage.removeItem('userData');
                 
                 // Force reload to ensure all state is cleared
-                window.location.href = '/login';
+                window.location.href = '/';
                 
             } catch (error) {
                 console.error('Logout failed:', error);
                 // Even if API fails, clear client-side tokens
                 Cookies.remove('access_token');
                 Cookies.remove('refresh_token');
-                window.location.href = '/login';
+                window.location.href = '/';
             }
         }
     };
