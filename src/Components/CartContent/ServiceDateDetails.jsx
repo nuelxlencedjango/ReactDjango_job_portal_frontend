@@ -169,6 +169,7 @@ const ServiceDetails = () => {
             {/* Contact Person */}
             <div className="relative">
               <label htmlFor="contact_person" className="text-gray-500 mb-1 px-1 block">Contact Person</label>
+              <FaUser className="absolute left-3 top-3/4 transform -translate-y-1/2 text-gray-400" />
               <input type="text" name="contact_person" placeholder="Contact Person"
                 value={formData.contact_person} onChange={handleInputChange}
                 className={`w-full py-2 pl-10 pr-4 border ${errors.contact_person ? 'border-red-500' : 'border-gray-300'} rounded-md`}
@@ -178,7 +179,7 @@ const ServiceDetails = () => {
 
             {/* Contact Phone */}
             <div className="relative">
-              <label htmlFor="contact_person_phone" className="text-gray-500 mb-1 px-1 block">Contact Phone</label>
+              <label htmlFor="contact_person_phone" className="text-gray-500 mb-1 px-1 block">Phone Number</label>
               <input type="tel" name="contact_person_phone" placeholder="Contact Phone"
                 value={formData.contact_person_phone} onChange={handleInputChange}
                 className={`w-full py-2 pl-10 pr-4 border ${errors.contact_person_phone ? 'border-red-500' : 'border-gray-300'} rounded-md`}

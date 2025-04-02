@@ -123,7 +123,7 @@ const Cart = () => {
                 {/* Artisan Image and Details */}
                 <div className="flex items-center w-full sm:w-auto">
                   <img
-                    src={item.artisan?.profile_image_resized || "/default-avatar.png"}
+                    src={item.artisan?.profile_image || "/default-avatar.png"}
                     alt="Artisan"
                     className="w-20 h-20 rounded-full object-cover mr-4"
                     onError={(e) => {
