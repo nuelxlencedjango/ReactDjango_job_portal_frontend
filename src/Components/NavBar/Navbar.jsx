@@ -12,28 +12,44 @@ const Navbar = () => {
     // Checking if the user is logged in
     const isLoggedIn = !!Cookies.get('access_token'); 
 
-    // Function to handle logout
     const handleLogout = async () => {
         const confirmLogout = window.confirm("Are you sure you want to log out?");
         if (confirmLogout) {
             try {
-                // refresh token from Cookies
                 const refreshToken = Cookies.get('refresh_token');
-
-                if (refreshToken) {
-                    await api.post('/logout/', { refresh_token: refreshToken });
-
-                    // remove access token
-                    Cookies.remove('access_token');
-                    Cookies.remove('refresh_token');
-
-                    // Redirect to login page
-                    navigate('/');
-                } else {
-                    console.error('Refresh token not found.');
+                const accessToken = Cookies.get('access_token');
+                
+                if (!refreshToken) {
+                    throw new Error('No refresh token found');
                 }
+    
+                // Send logout request to backend
+                await api.post('acct/logout/', { 
+                    refresh_token: refreshToken 
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+    
+                // Clear all auth-related cookies
+                Cookies.remove('access_token');
+                Cookies.remove('refresh_token');
+                Cookies.remove('user_type');
+                Cookies.remove('cart_code');
+                
+                // Clear any user data from state/local storage if needed
+                localStorage.removeItem('userData');
+                
+                // Force reload to ensure all state is cleared
+                window.location.href = '/login';
+                
             } catch (error) {
-                console.error('Error during logout:', error);
+                console.error('Logout failed:', error);
+                // Even if API fails, clear client-side tokens
+                Cookies.remove('access_token');
+                Cookies.remove('refresh_token');
+                window.location.href = '/login';
             }
         }
     };
