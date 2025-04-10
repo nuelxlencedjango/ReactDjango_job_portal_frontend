@@ -211,15 +211,14 @@ const Artisans = () => {
               <div className="flex justify-between w-full mb-2">
                 <p className="text-gray-500">Experience: <span className='font-semibold'>{artisan.experience} years </span></p>
                 
-                <p className="">Pay: <span className='text-red-600 font-bold'>${artisan.pay}</span></p>
+                <p className="">Pay: <span className='text-red-600 font-bold'>₦{artisan.pay}</span></p>
               </div>
 
               {/* Add to Cart button */}
               <button
                 onClick={() => handleOrderClick(artisan.user?.email, artisan.id, artisan)}
                 className="mt-auto bg-green-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:bg-green-600"
-                disabled={disabled}
-              >
+                disabled={disabled}> 
                 {addingToCart ? (
                   <ClipLoader color="#ffffff" size={20} /> // Spinner inside the button
                 ) : (

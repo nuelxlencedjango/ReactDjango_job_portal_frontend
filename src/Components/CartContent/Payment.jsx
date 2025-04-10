@@ -104,12 +104,14 @@ const PaymentPage = () => {
           </p>
           <p className="text-gray-700">
             <strong>Total Amount:</strong> ₦{totalAmount?.toFixed(2)}
+          
+            
           </p>
         </div>
 
         {/* Display error message */}
         {error && (
-          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded"> 
             {error}
           </div>
         )}
