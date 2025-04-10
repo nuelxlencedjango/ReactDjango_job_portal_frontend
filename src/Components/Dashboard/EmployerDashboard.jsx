@@ -44,7 +44,7 @@ const Dashboard = () => {
     setError(prev => ({...prev, artisan: null}));
     try {
       const token = Cookies.get("token");
-      const response = await api.get("employer/expected-artisan/", {
+      const response = await api.get("/employer/expected-artisan/", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setArtisanDetails(response.data);
