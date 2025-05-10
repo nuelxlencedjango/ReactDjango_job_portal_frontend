@@ -1,4 +1,5 @@
 
+// src/components/Login.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -10,45 +11,56 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true when the form is submitted
+    setLoading(true);
     setError('');
 
     try {
       const response = await axiosInstance.post('acct/login/', { username, password });
-      
-      // Store the access and refresh tokens in cookies
-      Cookies.set('access_token', response.data.access, { path: '/', secure: true, sameSite: 'Lax' });
-      Cookies.set('refresh_token', response.data.refresh, { path: '/', secure: true, sameSite: 'Lax' });
+
+      // Store tokens and user_type in cookies
+      Cookies.set('access_token', response.data.access, { path: '/', secure: true, sameSite: 'Lax', expires: 7 });
+      Cookies.set('refresh_token', response.data.refresh, { path: '/', secure: true, sameSite: 'Lax', expires: 7 });
+      Cookies.set('user_type', response.data.user_type, { path: '/', secure: true, sameSite: 'Lax', expires: 7 });
 
       console.log('Login successful:', response.data);
 
       // Redirect based on user_type
       const { user_type } = response.data;
-      if (user_type === 'manager') {
-        navigate('/manager-dashboard');  
-      } else if (user_type === 'employer') {
-        navigate('/');  
-      } else if (user_type === 'artisan') {
-        navigate('/artisan-dashboard');  
-      } else {
-        navigate('/'); 
+      switch (user_type) {
+        case 'admin':
+          navigate('/admin-dashboard');
+          break;
+        case 'employer':
+          navigate('/employer-dashboard');
+          break;
+        case 'artisan':
+          navigate('/artisan-dashboard');
+          break;
+        case 'marketer':
+          navigate('/marketer-dashboard');
+          break;
+        case 'manager':
+          navigate('/manager-dashboard');
+          break;
+        default:
+          navigate('/'); // Fallback for unexpected user types
       }
     } catch (error) {
       console.error('Login error:', error);
       setError('Login failed. Please check your credentials.');
     } finally {
-      setLoading(false); // Set loading to false when the request is complete
+      setLoading(false);
     }
   };
 
   return (
     <div className="p-6 max-w-md mx-auto" data-aos="fade-right">
-      <div className='bg-gray-200 p-4 rounded-md'>
+      <div className="bg-gray-200 p-4 rounded-md">
         <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-4">Login</h2>
           {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -82,7 +94,7 @@ const Login = () => {
           <button
             type="submit"
             className="bg-green-500 text-white py-2 px-4 rounded hover:bg-red-600 flex items-center justify-center"
-            disabled={loading} // Disable the button when loading
+            disabled={loading}
           >
             {loading ? (
               <div className="flex items-center">
@@ -116,8 +128,10 @@ const Login = () => {
 
         <div className="text-center mt-4">
           <p className="text-sm text-black-700">
-            Don't have an account?{" "}
-            <Link to="/signup" className="text-green-800 hover:underline">Signup Here</Link>
+            Don't have an account?{' '}
+            <Link to="/signup" className="text-green-800 hover:underline">
+              Signup Here
+            </Link>
           </p>
         </div>
       </div>
