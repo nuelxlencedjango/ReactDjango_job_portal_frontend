@@ -52,7 +52,7 @@ const Dashboard = () => {
                     href="#"
                     className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
                   >
-                    <span>Earnings</span>
+                    <span>Register Artisan</span>
                   </a>
                 </li>
                 <li>
