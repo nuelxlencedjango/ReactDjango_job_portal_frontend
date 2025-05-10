@@ -15,27 +15,34 @@ import Footer from './Components/FooterDiv/Footer';
 import OrderForm from './Components/OrdersRequest/OderForm';
 import ProtectedRoute from './api/ProtectedRoute';
 import Cart from './Components/CartContent/Cart';
-import ArtisanDashboard from "./Components/Dashboard/ArtisanDashboard";
+
 import Payment from './Components/CartContent/Payment';
 import PaymentConfirmation from './Components/CartContent/PaymentConfirmation';
-
-import ManagerDashboard from './Components/Admin/Dashboard';
 import  ArtisanFingerprintUpload  from './Components/Workers/FingerPrintUpload';
 import ArtisanSearchResults from './Components/SearchDiv/SearchResults';
-import EmployerDashboard from './Components/Dashboard/EmployerDashboard';
-import MarketerDashboard from './Components/Dashboard/MarketerDashboard';
-
-
-
 import ArtisanSearchPage from './Components/Admin/ArtisanSearchPage';
 
+
+import ArtisanDashboard from "./Components/Dashboard/ArtisanDashboard"; 
+import ManagerDashboard from './Components/Admin/Dashboard';
+import EmployerDashboard from './Components/Dashboard/EmployerDashboard';
+import MarketerDashboard from './Components/Dashboard/MarketerDashboard';
+import AdminDashboard from './Components/Dashboard/AdminDashboard';
+
+
+import CompanyList from './Components/Resources/Companies';
+import ContactPage  from './Components/Resources/ContactPage';
+import AboutUs from './Components/Resources/About';
+
+//import RegisterArtisan from './Components/Marketers/RegisterArtisan';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './index.css';
-import CompanyList from './Components/Resources/Companies';
-import ContactPage  from './Components/Resources/ContactPage';
-import AboutUs from './Components/Resources/About';
+
+
+
+
 
 
 
@@ -62,7 +69,7 @@ const App = () => {
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
           <Route path="/employer-details/:userId/:username" element={<EmployerDetailForm />} />
 
-          <Route path='/artisan-dashboard' element={< ArtisanDashboard />} />
+          <Route path='/artisan-dashboard' element={< ArtisanDashboard />} /> 
           <Route path='/employer-dashboard' element={< EmployerDashboard />} />
           <Route path="/artisan-finger-print/:artisanId" element={<ArtisanFingerprintUpload />} />
 
@@ -73,7 +80,10 @@ const App = () => {
           <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
 
           <Route path="/marketer-dashboard" element={<MarketerDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
 
+         
+          {/*<Route path="/register-artisan" element={<RegisterArtisan />} />*/}
           
           <Route path="/company" element={<CompanyList />} /> 
           <Route path="/about_us" element={<AboutUs />} />  
