@@ -23,6 +23,7 @@ import ManagerDashboard from './Components/Admin/Dashboard';
 import  ArtisanFingerprintUpload  from './Components/Workers/FingerPrintUpload';
 import ArtisanSearchResults from './Components/SearchDiv/SearchResults';
 import EmployerDashboard from './Components/Dashboard/EmployerDashboard';
+import MarketerDashboard from './Components/Dashboard/MarketerDashboard';
 
 
 
@@ -70,6 +71,8 @@ const App = () => {
           <Route path="/manager-dashboard" element={<ManagerDashboard />} />
 
           <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
+
+          <Route path="/marketer-dashboard" element={<MarketerDashboard />} />
 
           
           <Route path="/company" element={<CompanyList />} /> 
