@@ -95,8 +95,8 @@ const ArtisanRegistrationForm = () => {
   const [loading, setLoading] = useState(false);
   const [locations, setLocations] = useState([]);
   const [services, setServices] = useState([]);
-  const [jobTypes, setJobTypes] = useState([]);
-  const [industries, setIndustries] = useState([]);
+  //const [jobTypes, setJobTypes] = useState([]);
+  //const [industries, setIndustries] = useState([]);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -145,7 +145,7 @@ const ArtisanRegistrationForm = () => {
     }
   };
 
-  const fetchJobTypes = async () => {
+  {/*const fetchJobTypes = async () => {
     try {
       const response = await axiosInstance.get('api/job-type-list/');
       setJobTypes(response.data);
@@ -157,7 +157,7 @@ const ArtisanRegistrationForm = () => {
         { id: 'contract', title: 'Contract' },
       ]);
     }
-  };
+  };*
 
   const fetchIndustries = async () => {
     try {
@@ -171,13 +171,13 @@ const ArtisanRegistrationForm = () => {
         { id: 'services', name: 'Services' },
       ]);
     }
-  };
+  };*/}
 
   useEffect(() => {
     fetchLocations();
     fetchServices();
-    fetchJobTypes();
-    fetchIndustries();
+   // fetchJobTypes();
+    //fetchIndustries();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -196,8 +196,8 @@ const ArtisanRegistrationForm = () => {
     if (!formData.experience) newErrors.experience = 'Experience is required';
     if (!formData.address) newErrors.address = 'Address is required';
     if (!formData.phone_number) newErrors.phone_number = 'Phone number is required';
-    if (!formData.job_type) newErrors.job_type = 'Job type is required';
-    if (!formData.industry) newErrors.industry = 'Industry is required';
+    //if (!formData.job_type) newErrors.job_type = 'Job type is required';
+    //if (!formData.industry) newErrors.industry = 'Industry is required';
 
     setErrors(newErrors);
 
@@ -216,13 +216,13 @@ const ArtisanRegistrationForm = () => {
 
     try {
       setLoading(true);
-      const response = await axiosInstance.post('acct/artisan-register/', formDataToSend, {
+      const response = await axiosInstance.post('marketers/artisan-register/', formDataToSend, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
       if (response.status === 201) {
         alert('Artisan registration successful.');
-        navigate('/artisan-dashboard');
+        navigate('/marketer-dashboard');
       }
     } catch (error) {
       console.error('API Error:', error.response || error);
@@ -401,7 +401,7 @@ const ArtisanRegistrationForm = () => {
               error={errors.profile_image}
               disabled={loading}
             />
-            <InputField
+            {/*<InputField
               label="Marketer Code"
               type="text"
               name="marketer_code"
@@ -409,7 +409,7 @@ const ArtisanRegistrationForm = () => {
               onChange={handleInputChange}
               error={errors.marketer_code}
               disabled={loading}
-            />
+            />*/}
             <button
               type="submit"
               className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400"
