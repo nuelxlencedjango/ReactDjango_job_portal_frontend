@@ -34,7 +34,7 @@ import CompanyList from './Components/Resources/Companies';
 import ContactPage  from './Components/Resources/ContactPage';
 import AboutUs from './Components/Resources/About';
 
-//import RegisterArtisan from './Components/Marketers/RegisterArtisan';
+import RegisterArtisan from './Components/Marketers/RegisterArtisan';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -83,7 +83,7 @@ const App = () => {
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
 
          
-          {/*<Route path="/register-artisan" element={<RegisterArtisan />} />*/}
+          <Route path="/register-artisan" element={<RegisterArtisan />} />
           
           <Route path="/company" element={<CompanyList />} /> 
           <Route path="/about_us" element={<AboutUs />} />  

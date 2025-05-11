@@ -1,7 +1,7 @@
 // src/components/MarketerDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axiosInstance from '../api/axios';
+import axiosInstance from '../../api'; 
 import Cookies from 'js-cookie';
 
 const MarketerDashboard = () => {
@@ -61,7 +61,7 @@ const MarketerDashboard = () => {
                 </li>
                 <li>
                   <Link
-                    to={`/register?marketer_code=${marketerCode}&user_type=artisan`}
+                    to='/register-artisan'
                     className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
                   >
                     Register Artisan
