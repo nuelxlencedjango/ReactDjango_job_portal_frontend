@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from './marketerApi';
-import { FaUser, FaPhone, FaMapMarkerAlt, FaNairaSign } from 'react-icons/fa';
 import { MdOutlineEmail } from 'react-icons/md';
 import { RiLockPasswordFill, RiBriefcase4Fill } from 'react-icons/ri';
 import { BsPersonCheckFill } from 'react-icons/bs';
 import { IoPersonCircle } from 'react-icons/io5';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+
+
+import { FaUser, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 
 // Reusable InputField component
 const InputField = ({ label, type, name, value, onChange, error, accept, disabled, options = [] }) => {
@@ -522,15 +524,7 @@ const ArtisanRegistrationForm = () => {
               disabled={loading}
             />
 
-            <InputField
-              label="Marketer Code"
-              type="text"
-              name="marketer_code"
-              value={formData.marketer_code}
-              onChange={handleInputChange}
-              error={errors.marketer_code}
-              disabled={loading}
-            />
+          
 
             <button
               type="submit"
