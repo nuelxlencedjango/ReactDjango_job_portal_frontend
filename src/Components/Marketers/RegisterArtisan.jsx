@@ -189,7 +189,7 @@ const ArtisanRegistrationForm = () => {
     if (!formData.last_name) newErrors.last_name = 'Last Name is required';
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.password) newErrors.password = 'Password is required';
-    //if (!formData.password2) newErrors.password2 = 'Confirm Password is required';
+    if (!formData.password2) newErrors.password2 = 'Confirm Password is required';
     if (formData.password !== formData.password2) newErrors.password2 = 'Passwords do not match';
     if (!formData.nin) newErrors.nin = 'NIN is required';
     if (!formData.location) newErrors.location = 'Location is required';
