@@ -8,7 +8,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { BsPersonCheckFill } from 'react-icons/bs';
 import { IoPersonCircle } from 'react-icons/io5';
 
-const InputField = ({ label, type, name, value, onChange, error, accept, disabled, options }) => {
+const InputField = ({ label, type, name, value, onChange, error, accept, disabled }) => {
   return (
     <div className="relative">
       {label === 'Username' && <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
@@ -20,11 +20,16 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
       {label === 'NIN' && <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
       {label === 'Location' && <FaMapMarkerAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
       {label === 'Service' && <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      
+      {/*{label === 'Job Type' && <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      {/*{label === 'Marketer Code' && <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      {label === 'Industry' && <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />} */}
+
       {label === 'Experience' && <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
       {label === 'Address' && <FaMapMarkerAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
       {label === 'Phone Number' && <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
       {label === 'Pay' && <FaNairaSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
-      {label === 'Marketer Code' && <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      
       {type === 'file' ? (
         <input
           type="file"
@@ -42,12 +47,7 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
           className={`w-full pl-10 pr-4 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
           disabled={disabled}
         >
-          <option value="">{`Select ${label}`}</option>
-          {options.map((option) => (
-            <option key={option.id} value={option.id}>
-              {option.display}
-            </option>
-          ))}
+          {value}
         </select>
       ) : (
         <input
@@ -68,7 +68,7 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
 const ArtisanRegistrationForm = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const initialMarketerCode = queryParams.get('marketer_code') || '';
+  //const initialMarketerCode = queryParams.get('marketer_code') || '';
 
   const [formData, setFormData] = useState({
     username: '',
@@ -86,21 +86,25 @@ const ArtisanRegistrationForm = () => {
     service: '',
     pay: '',
     profile_image: null,
-    marketer_code: initialMarketerCode,
+   // job_type: '',
+    //industry: '',
+    //marketer_code: initialMarketerCode,
   });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [locations, setLocations] = useState([]);
   const [services, setServices] = useState([]);
+  const [jobTypes, setJobTypes] = useState([]);
+  const [industries, setIndustries] = useState([]);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === 'phone_number') {
-      const phoneRegex = /^(?:\+234|0)[0-9]{10}$/;
+      const phoneRegex = /^\+?234[0-9]{10}$/;
       if (value && !phoneRegex.test(value)) {
-        setErrors((prev) => ({ ...prev, phone_number: 'Invalid phone number format (e.g., +2348012345678 or 08012345678)' }));
+        setErrors((prev) => ({ ...prev, phone_number: 'Invalid phone number format (e.g., +2348012345678)' }));
       } else {
         setErrors((prev) => ({ ...prev, phone_number: '' }));
       }
@@ -124,7 +128,7 @@ const ArtisanRegistrationForm = () => {
   const fetchLocations = async () => {
     try {
       const response = await axiosInstance.get('api/location-list/');
-      setLocations(response.data.map((loc) => ({ id: loc.id, display: loc.location })));
+      setLocations(response.data);
     } catch (error) {
       console.error('Error fetching locations:', error);
       setErrors((prev) => ({ ...prev, general: 'Failed to fetch locations. Please try again.' }));
@@ -134,16 +138,46 @@ const ArtisanRegistrationForm = () => {
   const fetchServices = async () => {
     try {
       const response = await axiosInstance.get('api/profession-list/');
-      setServices(response.data.map((srv) => ({ id: srv.id, display: srv.title })));
+      setServices(response.data);
     } catch (error) {
       console.error('Error fetching services:', error);
       setErrors((prev) => ({ ...prev, general: 'Failed to fetch services. Please try again.' }));
     }
   };
 
+  const fetchJobTypes = async () => {
+    try {
+      const response = await axiosInstance.get('api/job-type-list/');
+      setJobTypes(response.data);
+    } catch (error) {
+      console.error('Error fetching job types:', error);
+      setJobTypes([
+        { id: 'full_time', title: 'Full Time' },
+        { id: 'part_time', title: 'Part Time' },
+        { id: 'contract', title: 'Contract' },
+      ]);
+    }
+  };
+
+  const fetchIndustries = async () => {
+    try {
+      const response = await axiosInstance.get('api/industry-list/');
+      setIndustries(response.data);
+    } catch (error) {
+      console.error('Error fetching industries:', error);
+      setIndustries([
+        { id: 'construction', name: 'Construction' },
+        { id: 'manufacturing', name: 'Manufacturing' },
+        { id: 'services', name: 'Services' },
+      ]);
+    }
+  };
+
   useEffect(() => {
     fetchLocations();
     fetchServices();
+    fetchJobTypes();
+    fetchIndustries();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -162,6 +196,8 @@ const ArtisanRegistrationForm = () => {
     if (!formData.experience) newErrors.experience = 'Experience is required';
     if (!formData.address) newErrors.address = 'Address is required';
     if (!formData.phone_number) newErrors.phone_number = 'Phone number is required';
+    if (!formData.job_type) newErrors.job_type = 'Job type is required';
+    if (!formData.industry) newErrors.industry = 'Industry is required';
 
     setErrors(newErrors);
 
@@ -283,26 +319,43 @@ const ArtisanRegistrationForm = () => {
               error={errors.nin}
               disabled={loading}
             />
-            <InputField
-              label="Location"
-              type="select"
-              name="location"
-              value={formData.location}
-              onChange={handleInputChange}
-              error={errors.location}
-              disabled={loading}
-              options={locations}
-            />
-            <InputField
-              label="Service"
-              type="select"
-              name="service"
-              value={formData.service}
-              onChange={handleInputChange}
-              error={errors.service}
-              disabled={loading}
-              options={services}
-            />
+          
+                                  {/* Location Field */}
+                                  <div className="relative">
+                                      <FaMapMarkerAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                      <select
+                                          name="location"
+                                          value={formData.location}
+                                          onChange={handleInputChange}
+                                          className={`w-full pl-10 pr-4 py-2 border ${errors.location ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
+                                          disabled={loading}
+                                      >
+                                          <option value="">Select Location</option>
+                                          {locations.map(location => (
+                                              <option key={location.id} value={location.id}>{location.location}</option>
+                                          ))}
+                                      </select>
+                                      {errors.location && <div className="text-red-500 text-sm">{errors.location}</div>}
+                                  </div>
+           
+                                   {/* Service Field */}
+                                   <div className="relative">
+                                       <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                       <select
+                                           name="service"
+                                           value={formData.service}
+                                           onChange={handleInputChange}
+                                           className={`w-full pl-10 pr-4 py-2 border ${errors.service ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
+                                           disabled={loading}
+                                       >
+                                           <option value="">Select Profession</option>
+                                           {services.map(service => (
+                                               <option key={service.id} value={service.id}>{service.title}</option>
+                                           ))}
+                                       </select>
+                                       {errors.service && <div className="text-red-500 text-sm">{errors.service}</div>}
+                                   </div>
+        
             <InputField
               label="Experience"
               type="number"
