@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../api/axios';
-
+import axiosInstance from './marketerApi';
 import { FaUser, FaPhone, FaMapMarkerAlt, FaNairaSign } from 'react-icons/fa';
 import { MdOutlineEmail } from 'react-icons/md';
 import { RiLockPasswordFill, RiBriefcase4Fill } from 'react-icons/ri';
 import { BsPersonCheckFill } from 'react-icons/bs';
 import { IoPersonCircle } from 'react-icons/io5';
-
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 
 // Reusable InputField component
