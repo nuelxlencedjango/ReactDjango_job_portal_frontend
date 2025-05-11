@@ -76,7 +76,7 @@ const ArtisanRegistrationForm = () => {
     last_name: '',
     email: '',
     password: '',
-    password2: '',
+    password2: '', 
     user_type: 'artisan',
     nin: '',
     location: '',
@@ -189,6 +189,7 @@ const ArtisanRegistrationForm = () => {
     if (!formData.last_name) newErrors.last_name = 'Last Name is required';
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.password2) newErrors.password2 = 'Confirm Password is required';
     if (formData.password !== formData.password2) newErrors.password2 = 'Passwords do not match';
     if (!formData.nin) newErrors.nin = 'NIN is required';
     if (!formData.location) newErrors.location = 'Location is required';
@@ -310,6 +311,8 @@ const ArtisanRegistrationForm = () => {
               error={errors.password2}
               disabled={loading}
             />
+
+
             <InputField
               label="NIN"
               type="text"
@@ -440,3 +443,5 @@ const ArtisanRegistrationForm = () => {
 };
 
 export default ArtisanRegistrationForm;
+
+
