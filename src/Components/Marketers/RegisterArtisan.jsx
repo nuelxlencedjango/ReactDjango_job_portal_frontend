@@ -99,16 +99,9 @@ const ArtisanRegistrationForm = () => {
   //const [industries, setIndustries] = useState([]);
   const navigate = useNavigate();
 
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'phone_number') {
-      const phoneRegex = /^\+?234[0-9]{10}$/;
-      if (value && !phoneRegex.test(value)) {
-        setErrors((prev) => ({ ...prev, phone_number: 'Invalid phone number format (e.g., +2348012345678)' }));
-      } else {
-        setErrors((prev) => ({ ...prev, phone_number: '' }));
-      }
-    }
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
@@ -180,54 +173,74 @@ const ArtisanRegistrationForm = () => {
     //fetchIndustries();
   }, []);
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Clear previous errors
+    setErrors({});
+  
     const newErrors = {};
-    if (!formData.username) newErrors.username = 'Username is required';
-    if (!formData.first_name) newErrors.first_name = 'First Name is required';
-    if (!formData.last_name) newErrors.last_name = 'Last Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-    if (!formData.password2) newErrors.password2 = 'Confirm Password is required';
-    if (formData.password !== formData.password2) newErrors.password2 = 'Passwords do not match';
-    if (!formData.nin) newErrors.nin = 'NIN is required';
-    if (!formData.location) newErrors.location = 'Location is required';
-    if (!formData.service) newErrors.service = 'Service is required';
-    if (!formData.experience) newErrors.experience = 'Experience is required';
-    if (!formData.address) newErrors.address = 'Address is required';
-    if (!formData.phone_number) newErrors.phone_number = 'Phone number is required';
-    //if (!formData.job_type) newErrors.job_type = 'Job type is required';
-    //if (!formData.industry) newErrors.industry = 'Industry is required';
-
-    setErrors(newErrors);
-
+  
+    // First check if passwords match (if both exist)
+    if (formData.password && formData.password2 && formData.password !== formData.password2) {
+      newErrors.password2 = 'Passwords do not match';
+    }
+  
+    // Check required fields
+    const requiredFields = {
+      username: 'Username is required',
+      first_name: 'First Name is required',
+      last_name: 'Last Name is required',
+      email: 'Email is required',
+      password: 'Password is required',
+      password2: 'Confirm Password is required',
+      nin: 'NIN is required',
+      location: 'Location is required',
+      service: 'Service is required',
+      experience: 'Experience is required',
+      address: 'Address is required',
+      phone_number: 'Phone number is required',
+      pay: 'Pay is required'
+    };
+  
+    Object.keys(requiredFields).forEach(field => {
+      if (!formData[field]) {
+        newErrors[field] = requiredFields[field];
+      }
+    });
+  
+    // If there are errors, set them and stop submission
     if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
-
+  
+    // FormData
     const formDataToSend = new FormData();
-    Object.keys(formData).forEach((key) => {
+    
+    // add form data to FormData
+    Object.keys(formData).forEach(key => {
       if (key === 'profile_image' && formData[key]) {
         formDataToSend.append(key, formData[key]);
-      } else if (key !== 'profile_image') {
+      } else if (key !== 'profile_image' && formData[key] !== null && formData[key] !== '') {
         formDataToSend.append(key, formData[key]);
       }
     });
-
+  
     try {
       setLoading(true);
       const response = await axiosInstance.post('marketers/artisan-register/', formDataToSend, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
+  
       if (response.status === 201) {
         alert('Artisan registration successful.');
         navigate('/marketer-dashboard');
       }
     } catch (error) {
       console.error('API Error:', error.response || error);
-      if (error.response && error.response.data) {
+      if (error.response?.data) {
         setErrors({
           ...error.response.data,
           general: error.response.data.detail || 'An error occurred. Please try again.',
@@ -239,6 +252,8 @@ const ArtisanRegistrationForm = () => {
       setLoading(false);
     }
   };
+
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-6">
@@ -262,7 +277,7 @@ const ArtisanRegistrationForm = () => {
               type="text"
               name="username"
               value={formData.username}
-              onChange={handleInputChange}
+              onChange={handleInputChange} 
               error={errors.username}
               disabled={loading}
             />
