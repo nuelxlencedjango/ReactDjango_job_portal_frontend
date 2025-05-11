@@ -20,13 +20,16 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
       {label === 'NIN' && <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
       {label === 'Location' && <FaMapMarkerAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
       {label === 'Service' && <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
-      {label === 'Job Type' && <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
-      {label === 'Industry' && <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      
+      {/*{label === 'Job Type' && <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      {/*{label === 'Marketer Code' && <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      {label === 'Industry' && <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />} */}
+
       {label === 'Experience' && <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
       {label === 'Address' && <FaMapMarkerAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
       {label === 'Phone Number' && <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
       {label === 'Pay' && <FaNairaSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
-      {label === 'Marketer Code' && <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />}
+      
       {type === 'file' ? (
         <input
           type="file"
@@ -65,7 +68,7 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
 const ArtisanRegistrationForm = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const initialMarketerCode = queryParams.get('marketer_code') || '';
+  //const initialMarketerCode = queryParams.get('marketer_code') || '';
 
   const [formData, setFormData] = useState({
     username: '',
@@ -83,17 +86,17 @@ const ArtisanRegistrationForm = () => {
     service: '',
     pay: '',
     profile_image: null,
-    job_type: '',
-    industry: '',
-    marketer_code: initialMarketerCode,
+   // job_type: '',
+    //industry: '',
+    //marketer_code: initialMarketerCode,
   });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [locations, setLocations] = useState([]);
   const [services, setServices] = useState([]);
-  const [jobTypes, setJobTypes] = useState([]);
-  const [industries, setIndustries] = useState([]);
+  //const [jobTypes, setJobTypes] = useState([]);
+  //const [industries, setIndustries] = useState([]);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -156,7 +159,7 @@ const ArtisanRegistrationForm = () => {
     }
   };
 
-  const fetchIndustries = async () => {
+  {/*const fetchIndustries = async () => {
     try {
       const response = await axiosInstance.get('api/industry-list/');
       setIndustries(response.data);
@@ -168,13 +171,13 @@ const ArtisanRegistrationForm = () => {
         { id: 'services', name: 'Services' },
       ]);
     }
-  };
+  };*/}
 
   useEffect(() => {
     fetchLocations();
     fetchServices();
-    fetchJobTypes();
-    fetchIndustries();
+   // fetchJobTypes();
+    //fetchIndustries();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -193,8 +196,8 @@ const ArtisanRegistrationForm = () => {
     if (!formData.experience) newErrors.experience = 'Experience is required';
     if (!formData.address) newErrors.address = 'Address is required';
     if (!formData.phone_number) newErrors.phone_number = 'Phone number is required';
-    if (!formData.job_type) newErrors.job_type = 'Job type is required';
-    if (!formData.industry) newErrors.industry = 'Industry is required';
+    //if (!formData.job_type) newErrors.job_type = 'Job type is required';
+    //if (!formData.industry) newErrors.industry = 'Industry is required';
 
     setErrors(newErrors);
 
@@ -219,7 +222,7 @@ const ArtisanRegistrationForm = () => {
 
       if (response.status === 201) {
         alert('Artisan registration successful.');
-        navigate('/artisan-dashboard');
+        navigate('/marketer-dashboard');
       }
     } catch (error) {
       console.error('API Error:', error.response || error);
@@ -398,7 +401,7 @@ const ArtisanRegistrationForm = () => {
               error={errors.profile_image}
               disabled={loading}
             />
-            <InputField
+            {/*<InputField
               label="Marketer Code"
               type="text"
               name="marketer_code"
@@ -406,7 +409,7 @@ const ArtisanRegistrationForm = () => {
               onChange={handleInputChange}
               error={errors.marketer_code}
               disabled={loading}
-            />
+            />*/}
             <button
               type="submit"
               className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400"
