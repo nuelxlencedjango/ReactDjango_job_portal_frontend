@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api';
+import Cookies from 'js-cookie';
 
 // Reusable Loading Spinner
 const LoadingSpinner = () => (
@@ -17,12 +18,18 @@ const RegisteredArtisans = () => {
     // Fetch artisans with retry logic
     const fetchArtisans = async () => {
         try {
-            const response = await api.get('marketers/registered-artisans/');
+            const token = Cookies.get('access_token');
+            if (!token) {
+                throw new Error('No access token found. Please log in.');
+            }
+            const response = await api.get('marketers/registered-artisans/', {
+                headers: { Authorization: `Bearer ${token}` },
+            });
             setArtisans(response.data);
             setError('');
         } catch (err) {
             console.error('Artisan fetch error:', err);
-            setError(err.response?.data?.detail || 'Failed to load artisans');
+            setError(err.response?.data?.detail || err.message || 'Failed to load artisans');
             throw err;
         }
     };
@@ -104,7 +111,7 @@ const RegisteredArtisans = () => {
                 Registered Artisans
             </h2>
             {/* Desktop: Table */}
-            <div className="hidden custom:block bg-white rounded-lg overflow-hidden">
+            <div className="hidden sm:block bg-white rounded-lg overflow-hidden">
                 <table className="w-full table-auto">
                     <thead>
                         <tr className="bg-gray-200 text-gray-600 text-sm">
@@ -117,7 +124,7 @@ const RegisteredArtisans = () => {
                     </thead>
                     <tbody>
                         {artisans.map(artisan => (
-                            <tr key={artisan.id} className="border-b text-sm">
+                            <tr key={artisan.id} className="border-b text-sm" aria-label={`Artisan ${artisan.first_name} ${artisan.last_name}`}>
                                 <td className="py-2 px-3">
                                     {artisan.first_name} {artisan.last_name}
                                 </td>
@@ -139,15 +146,16 @@ const RegisteredArtisans = () => {
                 </table>
             </div>
             {/* Mobile: Cards */}
-            <div className="block custom:hidden space-y-3">
+            <div className="block sm:hidden space-y-3">
                 {artisans.map(artisan => (
-                    <div key={artisan.id} className="bg-white p-4 rounded-lg shadow-md">
+                    <div key={artisan.id} className="bg-white p-4 rounded-lg shadow-md" aria-label={`Artisan ${artisan.first_name} ${artisan.last_name}`}>
                         <div className="flex items-center space-x-3">
                             {artisan.profile_image ? (
                                 <img
                                     src={`https://res.cloudinary.com/your-cloud-name/image/upload/w_40,h_40,c_thumb,g_face/${artisan.profile_image}.jpg`}
                                     alt={`${artisan.first_name} ${artisan.last_name}`}
                                     className="w-10 h-10 rounded-full object-cover"
+                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; }}
                                 />
                             ) : (
                                 <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
