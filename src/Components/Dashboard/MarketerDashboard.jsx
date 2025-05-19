@@ -1,24 +1,64 @@
-// src/components/MarketerDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axiosInstance from '../../api'; 
+import api from '../../api';
 import Cookies from 'js-cookie';
 
 const MarketerDashboard = () => {
   const [marketerCode, setMarketerCode] = useState('');
-  const [error, setError] = useState('');
-  const userName = 'John Doe'; // Replace with actual user data
-  const companyName = 'Artisan Pro';
-  const companyLogo = 'https://via.placeholder.com/50';
+  const [userDetails, setUserDetails] = useState({
+    username: 'Loading...',
+    companyName: 'User Profile',
+    companyLogo: 'https://via.placeholder.com/50',
+  });
+  const [error, setError] = useState({
+    marketerCode: null,
+    user: null,
+  });
 
+  // Fetch user details
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const token = Cookies.get('access_token');
+        if (!token) {
+          throw new Error('No access token found. Please log in.');
+        }
+        const response = await api.get('acct/user-profile/', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUserDetails({
+          username: response.data.first_name && response.data.last_name
+            ? `${response.data.first_name} ${response.data.last_name}`
+            : response.data.username || 'User',
+          companyName: response.data.company_name || `${response.data.user_type} Profile`,
+          companyLogo: response.data.company_logo || 'https://via.placeholder.com/50',
+        });
+      } catch (err) {
+        if (err.response?.status === 401) {
+          window.location.href = '/login';
+        }
+        setError(prev => ({ ...prev, user: err.message || 'Failed to fetch user details.' }));
+        console.error('Error fetching user details:', err);
+      }
+    };
+    fetchUserDetails();
+  }, []);
+
+  // Fetch marketer code
   useEffect(() => {
     const fetchMarketerCode = async () => {
       try {
-        const response = await axiosInstance.get('marketer-profile/'); // Endpoint to get marketer profile
+        const token = Cookies.get('access_token');
+        if (!token) {
+          throw new Error('No access token found. Please log in.');
+        }
+        const response = await api.get('marketer-profile/', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setMarketerCode(response.data.marketer_code);
-      } catch (error) {
-        console.error('Error fetching marketer code:', error);
-        setError('Failed to load marketer code.');
+      } catch (err) {
+        setError(prev => ({ ...prev, marketerCode: 'Failed to load marketer code.' }));
+        console.error('Error fetching marketer code:', err);
       }
     };
     fetchMarketerCode();
@@ -30,19 +70,27 @@ const MarketerDashboard = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <img src={companyLogo} alt="Company Logo" className="h-12 w-12 rounded-full" />
-              <span className="ml-3 text-2xl font-semibold text-gray-800">{companyName}</span>
+              <img
+                src={userDetails.companyLogo}
+                alt="Company Logo"
+                className="h-12 w-12 rounded-full"
+                onError={(e) => { e.target.src = 'https://via.placeholder.com/50'; }}
+              />
+              <span className="ml-3 text-2xl font-semibold text-gray-800">
+                {userDetails.companyName}
+              </span>
             </div>
             <div className="flex items-center">
               <span className="text-gray-700 mr-2">Welcome,</span>
-              <span className="font-semibold text-gray-800">{userName}</span>
+              <span className="font-semibold text-gray-800">{userDetails.username}</span>
             </div>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-6">
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {error.user && <p className="text-red-500 mb-4">{error.user}</p>}
+        {error.marketerCode && <p className="text-red-500 mb-4">{error.marketerCode}</p>}
         <div className="mb-6">
           <h3 className="text-xl font-semibold text-gray-800">Your Marketer Code</h3>
           <p className="text-2xl font-bold text-green-600">{marketerCode || 'Loading...'}</p>
@@ -69,8 +117,8 @@ const MarketerDashboard = () => {
                 </li>
                 <li>
                   <Link
-                    to={`/register?marketer_code=${marketerCode}&user_type=employer`}
-                    className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
+                    to={marketerCode ? `/register?marketer_code=${marketerCode}&user_type=employer` : '#'}
+                    className={`flex items-center p-3 text-gray-700 rounded-lg transition duration-300 ${!marketerCode ? 'opacity-50 cursor-not-allowed' : 'hover:bg-indigo-100'}`}
                   >
                     Register Employer
                   </Link>
@@ -101,15 +149,15 @@ const MarketerDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h3 className="text-lg font-semibold text-blue-800">Total Earnings</h3>
-                  <p className="text-3xl font-bold text-blue-800">$5,000</p>
+                  <p className="text-3xl font-bold text-blue-800">₦0.00</p>
                 </div>
                 <div className="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h3 className="text-lg font-semibold text-green-800">Active Jobs</h3>
-                  <p className="text-3xl font-bold text-green-800">12</p>
+                  <p className="text-3xl font-bold text-green-800">0</p>
                 </div>
                 <div className="bg-purple-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h3 className="text-lg font-semibold text-purple-800">Completed Jobs</h3>
-                  <p className="text-3xl font-bold text-purple-800">45</p>
+                  <p className="text-3xl font-bold text-purple-800">0</p>
                 </div>
               </div>
             </div>
@@ -119,19 +167,19 @@ const MarketerDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="bg-yellow-50 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h4 className="text-lg font-semibold text-yellow-800">Pending Orders</h4>
-                  <p className="text-2xl font-bold text-yellow-800">8</p>
+                  <p className="text-2xl font-bold text-yellow-800">0</p>
                 </div>
                 <div className="bg-indigo-50 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h4 className="text-lg font-semibold text-indigo-800">Total Reviews</h4>
-                  <p className="text-2xl font-bold text-indigo-800">123</p>
+                  <p className="text-2xl font-bold text-indigo-800">0</p>
                 </div>
                 <div className="bg-teal-50 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h4 className="text-lg font-semibold text-teal-800">New Messages</h4>
-                  <p className="text-2xl font-bold text-teal-800">7</p>
+                  <p className="text-2xl font-bold text-teal-800">0</p>
                 </div>
                 <div className="bg-red-50 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h4 className="text-lg font-semibold text-red-800">Refunds Pending</h4>
-                  <p className="text-2xl font-bold text-red-800">2</p>
+                  <p className="text-2xl font-bold text-red-800">0</p>
                 </div>
               </div>
             </div>
