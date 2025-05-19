@@ -1,9 +1,9 @@
 
+import React from 'react';
+import { useUser } from './UserContents';
 
 const Dashboard = () => {
-  const userName = "John Doe"; 
-  const companyName = "Artisan Pro";
-  const companyLogo = "https://via.placeholder.com/50";
+  const { user } = useUser();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -13,25 +13,36 @@ const Dashboard = () => {
           <div className="flex justify-between items-center py-4">
             {/* Company Logo and Name */}
             <div className="flex items-center">
-              <img
-                src={companyLogo}
-                alt="Company Logo"
-                className="h-12 w-12 rounded-full"
-              />
+              {user?.profile_image ? (
+                <img
+                  src={user.profile_image}
+                  alt="Profile"
+                  className="h-12 w-12 rounded-full"
+                />
+              ) : (
+                <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center">
+                  <span className="text-gray-600 text-xl">
+                    {user?.first_name?.charAt(0) || 'A'}
+                  </span>
+                </div>
+              )}
               <span className="ml-3 text-2xl font-semibold text-gray-800">
-                {companyName}
+                {user?.company_name || 'Artisan Pro'}
               </span>
             </div>
 
             {/* User Name */}
             <div className="flex items-center">
               <span className="text-gray-700 mr-2">Welcome,</span>
-              <span className="font-semibold text-gray-800">{userName}</span>
+              <span className="font-semibold text-gray-800">
+                {user?.first_name} {user?.last_name}
+              </span>
             </div>
           </div>
         </div>
       </div>
 
+      
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6">
         <div className="flex">
