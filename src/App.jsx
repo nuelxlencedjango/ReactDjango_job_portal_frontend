@@ -36,8 +36,6 @@ import AboutUs from './Components/Resources/About';
 
 import RegisterArtisan from './Components/Marketers/RegisterArtisan';
 
-import { UserProvider } from './Components/Dashboard/UserContents';
-
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './index.css';
@@ -100,7 +98,7 @@ const App = () => {
           <Route path="/order-service" element={<ProtectedRoute>
           
             
-          <UserProvider> </UserProvider>
+         
 
          {/* <Route path="/register/:userType" element={<RegistrationPage />} />
         <Route path="/success" element={<h1>Registration Successful!</h1>} /> */}
@@ -116,3 +114,5 @@ const App = () => {
 };
 
 export default App;
+
+
