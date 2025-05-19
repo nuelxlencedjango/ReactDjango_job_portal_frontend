@@ -5,6 +5,7 @@ import { RiLockPasswordFill, RiBriefcase4Fill } from 'react-icons/ri';
 import { BsPersonCheckFill } from 'react-icons/bs';
 import { IoPersonCircle } from 'react-icons/io5';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { FaNairaSign } from 'react-icons/fa6';
 
 
 import { FaUser, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
