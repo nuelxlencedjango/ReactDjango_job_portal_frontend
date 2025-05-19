@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import api from '../../api';
 
+
 const ArtisanDashboard = () => {
   const [userDetails, setUserDetails] = useState({
     username: 'Loading...',
