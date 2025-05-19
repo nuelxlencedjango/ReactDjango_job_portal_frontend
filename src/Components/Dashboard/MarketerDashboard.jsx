@@ -5,14 +5,14 @@ import Cookies from 'js-cookie';
 import RegisteredArtisans from './RegisteredArtisans';
 
 const MarketerDashboard = () => {
-  const [marketerCode, setMarketerCode] = useState('');
+  const [marketerCode, setMarketerCode] = useState(''); 
   const [userDetails, setUserDetails] = useState({
     username: 'Loading...',
     companyName: 'User Profile',
-    companyLogo: 'https://via.placeholder.com/50',
+    companyLogo: '',
   });
   const [error, setError] = useState({
-    marketerCode: null,
+    marketerCode: null, 
     user: null,
   });
 
@@ -47,7 +47,7 @@ const MarketerDashboard = () => {
 
   // Fetch marketer code
   useEffect(() => {
-    const fetchMarketerCode = async () => {
+    const fetchMarketerCode = async () => { 
       try {
         const token = Cookies.get('access_token');
         if (!token) {
@@ -56,13 +56,13 @@ const MarketerDashboard = () => {
         const response = await api.get('marketer-profile/', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setMarketerCode(response.data.marketer_code);
+        setMarketerCode(response.data.marketer_code); 
       } catch (err) {
         setError(prev => ({ ...prev, marketerCode: 'Failed to load marketer code.' }));
         console.error('Error fetching marketer code:', err);
       }
     };
-    fetchMarketerCode();
+    fetchMarketerCode(); 
   }, []);
 
   return (
@@ -114,6 +114,14 @@ const MarketerDashboard = () => {
                     className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300 text-sm sm:text-base"
                   >
                     Register Artisan
+                  </Link>
+                </li>
+                 <li>
+                  <Link
+                    to="/list-artisan"
+                    className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300 text-sm sm:text-base"
+                  >
+                    Show Registered Artisan By Me
                   </Link>
                 </li>
                 <li>
