@@ -22,9 +22,9 @@ const EmployerDashboard = () => {
     user: null,
   });
   const [stats, setStats] = useState({
-    pendingOrders: 3,
-    activeJobs: 12,
-    completedJobs: 45,
+    pendingOrders: 0,
+    activeJobs: 0,
+    completedJobs: 0,
   });
 
   // Fetch user details
