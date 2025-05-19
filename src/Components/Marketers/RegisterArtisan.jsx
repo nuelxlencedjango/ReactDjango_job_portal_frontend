@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from './marketerApi';
+
+import api from '../../api'
 import { MdOutlineEmail } from 'react-icons/md';
 import { RiLockPasswordFill, RiBriefcase4Fill } from 'react-icons/ri';
 import { BsPersonCheckFill } from 'react-icons/bs';
@@ -134,7 +135,7 @@ const ArtisanRegistrationForm = () => {
   // Fetch locations data
   const fetchLocations = async () => {
     try {
-      const response = await axiosInstance.get('api/location-list/', {
+      const response = await api.get('api/location-list/', {
         headers: { 'Cache-Control': 'no-cache' }
       });
       
@@ -158,7 +159,7 @@ const ArtisanRegistrationForm = () => {
   // Fetch services data
   const fetchServices = async () => {
     try {
-      const response = await axiosInstance.get('api/profession-list/', {
+      const response = await api.get('api/profession-list/', { 
         headers: { 'Cache-Control': 'no-cache' }
       });
       
@@ -264,7 +265,7 @@ const ArtisanRegistrationForm = () => {
 
     // Submit data
     try {
-      const response = await axiosInstance.post(
+      const response = await api.post( 
         'marketers/artisan-register/', 
         formDataToSend,
         { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -313,7 +314,7 @@ const ArtisanRegistrationForm = () => {
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        await axiosInstance.get('api/auth/verify/');
+        await api.get('api/auth/verify/'); 
       } catch (error) {
         if (error.response?.status === 401) {
           window.location.href = "/login";
