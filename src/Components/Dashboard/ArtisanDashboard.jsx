@@ -122,15 +122,15 @@ const ArtisanDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h3 className="text-lg font-semibold text-blue-800">Total Earnings</h3>
-                  <p className="text-3xl font-bold text-blue-800">$5,000</p>
+                  <p className="text-3xl font-bold text-blue-800">₦0.00</p>
                 </div>
                 <div className="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h3 className="text-lg font-semibold text-green-800">Active Jobs</h3>
-                  <p className="text-3xl font-bold text-green-800">12</p>
+                  <p className="text-3xl font-bold text-green-800">0</p>
                 </div>
                 <div className="bg-purple-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h3 className="text-lg font-semibold text-purple-800">Completed Jobs</h3>
-                  <p className="text-3xl font-bold text-purple-800">45</p>
+                  <p className="text-3xl font-bold text-purple-800">0</p>
                 </div>
               </div>
             </div>
@@ -140,19 +140,19 @@ const ArtisanDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="bg-yellow-50 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h4 className="text-lg font-semibold text-yellow-800">Pending Orders</h4>
-                  <p className="text-2xl font-bold text-yellow-800">8</p>
+                  <p className="text-2xl font-bold text-yellow-800">0</p>
                 </div>
                 <div className="bg-indigo-50 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h4 className="text-lg font-semibold text-indigo-800">Total Reviews</h4>
-                  <p className="text-2xl font-bold text-indigo-800">123</p>
+                  <p className="text-2xl font-bold text-indigo-800">0</p>
                 </div>
                 <div className="bg-teal-50 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h4 className="text-lg font-semibold text-teal-800">New Messages</h4>
-                  <p className="text-2xl font-bold text-teal-800">7</p>
+                  <p className="text-2xl font-bold text-teal-800">0</p>
                 </div>
                 <div className="bg-red-50 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                   <h4 className="text-lg font-semibold text-red-800">Refunds Pending</h4>
-                  <p className="text-2xl font-bold text-red-800">2</p>
+                  <p className="text-2xl font-bold text-red-800">0</p>
                 </div>
               </div>
             </div>
