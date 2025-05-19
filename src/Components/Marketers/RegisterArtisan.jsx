@@ -11,20 +11,20 @@ import { FaUser, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 // Reusable InputField component
 const InputField = ({ label, type, name, value, onChange, error, accept, disabled, options = [] }) => {
     const iconMap = {
-        'Username': <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'First Name': <IoPersonCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Last Name': <BsPersonCheckFill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Email': <MdOutlineEmail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Password': <RiLockPasswordFill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Confirm Password': <RiLockPasswordFill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'NIN': <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Location': <FaMapMarkerAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Service': <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Experience': <RiBriefcase4Fill className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Address': <FaMapMarkerAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Phone Number': <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Pay': <FaNairaSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
-        'Marketer Code': <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />,
+        'Username': <FaUser className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'First Name': <IoPersonCircle className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Last Name': <BsPersonCheckFill className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Email': <MdOutlineEmail className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Password': <RiLockPasswordFill className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Confirm Password': <RiLockPasswordFill className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'NIN': <FaUser className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Location': <FaMapMarkerAlt className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Service': <RiBriefcase4Fill className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Experience': <RiBriefcase4Fill className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Address': <FaMapMarkerAlt className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Phone Number': <FaPhone className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Pay': <FaNairaSign className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        'Marketer Code': <FaUser className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
     };
 
     return (
@@ -36,7 +36,7 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
                     name={name}
                     onChange={onChange}
                     accept={accept}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full pl-8 pr-3 py-1.5 sm:pl-10 sm:pr-4 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base"
                     disabled={disabled}
                 />
             ) : type === 'select' ? (
@@ -44,7 +44,7 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
                     name={name}
                     value={value}
                     onChange={onChange}
-                    className={`w-full pl-10 pr-4 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
+                    className={`w-full pl-8 pr-3 py-1.5 sm:pl-10 sm:pr-4 sm:py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base`}
                     disabled={disabled || options.length === 0}
                 >
                     <option value="">{`Select ${label}`}</option>
@@ -61,11 +61,11 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
                     value={value}
                     onChange={onChange}
                     placeholder={label}
-                    className={`w-full pl-10 pr-4 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
+                    className={`w-full pl-8 pr-3 py-1.5 sm:pl-10 sm:pr-4 sm:py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base`}
                     disabled={disabled}
                 />
             )}
-            {error && <div className="text-red-500 text-sm">{error}</div>}
+            {error && <div className="text-red-500 text-xs sm:text-sm mt-1">{error}</div>}
         </div>
     );
 };
@@ -298,54 +298,54 @@ const ArtisanRegistrationForm = () => {
 
     // Main form render
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-6">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-4 sm:py-6">
             {(errors.locations || errors.services) && (
-                <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md mb-6">
-                    <h2 className="text-xl font-semibold mb-4">Data Loading Issue</h2>
-                    <p className="mb-4 text-red-500">
+                <div className="w-full max-w-md mx-4 bg-white p-6 sm:p-8 rounded-lg shadow-md text-center mb-4 sm:mb-6">
+                    <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Data Loading Issue</h2>
+                    <p className="mb-3 sm:mb-4 text-red-500 text-sm sm:text-base">
                         {errors.locations || errors.services}
                     </p>
-                    <button
-                        onClick={() => {
-                            setRetryCount(prev => prev + 1);
-                            fetchWithRetry(fetchLocations, setLoadingLocations, 2);
-                            fetchWithRetry(fetchServices, setLoadingServices, 2);
-                        }}
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-gray-400"
-                        disabled={retryCount >= 2}
-                    >
-                        {retryCount >= 2 ? 'Max retries reached' : 'Try Again'}
-                    </button>
-                    {retryCount > 0 && (
-                        <p className="mt-2 text-sm text-gray-600">
-                            Attempt {retryCount} of 2
-                        </p>
-                    )}
-                    <p className="mt-4">
+                    <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:space-x-4 justify-center">
+                        <button
+                            onClick={() => {
+                                setRetryCount(prev => prev + 1);
+                                fetchWithRetry(fetchLocations, setLoadingLocations, 2);
+                                fetchWithRetry(fetchServices, setLoadingServices, 2);
+                            }}
+                            className="bg-green-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded hover:bg-green-600 disabled:bg-gray-400 text-sm sm:text-base"
+                            disabled={retryCount >= 2}
+                        >
+                            {retryCount >= 2 ? 'Max retries reached' : 'Try Again'}
+                        </button>
                         <button
                             onClick={() => setErrors(prev => ({ ...prev, locations: '', services: '' }))}
-                            className="text-green-500 hover:underline"
+                            className="text-green-500 hover:underline text-sm sm:text-base"
                         >
                             Continue with limited functionality
                         </button>
-                    </p>
+                    </div>
+                    {retryCount > 0 && (
+                        <p className="mt-2 text-xs sm:text-sm text-gray-600">
+                            Attempt {retryCount} of 2
+                        </p>
+                    )}
                 </div>
             )}
-            <div className="relative bg-white shadow-md rounded-lg p-8 w-full max-w-lg">
-                <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
+            <div className="relative w-full max-w-lg mx-4 bg-white shadow-md rounded-lg p-6 sm:p-8">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-4 sm:mb-6">
                     Artisan Registration
                 </h1>
                 {errors.general && (
-                    <div className="mb-4 text-red-500 text-center">{errors.general}</div>
+                    <div className="mb-3 sm:mb-4 text-red-500 text-center text-sm sm:text-base">{errors.general}</div>
                 )}
                 {loading && (
                     <div className="absolute inset-0 bg-gray-100 bg-opacity-75 flex items-center justify-center z-10 rounded-lg">
-                        <div className="loader border-t-4 border-green-500 rounded-full w-8 h-8 animate-spin"></div>
+                        <div className="loader border-t-4 border-green-500 rounded-full w-6 h-6 sm:w-8 sm:h-8 animate-spin"></div>
                     </div>
                 )}
-                <div className="bg-gray-200 p-4 rounded-md">
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-gray-200 p-3 sm:p-4 rounded-md">
+                    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+                        <div className="grid grid-cols-1 custom:grid-cols-2 gap-3 sm:gap-4">
                             <InputField
                                 label="First Name"
                                 type="text"
@@ -383,7 +383,7 @@ const ArtisanRegistrationForm = () => {
                             error={errors.email}
                             disabled={loading}
                         />
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 custom:grid-cols-2 gap-3 sm:gap-4">
                             <InputField
                                 label="Password"
                                 type="password"
@@ -512,14 +512,14 @@ const ArtisanRegistrationForm = () => {
                         />
                         <button
                             type="submit"
-                            className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 transition-colors"
+                            className="w-full bg-green-500 text-white py-1.5 sm:py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 transition-colors text-sm sm:text-base"
                             disabled={loading || loadingLocations || loadingServices}
                         >
                             {loading ? 'Registering...' : 'Register Artisan'}
                         </button>
                     </form>
-                    <div className="text-center mt-4">
-                        <p className="text-sm text-gray-600">
+                    <div className="text-center mt-3 sm:mt-4">
+                        <p className="text-xs sm:text-sm text-gray-600">
                             Already have an account?{' '}
                             <Link to="/login" className="text-green-500 hover:underline">
                                 Log in
