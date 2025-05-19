@@ -15,7 +15,7 @@ const ArtisanDashboard = () => {
     const fetchUserDetails = async () => {
       try {
         const token = Cookies.get('access_token');
-        const response = await api.get('/profile/', {
+        const response = await api.get('acct/user-profile/', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserDetails({
