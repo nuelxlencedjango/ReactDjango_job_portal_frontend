@@ -6,7 +6,7 @@ import api from '../../api';
 const ArtisanDashboard = () => {
   const [userDetails, setUserDetails] = useState({
     username: 'Loading...',
-    companyName: 'Artisan Pro',
+    companyName: `${response.data.user_type} Profile`,
     companyLogo: 'https://via.placeholder.com/50',
   });
   const [error, setError] = useState(null);
@@ -22,7 +22,7 @@ const ArtisanDashboard = () => {
           username: response.data.first_name
             ? `${response.data.first_name} ${response.data.last_name}`
             : response.data.username,
-          companyName: response.data.company_name || 'Artisan Pro',
+          companyName: response.data.company_name || `${response.user_type} Profile`,
           companyLogo: response.data.company_logo || 'https://via.placeholder.com/50',
         });
       } catch (err) {
