@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api';
 import Cookies from 'js-cookie';
-import RegisteredArtisans from '../Marketers/ListArtisans';
+//import RegisteredArtisans from './RegisteredArtisans';
 
 const MarketerDashboard = () => {
   const [marketerCode, setMarketerCode] = useState(''); 
@@ -121,7 +121,7 @@ const MarketerDashboard = () => {
                     to="/list-artisan"
                     className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300 text-sm sm:text-base"
                   >
-                    Show Registered Artisan By Me
+                    Show List Artisan
                   </Link>
                 </li>
                 <li>
