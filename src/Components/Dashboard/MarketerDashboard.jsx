@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api';
 import Cookies from 'js-cookie';
-//import RegisteredArtisans from './RegisteredArtisans';
+import RegisteredArtisans from '../Marketers/ListArtisans';
 
 const MarketerDashboard = () => {
   const [marketerCode, setMarketerCode] = useState(''); 
