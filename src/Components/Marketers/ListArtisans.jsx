@@ -90,7 +90,7 @@ const RegisteredArtisans = () => {
                       : artisan.user.username}
                   </td>
                   <td className="py-2 px-3 text-gray-800 text-sm">{artisan.service?.title || 'N/A'}</td>
-                  <td className="py-2 px-3 text-gray-800 text-sm">{artisan.location?.name || 'N/A'}</td>
+                  <td className="py-2 px-3 text-gray-800 text-sm">{artisan.location?.location || 'N/A'}</td>
                   <td className="py-2 px-3 text-gray-800 text-sm">{artisan.experience || 0} years</td>
                   <td className="py-2 px-3 text-gray-800 text-sm">₦{artisan.pay || '0.00'}</td>
                   <td className="py-2 px-3 text-sm">
