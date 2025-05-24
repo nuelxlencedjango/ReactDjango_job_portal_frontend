@@ -1,189 +1,83 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../api';
-import Cookies from 'js-cookie';
-
-// Reusable Loading Spinner
-const LoadingSpinner = () => (
-    <div className="flex justify-center items-center py-4">
-        <div className="border-t-4 border-green-500 rounded-full w-6 h-6 animate-spin"></div>
-    </div>
-);
 
 const RegisteredArtisans = () => {
-    const [artisans, setArtisans] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [retryCount, setRetryCount] = useState(0);
+  const [artisans, setArtisans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    // Fetch artisans with retry logic
+  useEffect(() => {
     const fetchArtisans = async () => {
-        try {
-            const token = Cookies.get('access_token');
-            if (!token) {
-                throw new Error('No access token found. Please log in.');
-            }
-            const response = await api.get('marketers/list-registered-artisans/', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            console.log(response.data)
-            setArtisans(response.data);
-            setError('');
-        } catch (err) {
-            console.error('Artisan fetch error:', err);
-            setError(err.response?.data?.detail || err.message || 'Failed to load artisans');
-            throw err;
-        }
+      try {
+        setLoading(true);
+        const response = await api.get('/marketers/list-registered-artisans/');
+        setArtisans(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.response?.data?.error || 'Failed to fetch artisans.');
+        setLoading(false);
+        console.error('Error fetching artisans:', err);
+      }
     };
+    fetchArtisans();
+  }, []);
 
-    const fetchWithRetry = async (maxRetries = 2) => {
-        let attempts = 0;
-        while (attempts < maxRetries) {
-            try {
-                setLoading(true);
-                await fetchArtisans();
-                setLoading(false);
-                setRetryCount(0);
-                return;
-            } catch (err) {
-                attempts++;
-                console.error(`Attempt ${attempts} failed:`, err);
-                if (attempts < maxRetries) {
-                    await new Promise(resolve => setTimeout(resolve, 2000 * attempts));
-                } else {
-                    setLoading(false);
-                    throw err;
-                }
-            }
-        }
-    };
+  if (loading) {
+    return <div className="text-center text-gray-600">Loading artisans...</div>;
+  }
 
-    useEffect(() => {
-        fetchWithRetry();
-    }, []);
+  if (error) {
+    return <div className="text-center text-red-500">{error}</div>;
+  }
 
-    if (loading) {
-        return <LoadingSpinner />;
-    }
-
-    if (error) {
-        return (
-            <div className="text-center">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4">Error Loading Artisans</h2>
-                <p className="mb-3 sm:mb-4 text-red-500 text-sm sm:text-base">{error}</p>
-                <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:space-x-4 justify-center">
-                    <button
-                        onClick={() => {
-                            setRetryCount(prev => prev + 1);
-                            fetchWithRetry();
-                        }}
-                        className="bg-green-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded hover:bg-green-600 disabled:bg-gray-400 text-sm sm:text-base"
-                        disabled={retryCount >= 2}
-                    >
-                        {retryCount >= 2 ? 'Max retries reached' : 'Try Again'}
-                    </button>
-                    <button
-                        onClick={() => setError('')}
-                        className="text-green-500 hover:underline text-sm sm:text-base"
-                    >
-                        Continue without artisans
-                    </button>
-                </div>
-                {retryCount > 0 && (
-                    <p className="mt-2 text-xs sm:text-sm text-gray-600">
-                        Attempt {retryCount} of 2
-                    </p>
-                )}
-            </div>
-        );
-    }
-
-    if (artisans.length === 0) {
-        return (
-            <div className="text-center">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4">No Artisans Registered</h2>
-                <p className="text-sm sm:text-base text-gray-600">You haven't registered any artisans yet.</p>
-            </div>
-        );
-    }
-
-    return (
-        <div>
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
-                Registered Artisans
-            </h2>
-            {/* Desktop: Table */}
-            <div className="hidden sm:block bg-white rounded-lg overflow-hidden">
-                <table className="w-full table-auto">
-                    <thead>
-                        <tr className="bg-gray-200 text-gray-600 text-sm">
-                            <th className="py-2 px-3 text-left">Name</th>
-                            <th className="py-2 px-3 text-left">Service</th>
-                            <th className="py-2 px-3 text-left">Experience</th>
-                            <th className="py-2 px-3 text-left">Pay (₦)</th>
-                            <th className="py-2 px-3 text-left">Commission (₦)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {artisans.map(artisan => (
-                            <tr key={artisan.id} className="border-b text-sm" aria-label={`Artisan ${artisan.first_name} ${artisan.last_name}`}>
-                                <td className="py-2 px-3">
-                                    {artisan.first_name} {artisan.last_name}
-                                </td>
-                                <td className="py-2 px-3">
-                                    {artisan.service?.title || 'N/A'}
-                                </td>
-                                <td className="py-2 px-3">
-                                    {artisan.experience ? `${artisan.experience} yrs` : 'N/A'}
-                                </td>
-                                <td className="py-2 px-3">
-                                    {artisan.pay ? Number(artisan.pay).toLocaleString() : 'N/A'}
-                                </td>
-                                <td className="py-2 px-3">
-                                    {artisan.commission ? Number(artisan.commission).toLocaleString() : 'N/A'}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            {/* Mobile: Cards */}
-            <div className="block sm:hidden space-y-3">
-                {artisans.map(artisan => (
-                    <div key={artisan.id} className="bg-white p-4 rounded-lg shadow-md" aria-label={`Artisan ${artisan.first_name} ${artisan.last_name}`}>
-                        <div className="flex items-center space-x-3">
-                            {artisan.profile_image ? (
-                                <img
-                                    src={`https://res.cloudinary.com/your-cloud-name/image/upload/w_40,h_40,c_thumb,g_face/${artisan.profile_image}.jpg`}
-                                    alt={`${artisan.first_name} ${artisan.last_name}`}
-                                    className="w-10 h-10 rounded-full object-cover"
-                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; }}
-                                />
-                            ) : (
-                                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                    <span className="text-gray-500 text-xs">
-                                        {artisan.first_name?.[0]}{artisan.last_name?.[0]}
-                                    </span>
-                                </div>
-                            )}
-                            <div>
-                                <h3 className="text-sm font-semibold text-gray-800">
-                                    {artisan.first_name} {artisan.last_name}
-                                </h3>
-                                <p className="text-xs text-gray-600">
-                                    {artisan.service?.title || 'N/A'}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="mt-2 text-xs text-gray-600 space-y-1">
-                            <p><strong>Experience:</strong> {artisan.experience ? `${artisan.experience} yrs` : 'N/A'}</p>
-                            <p><strong>Pay:</strong> ₦{artisan.pay ? Number(artisan.pay).toLocaleString() : 'N/A'}</p>
-                            <p><strong>Commission:</strong> ₦{artisan.commission ? Number(artisan.commission).toLocaleString() : 'N/A'}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>
+  return (
+    <div>
+      <h3 className="text-xl font-semibold text-gray-800 mb-4">Registered Artisans</h3>
+      {artisans.length === 0 ? (
+        <p className="text-gray-600">No artisans registered yet.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white shadow-md rounded-lg">
+            <thead>
+              <tr className="bg-gray-100 text-gray-700">
+                <th className="py-3 px-4 text-left text-sm font-semibold">Profile</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold">Name</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold">Service</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold">Location</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold">Experience</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold">Pay</th>
+              </tr>
+            </thead>
+            <tbody>
+              {artisans.map((artisan, index) => (
+                <tr key={index} className="border-b hover:bg-gray-50">
+                  <td className="py-3 px-4">
+                    <img
+                      src={artisan.profile_image || 'https://via.placeholder.com/40'}
+                      alt="Profile"
+                      className="h-10 w-10 rounded-full object-cover"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/40';
+                      }}
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-gray-800">
+                    {artisan.user.first_name && artisan.user.last_name
+                      ? `${artisan.user.first_name} ${artisan.user.last_name}`
+                      : artisan.user.username}
+                  </td>
+                  <td className="py-3 px-4 text-gray-800">{artisan.service?.title || 'N/A'}</td>
+                  <td className="py-3 px-4 text-gray-800">{artisan.location?.name || 'N/A'}</td>
+                  <td className="py-3 px-4 text-gray-800">{artisan.experience || 0} years</td>
+                  <td className="py-3 px-4 text-gray-800">₦{artisan.pay || '0.00'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default RegisteredArtisans;
