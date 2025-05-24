@@ -347,7 +347,9 @@ select {
 }
 /*end checkout page*/
 
-
+.marketer-dash{
+  display: flex;
+}
 
 @media (max-width:450px) {
   .artisan-form{

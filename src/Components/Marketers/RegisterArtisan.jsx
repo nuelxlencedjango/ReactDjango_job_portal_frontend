@@ -24,7 +24,7 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
         'Address': <FaMapMarkerAlt className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
         'Phone Number': <FaPhone className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
         'Pay': <FaNairaSign className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
-        'Marketer Code': <FaUser className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-base sm:text-lg" />,
+        
     };
 
     return (
@@ -73,7 +73,7 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
 const ArtisanRegistrationForm = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const initialMarketerCode = queryParams.get('marketer_code') || '';
+    //const initialMarketerCode = queryParams.get('marketer_code') || '';
 
     // Form state
     const [formData, setFormData] = useState({
@@ -92,7 +92,7 @@ const ArtisanRegistrationForm = () => {
         service: '',
         pay: '',
         profile_image: null,
-        marketer_code: initialMarketerCode,
+       // marketer_code: initialMarketerCode, 
     });
 
     // UI state
@@ -225,7 +225,7 @@ const ArtisanRegistrationForm = () => {
             address: 'Address is required',
             phone_number: 'Phone number is required',
             pay: 'Pay is required',
-            marketer_code: 'Marketer code is required',
+            //marketer_code: 'Marketer code is required',
         };
 
         Object.entries(requiredFields).forEach(([field, message]) => {
@@ -501,15 +501,7 @@ const ArtisanRegistrationForm = () => {
                             error={errors.profile_image}
                             disabled={loading}
                         />
-                        <InputField
-                            label="Marketer Code"
-                            type="text"
-                            name="marketer_code"
-                            value={formData.marketer_code}
-                            onChange={handleInputChange}
-                            error={errors.marketer_code}
-                            disabled={loading}
-                        />
+                      
                         <button
                             type="submit"
                             className="w-full bg-green-500 text-white py-1.5 sm:py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 transition-colors text-sm sm:text-base"
