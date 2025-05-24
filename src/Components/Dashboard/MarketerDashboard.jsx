@@ -77,14 +77,17 @@ const ManagerDashboard = () => {
                     <span>Home</span>
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="#"
+
+                 <li>
+                  <Link
+                    to='/list-artisans'
                     className="flex items-center p-3 text-gray-700 hover:bg-indigo-100 rounded-lg transition duration-300"
                   >
-                    <span>Manage Artisans</span>
-                  </a>
+                    Manage Artisan
+                  </Link>
                 </li>
+
+              
 
                   <li>
                   <Link

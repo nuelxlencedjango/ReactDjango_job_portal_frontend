@@ -22,7 +22,7 @@ const RegisteredArtisans = () => {
             if (!token) {
                 throw new Error('No access token found. Please log in.');
             }
-            const response = await api.get('marketers/registered-artisans/', {
+            const response = await api.get('marketers/list-registered-artisans/', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setArtisans(response.data);

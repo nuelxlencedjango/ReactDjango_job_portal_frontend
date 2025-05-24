@@ -73,7 +73,7 @@ const InputField = ({ label, type, name, value, onChange, error, accept, disable
 const ArtisanRegistrationForm = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    //const initialMarketerCode = queryParams.get('marketer_code') || '';
+   
 
     // Form state
     const [formData, setFormData] = useState({
@@ -92,7 +92,7 @@ const ArtisanRegistrationForm = () => {
         service: '',
         pay: '',
         profile_image: null,
-       // marketer_code: initialMarketerCode, 
+      
     });
 
     // UI state
@@ -225,7 +225,7 @@ const ArtisanRegistrationForm = () => {
             address: 'Address is required',
             phone_number: 'Phone number is required',
             pay: 'Pay is required',
-            //marketer_code: 'Marketer code is required',
+           
         };
 
         Object.entries(requiredFields).forEach(([field, message]) => {
