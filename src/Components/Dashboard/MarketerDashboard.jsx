@@ -7,7 +7,7 @@ const ManagerDashboard = () => {
   const [userDetails, setUserDetails] = useState({
     username: 'Loading...',
     companyName: 'Artisan Pro',
-    companyLogo: 'https://via.placeholder.com/50',
+    companyLogo: '',
   });
   const [error, setError] = useState(null);
 
@@ -25,8 +25,8 @@ const ManagerDashboard = () => {
           username: response.data.first_name && response.data.last_name
             ? `${response.data.first_name} ${response.data.last_name}`
             : response.data.username || 'User',
-          companyName: response.data.company_name || 'Artisan Pro',
-          companyLogo: response.data.company_logo || 'https://via.placeholder.com/50',
+          companyName: response.data.company_name || "Marketer's Profile",
+          companyLogo: response.data.company_logo ||  `${response.data.username}`,
         });
       } catch (err) {
         if (err.response?.status === 401) {

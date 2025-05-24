@@ -36,6 +36,8 @@ import AboutUs from './Components/Resources/About';
 
 import RegisterArtisan from './Components/Marketers/RegisterArtisan';
 
+import MarketerArtisansList from './Components/Marketers/ListArtisans';
+
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './index.css';
@@ -79,6 +81,8 @@ const App = () => {
 
           <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
 
+          <Route path="/list-artisans" element={<MarketerArtisansList />} />
+
           <Route path="/marketer-dashboard" element={<MarketerDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
 
@@ -100,7 +104,7 @@ const App = () => {
             
          
 
-         {/* <Route path="/register/:userType" element={<RegistrationPage />} />
+         {/* 
         <Route path="/success" element={<h1>Registration Successful!</h1>} /> */}
 
             <OrderForm />

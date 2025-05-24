@@ -11,6 +11,8 @@ const RegisteredArtisans = () => {
       try {
         setLoading(true);
         const response = await api.get('/marketers/list-registered-artisans/');
+        console.log(response.data)
+        
         setArtisans(response.data);
         setLoading(false);
       } catch (err) {
