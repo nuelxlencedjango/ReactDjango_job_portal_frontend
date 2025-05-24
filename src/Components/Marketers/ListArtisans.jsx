@@ -25,6 +25,7 @@ const RegisteredArtisans = () => {
             const response = await api.get('marketers/list-registered-artisans/', {
                 headers: { Authorization: `Bearer ${token}` },
             });
+            console.log(response.data)
             setArtisans(response.data);
             setError('');
         } catch (err) {

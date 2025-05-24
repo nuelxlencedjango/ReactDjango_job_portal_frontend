@@ -346,6 +346,11 @@ const ArtisanRegistrationForm = () => {
                 <div className="bg-gray-200 p-3 sm:p-4 rounded-md">
                     <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                         <div className="grid grid-cols-1 custom:grid-cols-2 gap-3 sm:gap-4">
+                           
+                            <InputField label="Username" type="text" name="username"
+                            value={formData.username} onChange={handleInputChange} error={errors.username}
+                            disabled={loading}/>
+
                             <InputField
                                 label="First Name"
                                 type="text"
@@ -365,15 +370,7 @@ const ArtisanRegistrationForm = () => {
                                 disabled={loading}
                             />
                         </div>
-                        <InputField
-                            label="Username"
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleInputChange}
-                            error={errors.username}
-                            disabled={loading}
-                        />
+                        
                         <InputField
                             label="Email"
                             type="email"
