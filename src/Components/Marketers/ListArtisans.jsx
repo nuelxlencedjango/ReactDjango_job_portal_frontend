@@ -105,6 +105,7 @@ const RegisteredArtisans = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                       </Link>
+                      
                       <Link
                         to={`/artisans/${artisan.id}/edit`}
                         className="text-green-600 hover:text-green-800"
