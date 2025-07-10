@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import api from "../../api";
-import Cookies from "js-cookies";
+import Cookies from "js-cookie";
 
 const EmployerDashboard = () => {
   const [lastPayment, setLastPayment] = useState(null);
-  const [artisanDetailsList, setArtisanDetailsList] = useState([]);
+  const [artisanDetails, setArtisanDetails] = useState(null);
   const [userDetails, setUserDetails] = useState({
     username: "Loading...",
     companyName: "User Profile",
@@ -83,7 +83,7 @@ const EmployerDashboard = () => {
     }
   };
 
-  // Fetch artisans with paid services
+  // Fetch expected artisan details
   const fetchExpectedArtisan = async () => {
     setLoading(prev => ({ ...prev, artisan: true }));
     setError(prev => ({ ...prev, artisan: null }));
@@ -95,7 +95,7 @@ const EmployerDashboard = () => {
       const response = await api.get("/employer/expected-artisan/", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setArtisanDetailsList(response.data); // Expecting an array of artisan details
+      setArtisanDetails(response.data);
     } catch (err) {
       setError(prev => ({
         ...prev,
@@ -505,7 +505,7 @@ const EmployerDashboard = () => {
                           <path
                             className="opacity-75"
                             fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 බ3 7.938l3-2.647z"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                           ></path>
                         </svg>
                         Loading...
@@ -639,7 +639,7 @@ const EmployerDashboard = () => {
                   </button>
                 </div>
 
-                {loading.artisan && !artisanDetailsList.length && (
+                {loading.artisan && !artisanDetails && (
                   <div className="flex justify-center items-center py-8">
                     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
                   </div>
@@ -667,115 +667,105 @@ const EmployerDashboard = () => {
                     </div>
                   </div>
                 )}
-                {artisanDetailsList.length > 0 && (
+                {artisanDetails && (
                   <div className="bg-gray-50 rounded-lg p-6">
-                    {artisanDetailsList.map((artisanDetails, index) => (
-                      <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        {/* Artisan Profile Image */}
-                        <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center">
-                          {artisanDetails.artisan_details.profile_image ? (
-                            <img
-                              src={artisanDetails.artisan_details.profile_image}
-                              alt="Artisan Profile"
-                              className="h-32 w-32 rounded-full object-cover mb-4"
-                              onError={e => {
-                                e.target.src = "https://via.placeholder.com/50";
-                              }}
-                            />
-                          ) : (
-                            <div className="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-                              <span className="text-gray-500">No Image</span>
-                            </div>
-                          )}
-                          <h4 className="text-xl font-semibold text-gray-900">
-                            {artisanDetails.artisan_details.first_name}{" "}
-                            {artisanDetails.artisan_details.last_name}
-                          </h4>
-                          <p className="text-gray-600">
-                            {artisanDetails.artisan_details.service}
-                          </p>
-                        </div>
-
-                        {/* Artisan Details */}
-                        <div className="bg-white p-6 rounded-lg shadow-sm">
-                          <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                            Artisan Details
-                          </h4>
-                          <div className="space-y-3">
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">Service</p>
-                              <p className="text-gray-900">
-                                {artisanDetails.artisan_details.service}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">Experience</p>
-                              <p className="text-gray-900">
-                                {artisanDetails.artisan_details.experience} years
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">Location</p>
-                              <p className="text-gray-900">
-                                {artisanDetails.artisan_details.location}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">Pay Rate</p>
-                              <p className="text-gray-900">
-                                ${artisanDetails.artisan_details.pay}/hr
-                              </p>
-                            </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {/* Artisan Profile Image */}
+                      <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center">
+                        {artisanDetails.artisan_details.profile_image ? (
+                          <img
+                            src={artisanDetails.artisan_details.profile_image}
+                            alt="Artisan Profile"
+                            className="h-32 w-32 rounded-full object-cover mb-4"
+                          />
+                        ) : (
+                          <div className="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
+                            <span className="text-gray-500">No Image</span>
                           </div>
-                        </div>
+                        )}
+                        <h4 className="text-xl font-semibold text-gray-900">
+                          {artisanDetails.artisan_details.first_name}{" "}
+                          {artisanDetails.artisan_details.last_name}
+                        </h4>
+                        <p className="text-gray-600">
+                          {artisanDetails.artisan_details.service}
+                        </p>
+                      </div>
 
-                        {/* Job Details */}
-                        <div className="bg-white p-6 rounded-lg shadow-sm">
-                          <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                            Job Details
-                          </h4>
-                          <div className="space-y-3">
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">Expected Date</p>
-                              <p className="text-gray-900">
-                                {new Date(
-                                  artisanDetails.job_details.expectedDate
-                                ).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">
-                                Job Description
-                              </p>
-                              <p className="text-gray-900">
-                                {artisanDetails.job_details.description}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">
-                                Contact Person
-                              </p>
-                              <p className="text-gray-900">
-                                {artisanDetails.job_details.contact_person}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">
-                                Contact Phone
-                              </p>
-                              <p className="text-gray-900">
-                                {artisanDetails.job_details.contact_person_phone}
-                              </p>
-                            </div>
+                      {/* Artisan Details */}
+                      <div className="bg-white p-6 rounded-lg shadow-sm">
+                        <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                          Artisan Details
+                        </h4>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">Service</p>
+                            <p className="text-gray-900">
+                              {artisanDetails.artisan_details.service}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">Experience</p>
+                            <p className="text-gray-900">
+                              {artisanDetails.artisan_details.experience} years
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">Location</p>
+                            <p className="text-gray-900">
+                              {artisanDetails.artisan_details.location}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">Pay Rate</p>
+                            <p className="text-gray-900">
+                              ${artisanDetails.artisan_details.pay}/hr
+                            </p>
                           </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-                {artisanDetailsList.length === 0 && !loading.artisan && !error.artisan && (
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <p className="text-gray-600">No paid artisans found.</p>
+
+                      {/* Job Details */}
+                      <div className="bg-white p-6 rounded-lg shadow-sm">
+                        <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                          Job Details
+                        </h4>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">Expected Date</p>
+                            <p className="text-gray-900">
+                              {new Date(
+                                artisanDetails.job_details.expectedDate
+                              ).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">
+                              Job Description
+                            </p>
+                            <p className="text-gray-900">
+                              {artisanDetails.job_details.description}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">
+                              Contact Person
+                            </p>
+                            <p className="text-gray-900">
+                              {artisanDetails.job_details.contact_person}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">
+                              Contact Phone
+                            </p>
+                            <p className="text-gray-900">
+                              {artisanDetails.job_details.contact_person_phone}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
