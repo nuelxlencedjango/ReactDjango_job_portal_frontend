@@ -95,6 +95,7 @@ const EmployerDashboard = () => {
       const response = await api.get("/employer/expected-artisan/", {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log(response.data)
       setArtisanDetailsList(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       setError(prev => ({
