@@ -134,9 +134,20 @@ const Login = () => {
             </Link>
           </p>
         </div>
+       
+        <div className="text-center mt-2">
+  <        p className="text-sm text-gray-600">
+              Forgot password?{' '}
+              <Link to="/forgot-password" className="text-blue-600 hover:underline">
+                  Reset it here
+              </Link>
+           </p>
+          </div>
+        
       </div>
     </div>
   );
 };
 
 export default Login;
+

@@ -363,7 +363,9 @@ select {
 }
 
 
-
+.text-center{
+  border-radius: 10px;
+}
 
 /* sign up loading */
 
