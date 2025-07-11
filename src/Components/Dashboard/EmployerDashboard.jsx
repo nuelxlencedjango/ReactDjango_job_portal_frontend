@@ -3,6 +3,7 @@ import api from "../../api";
 import Cookies from "js-cookie";
 
 const EmployerDashboard = () => {
+  const [activeSection, setActiveSection] = useState("home");
   const [lastPayment, setLastPayment] = useState(null);
   const [artisanDetailsList, setArtisanDetailsList] = useState([]);
   const [userDetails, setUserDetails] = useState({
@@ -62,6 +63,7 @@ const EmployerDashboard = () => {
 
   // Fetch last payment details
   const fetchLastPayment = async () => {
+    setActiveSection("payment");
     setLoading(prev => ({ ...prev, payment: true }));
     setError(prev => ({ ...prev, payment: null }));
     try {
@@ -85,6 +87,7 @@ const EmployerDashboard = () => {
 
   // Fetch artisans with paid services
   const fetchExpectedArtisan = async () => {
+    setActiveSection("artisan");
     setLoading(prev => ({ ...prev, artisan: true }));
     setError(prev => ({ ...prev, artisan: null }));
     try {
@@ -95,7 +98,6 @@ const EmployerDashboard = () => {
       const response = await api.get("/employer/expected-artisan/", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(response.data)
       setArtisanDetailsList(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       setError(prev => ({
@@ -134,6 +136,12 @@ const EmployerDashboard = () => {
     } catch (err) {
       setLoading(prev => ({ ...prev, completedJobs: false }));
     }
+  };
+
+  // Helper function to get Cloudinary image URL
+  const getCloudinaryImageUrl = (publicId, width = 800, height = 800) => {
+    if (!publicId) return "https://via.placeholder.com/150";
+    return `https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload/w_${width},h_${height},c_fill/${publicId}`;
   };
 
   // Load initial data
@@ -200,7 +208,10 @@ const EmployerDashboard = () => {
             <nav>
               <ul className="space-y-2">
                 <li>
-                  <button className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1">
+                  <button 
+                    onClick={() => setActiveSection("home")}
+                    className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1"
+                  >
                     <svg
                       className="w-5 h-5 mr-3"
                       fill="none"
@@ -355,7 +366,7 @@ const EmployerDashboard = () => {
                 Dashboard Overview
               </h2>
 
-              {/* Stats Cards */}
+              {/* Stats Cards (always visible) */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-blue-500">
                   <h3 className="text-lg font-semibold text-blue-800 mb-2">
@@ -477,310 +488,303 @@ const EmployerDashboard = () => {
                 </div>
               </div>
 
-              {/* Last Payment Section */}
-              <div className="mt-8">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-semibold text-gray-800">
-                    Last Payment Details
-                  </h3>
-                  <button
-                    onClick={fetchLastPayment}
-                    disabled={loading.payment}
-                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-                  >
-                    {loading.payment ? (
-                      <>
-                        <svg
-                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
+              {/* Conditional Sections */}
+              {activeSection === "payment" && (
+                <div className="mt-8">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      Last Payment Details
+                    </h3>
+                    <button
+                      onClick={fetchLastPayment}
+                      disabled={loading.payment}
+                      className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                    >
+                      {loading.payment ? (
+                        <>
+                          <svg
+                            className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Loading...
+                        </>
+                      ) : (
+                        "Refresh"
+                      )}
+                    </button>
+                  </div>
+
+                  {loading.payment && !lastPayment && (
+                    <div className="flex justify-center items-center py-8">
+                      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+                    </div>
+                  )}
+                  {error.payment && (
+                    <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                      <div className="flex">
+                        <div className="flex-shrink-0">
+                          <svg
+                            className="h-5 w-5 text-red-500"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
                             fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Loading...
-                      </>
-                    ) : (
-                      "Refresh"
-                    )}
-                  </button>
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-sm text-red-700">{error.payment}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {lastPayment && (
+                    <div className="bg-gray-50 rounded-lg p-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-white p-4 rounded-lg shadow-sm">
+                          <p className="text-sm font-medium text-gray-500">
+                            Transaction Reference:
+                          </p>
+                          <p className="mt-1 text-lg font-semibold text-gray-900">
+                            {lastPayment.tx_ref}
+                          </p>
+                        </div>
+                        <div className="bg-white p-4 rounded-lg shadow-sm">
+                          <p className="text-sm font-medium text-gray-500">Cart No:</p>
+                          <p className="mt-1 text-lg font-semibold text-gray-900">
+                            {lastPayment.cart}
+                          </p>
+                        </div>
+                        <div className="bg-white p-4 rounded-lg shadow-sm">
+                          <p className="text-sm font-medium text-gray-500">Total Amount:</p>
+                          <p className="mt-1 text-lg font-semibold text-gray-900">
+                            {lastPayment.total_amount}
+                          </p>
+                        </div>
+                        <div className="bg-white p-4 rounded-lg shadow-sm">
+                          <p className="text-sm font-medium text-gray-500">Transaction ID:</p>
+                          <p className="mt-1 text-lg font-semibold text-gray-900">
+                            {lastPayment.transaction_id}
+                          </p>
+                        </div>
+                        <div className="bg-white p-4 rounded-lg shadow-sm">
+                          <p className="text-sm font-medium text-gray-500">Status:</p>
+                          <p
+                            className={`mt-1 text-lg font-semibold ${
+                              lastPayment.status === "successful"
+                                ? "text-green-600"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {lastPayment.status}
+                          </p>
+                        </div>
+                        <div className="bg-white p-4 rounded-lg shadow-sm">
+                          <p className="text-sm font-medium text-gray-500">
+                            Transaction Date:
+                          </p>
+                          <p className="mt-1 text-lg font-semibold text-gray-900">
+                            {new Date(lastPayment.modified_at).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
+              )}
 
-                {loading.payment && !lastPayment && (
-                  <div className="flex justify-center items-center py-8">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+              {activeSection === "artisan" && (
+                <div className="mt-8">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      Expected Artisan Details
+                    </h3>
+                    <button
+                      onClick={fetchExpectedArtisan}
+                      disabled={loading.artisan}
+                      className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                    >
+                      {loading.artisan ? (
+                        <>
+                          <svg
+                            className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Loading...
+                        </>
+                      ) : (
+                        "Refresh"
+                      )}
+                    </button>
                   </div>
-                )}
-                {error.payment && (
-                  <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-                    <div className="flex">
-                      <div className="flex-shrink-0">
-                        <svg
-                          className="h-5 w-5 text-red-500"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                      <div className="ml-3">
-                        <p className="text-sm text-red-700">{error.payment}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {lastPayment && (
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="bg-white p-4 rounded-lg shadow-sm">
-                        <p className="text-sm font-medium text-gray-500">
-                          Transaction Reference:
-                        </p>
-                        <p className="mt-1 text-lg font-semibold text-gray-900">
-                          {lastPayment.tx_ref}
-                        </p>
-                      </div>
-                      <div className="bg-white p-4 rounded-lg shadow-sm">
-                        <p className="text-sm font-medium text-gray-500">Cart No:</p>
-                        <p className="mt-1 text-lg font-semibold text-gray-900">
-                          {lastPayment.cart}
-                        </p>
-                      </div>
-                      <div className="bg-white p-4 rounded-lg shadow-sm">
-                        <p className="text-sm font-medium text-gray-500">Total Amount:</p>
-                        <p className="mt-1 text-lg font-semibold text-gray-900">
-                          {lastPayment.total_amount}
-                        </p>
-                      </div>
-                      <div className="bg-white p-4 rounded-lg shadow-sm">
-                        <p className="text-sm font-medium text-gray-500">Transaction ID:</p>
-                        <p className="mt-1 text-lg font-semibold text-gray-900">
-                          {lastPayment.transaction_id}
-                        </p>
-                      </div>
-                      <div className="bg-white p-4 rounded-lg shadow-sm">
-                        <p className="text-sm font-medium text-gray-500">Status:</p>
-                        <p
-                          className={`mt-1 text-lg font-semibold ${
-                            lastPayment.status === "successful"
-                              ? "text-green-600"
-                              : "text-red-600"
-                          }`}
-                        >
-                          {lastPayment.status}
-                        </p>
-                      </div>
-                      <div className="bg-white p-4 rounded-lg shadow-sm">
-                        <p className="text-sm font-medium text-gray-500">
-                          Transaction Date:
-                        </p>
-                        <p className="mt-1 text-lg font-semibold text-gray-900">
-                          {new Date(lastPayment.modified_at).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
 
-              {/* Expected Artisan Section */}
-              <div className="mt-8">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-semibold text-gray-800">
-                    Expected Artisan Details
-                  </h3>
-                  <button
-                    onClick={fetchExpectedArtisan}
-                    disabled={loading.artisan}
-                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-                  >
-                    {loading.artisan ? (
-                      <>
-                        <svg
-                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
+                  {loading.artisan && !artisanDetailsList.length && (
+                    <div className="flex justify-center items-center py-8">
+                      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+                    </div>
+                  )}
+                  {error.artisan && (
+                    <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                      <div className="flex">
+                        <div className="flex-shrink-0">
+                          <svg
+                            className="h-5 w-5 text-red-500"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
                             fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Loading...
-                      </>
-                    ) : (
-                      "Refresh"
-                    )}
-                  </button>
-                </div>
-
-                {loading.artisan && !artisanDetailsList.length && (
-                  <div className="flex justify-center items-center py-8">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-                  </div>
-                )}
-                {error.artisan && (
-                  <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-                    <div className="flex">
-                      <div className="flex-shrink-0">
-                        <svg
-                          className="h-5 w-5 text-red-500"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                      <div className="ml-3">
-                        <p className="text-sm text-red-700">{error.artisan}</p>
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-sm text-red-700">{error.artisan}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-                {artisanDetailsList.length > 0 && (
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    {artisanDetailsList.map((artisanDetails, index) => (
-                      <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        {/* Artisan Profile Image */}
-                        <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center">
-                          {artisanDetails.artisan_details.profile_image ? (
+                  )}
+                  {artisanDetailsList.length > 0 && (
+                    <div className="bg-gray-50 rounded-lg p-6">
+                      {artisanDetailsList.map((artisanDetails, index) => (
+                        <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                          {/* Artisan Profile Image */}
+                          <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center">
                             <img
-                              src={artisanDetails.artisan_details.profile_image}
+                              src={getCloudinaryImageUrl(artisanDetails.artisan_details.profile_image)}
                               alt="Artisan Profile"
                               className="h-32 w-32 rounded-full object-cover mb-4"
                               onError={e => {
-                                e.target.src = "https://via.placeholder.com/50";
+                                e.target.src = "https://via.placeholder.com/150";
                               }}
                             />
-                          ) : (
-                            <div className="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-                              <span className="text-gray-500">No Image</span>
-                            </div>
-                          )}
-                          <h4 className="text-xl font-semibold text-gray-900">
-                            {artisanDetails.artisan_details.first_name}{" "}
-                            {artisanDetails.artisan_details.last_name}
-                          </h4>
-                          <p className="text-gray-600">
-                            {artisanDetails.artisan_details.service}
-                          </p>
-                        </div>
+                            <h4 className="text-xl font-semibold text-gray-900">
+                              {artisanDetails.artisan_details.full_name}
+                            </h4>
+                            <p className="text-gray-600">
+                              {artisanDetails.artisan_details.service}
+                            </p>
+                          </div>
 
-                        {/* Artisan Details */}
-                        <div className="bg-white p-6 rounded-lg shadow-sm">
-                          <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                            Artisan Details
-                          </h4>
-                          <div className="space-y-3">
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">Service</p>
-                              <p className="text-gray-900">
-                                {artisanDetails.artisan_details.service}
-                              </p>
+                          {/* Artisan Details */}
+                          <div className="bg-white p-6 rounded-lg shadow-sm">
+                            <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                              Artisan Details
+                            </h4>
+                            <div className="space-y-3">
+                              <div>
+                                <p className="text-sm font-medium text-gray-500">Phone Number</p>
+                                <p className="text-gray-900">
+                                  {artisanDetails.artisan_details.phone_number}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-500">Service</p>
+                                <p className="text-gray-900">
+                                  {artisanDetails.artisan_details.service}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-500">Location</p>
+                                <p className="text-gray-900">
+                                  {artisanDetails.artisan_details.location}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-500">Experience</p>
+                                <p className="text-gray-900">
+                                  {artisanDetails.artisan_details.experience} years
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">Experience</p>
-                              <p className="text-gray-900">
-                                {artisanDetails.artisan_details.experience} years
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">Location</p>
-                              <p className="text-gray-900">
-                                {artisanDetails.artisan_details.location}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">Pay Rate</p>
-                              <p className="text-gray-900">
-                                ${artisanDetails.artisan_details.pay}/hr
-                              </p>
+                          </div>
+
+                          {/* Job Details */}
+                          <div className="bg-white p-6 rounded-lg shadow-sm">
+                            <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                              Job Details
+                            </h4>
+                            <div className="space-y-3">
+                              <div>
+                                <p className="text-sm font-medium text-gray-500">Expected Date</p>
+                                <p className="text-gray-900">
+                                  {new Date(
+                                    artisanDetails.job_details.expectedDate
+                                  ).toLocaleDateString()}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-500">
+                                  Job Description
+                                </p>
+                                <p className="text-gray-900">
+                                  {artisanDetails.job_details.description}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
+                      ))}
+                    </div>
+                  )}
+                  {artisanDetailsList.length === 0 && !loading.artisan && !error.artisan && (
+                    <div className="bg-gray-50 rounded-lg p-6">
+                      <p className="text-gray-600">No paid artisans found.</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
-                        {/* Job Details */}
-                        <div className="bg-white p-6 rounded-lg shadow-sm">
-                          <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                            Job Details
-                          </h4>
-                          <div className="space-y-3">
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">Expected Date</p>
-                              <p className="text-gray-900">
-                                {new Date(
-                                  artisanDetails.job_details.expectedDate
-                                ).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">
-                                Job Description
-                              </p>
-                              <p className="text-gray-900">
-                                {artisanDetails.job_details.description}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">
-                                Contact Person
-                              </p>
-                              <p className="text-gray-900">
-                                {artisanDetails.job_details.contact_person}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500">
-                                Contact Phone
-                              </p>
-                              <p className="text-gray-900">
-                                {artisanDetails.job_details.contact_person_phone}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+              {activeSection === "home" && (
+                <div className="mt-8">
+                  <div className="bg-gray-50 rounded-lg p-6 text-center">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                      Welcome to Your Dashboard
+                    </h3>
+                    <p className="text-gray-600">
+                      Select an option from the sidebar to view details
+                    </p>
                   </div>
-                )}
-                {artisanDetailsList.length === 0 && !loading.artisan && !error.artisan && (
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <p className="text-gray-600">No paid artisans found.</p>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
