@@ -85,31 +85,40 @@ const EmployerDashboard = () => {
     }
   };
 
-  // Fetch artisans with paid services
-  const fetchExpectedArtisan = async () => {
-    setActiveSection("artisan");
-    setLoading(prev => ({ ...prev, artisan: true }));
-    setError(prev => ({ ...prev, artisan: null }));
-    try {
-      const token = Cookies.get("access_token");
-      if (!token) {
-        throw new Error("No access token found. Please log in.");
-      }
-      const response = await api.get("/employer/expected-artisan/", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setArtisanDetailsList(Array.isArray(response.data) ? response.data : []);
-    } catch (err) {
-      setError(prev => ({
-        ...prev,
-        artisan: err.response?.data?.message || "Failed to fetch expected artisan details.",
-      }));
-      setArtisanDetailsList([]);
-    } finally {
-      setLoading(prev => ({ ...prev, artisan: false }));
+// Fetch artisans with paid services
+const fetchExpectedArtisan = async () => {
+  setActiveSection("artisan");
+  setLoading(prev => ({ ...prev, artisan: true }));
+  setError(prev => ({ ...prev, artisan: null }));
+  
+  try {
+    const token = Cookies.get("access_token");
+    if (!token) {
+      throw new Error("No access token found. Please log in.");
     }
-  };
-
+    
+    const response = await api.get("/employer/expected-artisan/", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    
+    console.log("API Response:", response.data); 
+    
+    if (response.data && Array.isArray(response.data)) {
+      setArtisanDetailsList(response.data);
+    } else {
+      throw new Error("Invalid data format received from server");
+    }
+  } catch (err) {
+    console.error("Error fetching expected artisans:", err);
+    setError(prev => ({
+      ...prev,
+      artisan: err.response?.data?.message || err.message || "Failed to fetch expected artisan details.",
+    }));
+    setArtisanDetailsList([]);
+  } finally {
+    setLoading(prev => ({ ...prev, artisan: false }));
+  }
+};
   // Fetch active jobs count
   const fetchActiveJobs = async () => {
     setLoading(prev => ({ ...prev, activeJobs: true }));
