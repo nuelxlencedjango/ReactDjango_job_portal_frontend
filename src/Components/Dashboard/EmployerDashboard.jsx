@@ -112,7 +112,7 @@ const fetchExpectedArtisan = async () => {
     console.error("Error fetching expected artisans:", err);
     setError(prev => ({
       ...prev,
-      artisan: err.response?.data?.message || err.message || "Failed to fetch expected artisan details.",
+      artisan: err.response?.data?.message || err.message || "Failed to fetch expected artisan details.", 
     }));
     setArtisanDetailsList([]);
   } finally {
@@ -725,24 +725,19 @@ const fetchExpectedArtisan = async () => {
                                   {artisanDetails.artisan_details.phone_number}
                                 </p>
                               </div>
-                              <div>
-                                <p className="text-sm font-medium text-gray-500">Service</p>
-                                <p className="text-gray-900">
-                                  {artisanDetails.artisan_details.service}
-                                </p>
-                              </div>
+                            
                               <div>
                                 <p className="text-sm font-medium text-gray-500">Location</p>
                                 <p className="text-gray-900">
                                   {artisanDetails.artisan_details.location}
                                 </p>
                               </div>
-                              <div>
+                              {/*<div>
                                 <p className="text-sm font-medium text-gray-500">Experience</p>
                                 <p className="text-gray-900">
                                   {artisanDetails.artisan_details.experience} years
                                 </p>
-                              </div>
+                              </div>*/}
                             </div>
                           </div>
 
@@ -760,14 +755,7 @@ const fetchExpectedArtisan = async () => {
                                   ).toLocaleDateString()}
                                 </p>
                               </div>
-                              <div>
-                                <p className="text-sm font-medium text-gray-500">
-                                  Job Description
-                                </p>
-                                <p className="text-gray-900">
-                                  {artisanDetails.job_details.description}
-                                </p>
-                              </div>
+                            
                             </div>
                           </div>
                         </div>
