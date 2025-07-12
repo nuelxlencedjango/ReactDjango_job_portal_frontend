@@ -148,7 +148,7 @@ const fetchExpectedArtisan = async () => {
   };
 
   // Helper function to get Cloudinary image URL
-  const getCloudinaryImageUrl = (publicId, width = 800, height = 800) => {
+  const getCloudinaryImageUrl = (publicId, width = 150, height = 150) => {
     if (!publicId) return "https://via.placeholder.com/150";
     return `https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload/w_${width},h_${height},c_fill/${publicId}`;
   };
@@ -698,9 +698,10 @@ const fetchExpectedArtisan = async () => {
                           {/* Artisan Profile Image */}
                           <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center">
                             <img
-                              src={getCloudinaryImageUrl(artisanDetails.artisan_details.profile_image)}
+                             
+                              src={artisanDetails.artisan_details.profile_image}
                               alt="Artisan Profile"
-                              className="h-24 w-24 rounded-full object-cover mb-4"
+                              className="h-32 w-32 rounded-full object-cover mb-4"
                               onError={e => {
                                 e.target.src = "https://via.placeholder.com/150";
                               }}
