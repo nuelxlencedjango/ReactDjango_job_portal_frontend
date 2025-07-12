@@ -702,7 +702,7 @@ const fetchExpectedArtisan = async () => {
                                 e.target.src = "https://via.placeholder.com/150";
                               }}
                             />
-                            <h4 className="text-xl font-semibold text-gray-900">
+                            <h4 className="text-lg font-semibold text-gray-800">
                               {artisanDetails.artisan_details.full_name}
                             </h4>
                             <p className="text-gray-600">
