@@ -700,7 +700,7 @@ const fetchExpectedArtisan = async () => {
                             <img
                               src={getCloudinaryImageUrl(artisanDetails.artisan_details.profile_image)}
                               alt="Artisan Profile"
-                              className="h-32 w-32 rounded-full object-cover mb-4"
+                              className="h-24 w-24 rounded-full object-cover mb-4"
                               onError={e => {
                                 e.target.src = "https://via.placeholder.com/150";
                               }}
