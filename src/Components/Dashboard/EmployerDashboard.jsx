@@ -697,7 +697,7 @@ const fetchExpectedArtisan = async () => {
                              
                               src={artisanDetails.artisan_details.profile_image}
                               alt="Artisan Profile"
-                              className="h-24 w-24 rounded-full object-cover mb-4"
+                              className="h-24 w-24 rounded-full object-cover mb-2"
                               onError={e => {
                                 e.target.src = "https://via.placeholder.com/150";
                               }}
