@@ -1,118 +1,73 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import api from "../../api";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 
 const PaymentConfirmation = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  
-  // Initialize state from localStorage if available
-  const [paymentInfo, setPaymentInfo] = useState(() => {
-    const saved = localStorage.getItem('paymentConfirmation');
-    return saved ? JSON.parse(saved) : {
-      tx_ref: "",
-      status: "",
-      transaction_id: "",
-      confirmed: false,
-      verified: false
-    };
+  const [paymentInfo, setPaymentInfo] = useState({
+    tx_ref: "",
+    status: "",
+    transaction_id: "",
   });
-  
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(() => {
-    return localStorage.getItem('paymentSuccess') === 'true';
-  });
+  const [error, setError] = useState(""); 
+  const [success, setSuccess] = useState(false); 
 
   const token = Cookies.get("access_token");
 
-  // Persist state to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('paymentConfirmation', JSON.stringify(paymentInfo));
-    localStorage.setItem('paymentSuccess', success.toString());
-  }, [paymentInfo, success]);
+    // Extract query parameters from URL
+    const queryParams = new URLSearchParams(location.search);
+    const tx_ref = queryParams.get("tx_ref");
+    const status = queryParams.get("status");
+    const transaction_id = queryParams.get("transaction_id");
+
+    console.log("Extracted Params:", { tx_ref, status, transaction_id });
+
+    // Ensure all required parameters are present
+    if (tx_ref && status && transaction_id) {
+      setPaymentInfo({ tx_ref, status, transaction_id });
+
+      // Send payment details to the backend for verification
+      verifyPayment(tx_ref, status, transaction_id);
+    } else {
+      console.error("Missing required fields in the payment confirmation state.");
+      setError("Missing required payment details.");
+      setLoading(false);
+    }
+  }, [location]);
 
   const verifyPayment = async (tx_ref, status, transaction_id) => {
     try {
+      console.log("Sending payment details to backend...");
+      console.log("Query Params:", { tx_ref, status, transaction_id });
+    
       const response = await api.post(
-        'employer/payment_confirmation/',
-        { 
-          tx_ref,
-          status,
-          transaction_id 
-        },
+        `employer/payment_confirmation/?tx_ref=${tx_ref}&status=${status}&transaction_id=${transaction_id}`,
+        {}, 
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
+    
+      console.log("Backend Response:", response.data);
+    
+      // Check if the message contains "Payment Successful"
       if (response.data.message && response.data.message.includes("Payment Successful")) {
-        setSuccess(true);
-        setPaymentInfo(prev => ({ 
-          ...prev, 
-          confirmed: true,
-          verified: true
-        }));
+        setSuccess(true); 
       } else {
-        setError(response.data.message || "Payment verification failed.");
+        setError("Payment verification failed.");
       }
     } catch (error) {
       console.error("Error verifying payment:", error);
-      setError(error.response?.data?.message || "An error occurred while verifying the payment.");
+      setError("An error occurred while verifying the payment.");
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading
     }
-  };
-
-  useEffect(() => {
-    const checkPaymentStatus = async () => {
-      // If payment is already verified, skip processing
-      if (paymentInfo.verified) {
-        setLoading(false);
-        return;
-      }
-
-      // First try to get params from URL
-      const queryParams = new URLSearchParams(location.search);
-      const tx_ref = queryParams.get("tx_ref");
-      const status = queryParams.get("status");
-      const transaction_id = queryParams.get("transaction_id");
-
-      if (tx_ref && status && transaction_id) {
-        // Update state with new params and verify
-        setPaymentInfo({ 
-          tx_ref, 
-          status, 
-          transaction_id,
-          confirmed: false,
-          verified: false
-        });
-        await verifyPayment(tx_ref, status, transaction_id);
-      } else if (paymentInfo.tx_ref && !success) {
-        // If no URL params but have stored payment info, try to verify
-        await verifyPayment(
-          paymentInfo.tx_ref,
-          paymentInfo.status,
-          paymentInfo.transaction_id
-        );
-      } else {
-        setError("Missing required payment details.");
-        setLoading(false);
-      }
-    };
-
-    checkPaymentStatus();
-  }, [location]);
-
-  const handleDashboardVisit = () => {
-    // Clear payment confirmation from localStorage
-    localStorage.removeItem('paymentConfirmation');
-    localStorage.removeItem('paymentSuccess');
-    navigate('/employer-dashboard');
   };
 
   if (loading) {
@@ -132,49 +87,53 @@ const PaymentConfirmation = () => {
         <h1 className="text-3xl font-bold mb-6">
           Payment {success ? "Successful" : "Failed"}
         </h1>
-        
         {error && (
           <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
             {error}
           </div>
         )}
-
-        <div className="space-y-4 text-left">
-          <div>
+        {success && (
+          <>
+            <div className="space-y-4 text-left">
+              <div>
+                <p className="text-sm text-gray-600">Transaction Reference</p>
+                <p className="text-lg font-semibold text-gray-800">{paymentInfo.tx_ref}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Transaction ID</p>
+                <p className="text-lg font-semibold text-gray-800">{paymentInfo.transaction_id}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Status</p>
+                <p className="text-lg font-semibold text-green-600">Successful</p>
+              </div>
+            </div>
+          </>
+        )}
+        {!success && (
+          <div className="space-y-4 text-left">
             <p className="text-sm text-gray-600">Transaction Reference</p>
-            <p className="text-lg font-semibold text-gray-800">
-              {paymentInfo.tx_ref || "N/A"}
-            </p>
-          </div>
-          <div>
+            <p className="text-lg font-semibold text-gray-800">{paymentInfo.tx_ref}</p>
             <p className="text-sm text-gray-600">Transaction ID</p>
-            <p className="text-lg font-semibold text-gray-800">
-              {paymentInfo.transaction_id || "N/A"}
-            </p>
+            <p className="text-lg font-semibold text-gray-800">{paymentInfo.transaction_id}</p>
+            <p className="text-lg font-semibold text-red-600">Payment Failed</p>
           </div>
-          <div>
-            <p className="text-sm text-gray-600">Status</p>
-            <p className={`text-lg font-semibold ${
-              success ? "text-green-600" : "text-red-600"
-            }`}>
-              {success ? "Successful" : "Failed"}
-            </p>
-          </div>
-        </div>
+        )}
 
-        <div className="mt-6 flex flex-col sm:flex-row justify-between gap-2">
+        {/* Links with reduced size */}
+        <div className="mt-6 flex justify-between space-x-2">
           <Link
-            to="/"
+            to="/" // 
             className="w-full sm:w-auto bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300 text-center text-sm"
           >
             Request Another Service
           </Link>
-          <button
-            onClick={handleDashboardVisit}
-            className="w-full sm:w-auto bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition duration-300 text-center text-sm"
-          >
-            See Transaction Details
-          </button>
+          <Link
+  to={`/employer-dashboard`} 
+  className="w-full sm:w-auto bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition duration-300 text-center text-sm"
+>
+  See Transaction Details
+</Link>
         </div>
       </div>
     </div>
