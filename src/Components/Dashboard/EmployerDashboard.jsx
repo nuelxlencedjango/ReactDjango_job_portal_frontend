@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../../api";
 import Cookies from "js-cookie";
 
-const EmployerDashboard = () => {
+const EmployerDashboard = () => { 
   const [activeSection, setActiveSection] = useState("home");
   const [lastPayment, setLastPayment] = useState(null);
   const [artisanDetailsList, setArtisanDetailsList] = useState([]);
@@ -98,19 +98,23 @@ const EmployerDashboard = () => {
       if (!token) {
         throw new Error("No access token found. Please log in.");
       }
-      const response = await api.get("/employer/expected-artisan/", {
+      const response = await api.get("/employer/expected-artisan/", { 
+      
         headers: { Authorization: `Bearer ${token}` },
+         
       });
+       console.log('headers:',headers)
+      console.log('responses:',response.data)
       if (response.data && Array.isArray(response.data)) {
         setArtisanDetailsList(response.data);
       } else {
         throw new Error("Invalid data format received from server");
       }
     } catch (err) {
-      console.error("Error fetching expected artisans:", err);
+      console.error("Error fetching expected artisans:", err); 
       setError(prev => ({
         ...prev,
-        artisan: err.response?.data?.message || err.message || "Failed to fetch expected artisan details.",
+        artisan: err.response?.data?.message || err.message || "Failed to fetch expected artisan details.", 
       }));
       setArtisanDetailsList([]);
     } finally {
@@ -131,6 +135,7 @@ const EmployerDashboard = () => {
       const response = await api.get("/employer/order-history/", {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log('order history:', response.data)
       if (response.data && Array.isArray(response.data)) {
         setOrderHistory(response.data);
         // Update stats based on order statuses
@@ -165,6 +170,7 @@ const EmployerDashboard = () => {
       const response = await api.get("/employer/active-jobs-count/", {
         headers: { Authorization: `Bearer ${token}` },
       });
+       console.log('active job:', response.data)
       setStats(prev => ({ ...prev, activeJobs: response.data.count }));
     } catch (err) {
       console.error("Error fetching active jobs count:", err);
@@ -182,8 +188,9 @@ const EmployerDashboard = () => {
         throw new Error("No access token found. Please log in.");
       }
       const response = await api.get("/employer/completed-jobs-count/", {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }, 
       });
+      console.log('completed jobs:', response.data)
       setStats(prev => ({ ...prev, completedJobs: response.data.count }));
     } catch (err) {
       console.error("Error fetching completed jobs count:", err);
@@ -303,8 +310,7 @@ const EmployerDashboard = () => {
                   </button>
                 </li>
                 <li>
-                  <button
-                    onClick={fetchExpectedArtisan}
+                  <button onClick={fetchExpectedArtisan}
                     className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1"
                   >
                     <svg
@@ -321,7 +327,7 @@ const EmployerDashboard = () => {
                         d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                       />
                     </svg>
-                    <span>Expected Artisan</span>
+                    <span>Expected Artisan</span>    
                   </button>
                 </li>
                 <li>
@@ -887,7 +893,7 @@ const EmployerDashboard = () => {
                                   </div>
                                   <div>
                                     <p className="text-sm font-medium text-gray-500">Total Price</p>
-                                    <p className="text-gray-900">${order.total_price}</p>
+                                    <p className="text-gray-900">₦{order.total_price}</p>
                                   </div>
                                   <div>
                                     <p className="text-sm font-medium text-gray-500">Created At</p>
@@ -915,7 +921,7 @@ const EmployerDashboard = () => {
                                   <ul className="mt-2 space-y-2">
                                     {order.items.map(item => (
                                       <li key={item.id} className="text-gray-900">
-                                        {item.service_name} by {item.artisan_name} - ${item.price} (Total: ${item.total})
+                                        {item.service_name} by {item.artisan_name} - ₦{item.price} (Total: ${item.total})
                                       </li>
                                     ))}
                                   </ul>
@@ -942,7 +948,7 @@ const EmployerDashboard = () => {
                                   </div>
                                   <div>
                                     <p className="text-sm font-medium text-gray-500">Total Price</p>
-                                    <p className="text-gray-900">${order.total_price}</p>
+                                    <p className="text-gray-900"> ₦{order.total_price}</p>
                                   </div>
                                   <div>
                                     <p className="text-sm font-medium text-gray-500">Created At</p>
@@ -970,7 +976,7 @@ const EmployerDashboard = () => {
                                   <ul className="mt-2 space-y-2">
                                     {order.items.map(item => (
                                       <li key={item.id} className="text-gray-900">
-                                        {item.service_name} by {item.artisan_name} - ${item.price} (Total: ${item.total})
+                                        {item.service_name} by {item.artisan_name} - ₦{item.price} (Total: ${item.total})
                                       </li>
                                     ))}
                                   </ul>
