@@ -98,7 +98,7 @@ const EmployerDashboard = () => {
       if (!token) {
         throw new Error("No access token found. Please log in.");
       }
-      const response = await api.get("/employer/expected-artisan/", { 
+      const response = await api.get("/employer/expectedArtisan/", { 
       
         headers: { Authorization: `Bearer ${token}` },
          
