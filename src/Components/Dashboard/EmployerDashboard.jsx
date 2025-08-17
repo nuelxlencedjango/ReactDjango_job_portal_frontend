@@ -10,7 +10,7 @@ const EmployerDashboard = () => {
   const [userDetails, setUserDetails] = useState({
     username: "Loading...",
     companyName: "User Profile",
-    companyLogo: "https://via.placeholder.com/50",
+    companyLogo: "https://via.placeholder.com/50", 
   });
   const [loading, setLoading] = useState({
     payment: false,
@@ -19,7 +19,7 @@ const EmployerDashboard = () => {
     completedJobs: false,
     orderHistory: false,
   });
-  const [error, setError] = useState({
+  const [error, setError] = useState({ 
     payment: null,
     artisan: null,
     user: null,
@@ -51,7 +51,7 @@ const EmployerDashboard = () => {
           companyLogo: response.data.company_logo || "https://via.placeholder.com/50",
         });
       } catch (err) {
-        if (err.response?.status === 401) {
+        if (err.response?.status === 401) {  
           window.location.href = "/login";
         }
         setError(prev => ({
@@ -99,7 +99,7 @@ const EmployerDashboard = () => {
         throw new Error("No access token found. Please log in.");
       }
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await api.get("/employer/expected-artisan/", {
+      const response = await api.get("/employer/expected-artisan/", { 
         headers,
       });
       console.log("Expected artisan response:", response.data);
@@ -120,7 +120,7 @@ const EmployerDashboard = () => {
     }
   };
 
-  // Fetch order history
+  // Fetch order history 
   const fetchOrderHistory = async () => {
     setActiveSection("orderHistory");
     setLoading(prev => ({ ...prev, orderHistory: true }));
@@ -133,13 +133,13 @@ const EmployerDashboard = () => {
       const response = await api.get("/employer/order-history/", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("Order history:", response.data);
+      console.log("Order history:", response.data); 
       if (response.data && Array.isArray(response.data)) {
         setOrderHistory(response.data);
         setStats({
-          pendingOrders: response.data.filter(order => order.status === "pending").length,
-          activeJobs: response.data.filter(order => order.status === "in_progress").length,
-          completedJobs: response.data.filter(order => order.status === "completed").length,
+          pendingOrders: response.data.filter(order => order.order_status === "pending").length,
+          activeJobs: response.data.filter(order => order.order_status === "in_progress").length,
+          completedJobs: response.data.filter(order => order.order_status === "completed").length,   
         });
       } else {
         throw new Error("Invalid data format received from server");
@@ -652,7 +652,7 @@ const EmployerDashboard = () => {
                           </p>
                         </div>
                         <div className="bg-white p-4 rounded-lg shadow-sm">
-                          <p className="text-sm font-medium text-gray-500">Status:</p>
+                          <p className="text-sm font-medium text-gray-500">Status:</p>  
                           <p
                             className={`mt-1 text-lg font-semibold ${
                               lastPayment.status === "successful"
@@ -660,7 +660,7 @@ const EmployerDashboard = () => {
                                 : "text-red-600"
                             }`}
                           >
-                            {lastPayment.status}
+                            {lastPayment.status} 
                           </p>
                         </div>
                         <div className="bg-white p-4 rounded-lg shadow-sm">
@@ -771,7 +771,7 @@ const EmployerDashboard = () => {
                                 <span className="text-gray-500">No Artisan</span>
                               </div>
                               <h4 className="text-lg font-semibold text-gray-800">
-                                {artisanDetails.status === "no_artisan_assigned"
+                                {artisanDetails.status === "no_artisan_assigned" 
                                   ? "No Artisan Assigned"
                                   : "Error in Data"}
                               </h4>
@@ -869,10 +869,10 @@ const EmployerDashboard = () => {
                 <div className="mt-8">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-semibold text-gray-800">
-                      Order History
+                      Order History 
                     </h3>
                     <button
-                      onClick={fetchOrderHistory}
+                      onClick={fetchOrderHistory} 
                       disabled={loading.orderHistory}
                       className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                     >
@@ -939,10 +939,10 @@ const EmployerDashboard = () => {
                       {/* Pending Orders */}
                       <div className="mb-8">
                         <h4 className="text-lg font-semibold text-blue-800 mb-4">Pending Orders</h4>
-                        {orderHistory.filter(order => order.status === "pending").length > 0 ? (
+                        {orderHistory.filter(order => order.order_status === "pending").length > 0 ? (
                           <div className="space-y-4">
                             {orderHistory
-                              .filter(order => order.status === "pending")
+                              .filter(order => order.order_status === "pending")
                               .map(order => (
                                 <div key={order.id} className="bg-white p-6 rounded-lg shadow-sm">
                                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -962,7 +962,7 @@ const EmployerDashboard = () => {
                                     </div>
                                     <div>
                                       <p className="text-sm font-medium text-gray-500">Status</p>
-                                      <p className="text-blue-600 capitalize">{order.status}</p>
+                                      <p className="text-blue-600 capitalize">{order.order_status}</p> 
                                     </div>
                                     <div>
                                       <p className="text-sm font-medium text-gray-500">Paid</p>
@@ -1001,10 +1001,10 @@ const EmployerDashboard = () => {
                       {/* Ongoing Orders */}
                       <div className="mb-8">
                         <h4 className="text-lg font-semibold text-green-800 mb-4">Ongoing Orders</h4>
-                        {orderHistory.filter(order => order.status === "in_progress").length > 0 ? (
+                        {orderHistory.filter(order => order.order_status === "in_progress").length > 0 ? (
                           <div className="space-y-4">
                             {orderHistory
-                              .filter(order => order.status === "in_progress")
+                              .filter(order => order.order_status === "in_progress")
                               .map(order => (
                                 <div key={order.id} className="bg-white p-6 rounded-lg shadow-sm">
                                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1024,7 +1024,7 @@ const EmployerDashboard = () => {
                                     </div>
                                     <div>
                                       <p className="text-sm font-medium text-gray-500">Status</p>
-                                      <p className="text-green-600 capitalize">{order.status}</p>
+                                      <p className="text-green-600 capitalize">{order.order_status}</p> 
                                     </div>
                                     <div>
                                       <p className="text-sm font-medium text-gray-500">Paid</p>
@@ -1063,10 +1063,10 @@ const EmployerDashboard = () => {
                       {/* Completed Orders */}
                       <div>
                         <h4 className="text-lg font-semibold text-purple-800 mb-4">Completed Orders</h4>
-                        {orderHistory.filter(order => order.status === "completed").length > 0 ? (
+                        {orderHistory.filter(order => order.order_status === "completed").length > 0 ? (
                           <div className="space-y-4">
                             {orderHistory
-                              .filter(order => order.status === "completed")
+                              .filter(order => order.order_status === "completed")
                               .map(order => (
                                 <div key={order.id} className="bg-white p-6 rounded-lg shadow-sm">
                                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1086,7 +1086,7 @@ const EmployerDashboard = () => {
                                     </div>
                                     <div>
                                       <p className="text-sm font-medium text-gray-500">Status</p>
-                                      <p className="text-purple-600 capitalize">{order.status}</p>
+                                      <p className="text-purple-600 capitalize">{order.order_status}</p>
                                     </div>
                                     <div>
                                       <p className="text-sm font-medium text-gray-500">Paid</p>
