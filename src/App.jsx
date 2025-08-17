@@ -38,7 +38,7 @@ import RegisterArtisan from './Components/Marketers/RegisterArtisan';
 
 import MarketerArtisansList from './Components/Marketers/ListArtisans';
 
-import ForgotPassword from './pages/ForgotPassword';
+import ForgotPassword from './Compos/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 
 import AOS from 'aos';
@@ -69,7 +69,8 @@ const App = () => {
           <Route path="/payment" element={<Payment />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUP />} />
-
+          
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
           <Route path="/profession-details/:userId/:username" element={<ArtisanProfessionDetails />} />
           <Route path="/employer-details/:userId/:username" element={<EmployerDetailForm />} />
@@ -105,7 +106,7 @@ const App = () => {
           <Route path="/order-service" element={<ProtectedRoute>
           
             
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+          
           <Route path="/reset-password/:uidb64/:token" element={<ResetPassword />} />
 
          {/* */}
