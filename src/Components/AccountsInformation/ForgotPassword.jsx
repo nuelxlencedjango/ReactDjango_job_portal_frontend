@@ -55,12 +55,13 @@ const ForgotPassword = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="form-button w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
             disabled={loading}
           >
             {loading ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>
+
 
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
