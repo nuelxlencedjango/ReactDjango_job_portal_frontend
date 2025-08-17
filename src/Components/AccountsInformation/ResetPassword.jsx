@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axiosInstance from '../api/axios';
+
+import api from "../../api";
 
 const ResetPassword = () => {
   const { uidb64, token } = useParams();
@@ -24,7 +25,7 @@ const ResetPassword = () => {
     setError('');
     
     try {
-      const response = await axiosInstance.post(
+      const response = await api.post(
         `acct/password-reset-confirm/${uidb64}/${token}/`, 
         { new_password: newPassword }
       );
