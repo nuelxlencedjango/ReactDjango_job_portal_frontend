@@ -108,8 +108,7 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:uidb64/:token" element={<ResetPassword />} />
 
-         {/* 
-        <Route path="/success" element={<h1>Registration Successful!</h1>} /> */}
+         {/* */}
 
             <OrderForm />
             </ProtectedRoute>}/>
