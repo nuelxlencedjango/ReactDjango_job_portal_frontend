@@ -1,7 +1,7 @@
 // src/components/ForgotPassword.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axiosInstance from '../api/axios';
+import axiosInstance from '../../api/axios';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');

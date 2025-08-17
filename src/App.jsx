@@ -38,8 +38,8 @@ import RegisterArtisan from './Components/Marketers/RegisterArtisan';
 
 import MarketerArtisansList from './Components/Marketers/ListArtisans';
 
-import ForgotPassword from './Compos/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
+import ForgotPassword from './Components/AccountsInformation/ForgotPassword';
+import ResetPassword from './Components/AccountsInformation/ResetPassword';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
