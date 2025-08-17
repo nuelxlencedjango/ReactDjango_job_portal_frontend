@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../../api";
 import Cookies from "js-cookie";
 
-const EmployerDashboard = () => { 
+const EmployerDashboard = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [lastPayment, setLastPayment] = useState(null);
   const [artisanDetailsList, setArtisanDetailsList] = useState([]);
@@ -81,7 +81,7 @@ const EmployerDashboard = () => {
     } catch (err) {
       setError(prev => ({
         ...prev,
-        payment: "Failed to fetch last payment details.",
+        payment: err.response?.data?.message || "Failed to fetch last payment details.",
       }));
     } finally {
       setLoading(prev => ({ ...prev, payment: false }));
@@ -98,23 +98,21 @@ const EmployerDashboard = () => {
       if (!token) {
         throw new Error("No access token found. Please log in.");
       }
-      const response = await api.get("/employer/expected-artisan/", { 
-      
-        headers: { Authorization: `Bearer ${token}` },
-         
+      const headers = { Authorization: `Bearer ${token}` };
+      const response = await api.get("/employer/expected-artisan/", {
+        headers,
       });
-       console.log('headers:',headers)
-      console.log('responses:',response.data)
+      console.log("Expected artisan response:", response.data);
       if (response.data && Array.isArray(response.data)) {
         setArtisanDetailsList(response.data);
       } else {
         throw new Error("Invalid data format received from server");
       }
     } catch (err) {
-      console.error("Error fetching expected artisans:", err); 
+      console.error("Error fetching expected artisans:", err);
       setError(prev => ({
         ...prev,
-        artisan: err.response?.data?.message || err.message || "Failed to fetch expected artisan details.", 
+        artisan: err.response?.data?.message || err.message || "Failed to fetch expected artisan details.",
       }));
       setArtisanDetailsList([]);
     } finally {
@@ -135,14 +133,13 @@ const EmployerDashboard = () => {
       const response = await api.get("/employer/order-history/", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log('order history:', response.data)
+      console.log("Order history:", response.data);
       if (response.data && Array.isArray(response.data)) {
         setOrderHistory(response.data);
-        // Update stats based on order statuses
         setStats({
-          pendingOrders: response.data.filter(order => order.status === 'pending').length,
-          activeJobs: response.data.filter(order => order.status === 'in_progress').length,
-          completedJobs: response.data.filter(order => order.status === 'completed').length,
+          pendingOrders: response.data.filter(order => order.status === "pending").length,
+          activeJobs: response.data.filter(order => order.status === "in_progress").length,
+          completedJobs: response.data.filter(order => order.status === "completed").length,
         });
       } else {
         throw new Error("Invalid data format received from server");
@@ -170,7 +167,7 @@ const EmployerDashboard = () => {
       const response = await api.get("/employer/active-jobs-count/", {
         headers: { Authorization: `Bearer ${token}` },
       });
-       console.log('active job:', response.data)
+      console.log("Active jobs:", response.data);
       setStats(prev => ({ ...prev, activeJobs: response.data.count }));
     } catch (err) {
       console.error("Error fetching active jobs count:", err);
@@ -188,9 +185,9 @@ const EmployerDashboard = () => {
         throw new Error("No access token found. Please log in.");
       }
       const response = await api.get("/employer/completed-jobs-count/", {
-        headers: { Authorization: `Bearer ${token}` }, 
+        headers: { Authorization: `Bearer ${token}` },
       });
-      console.log('completed jobs:', response.data)
+      console.log("Completed jobs:", response.data);
       setStats(prev => ({ ...prev, completedJobs: response.data.count }));
     } catch (err) {
       console.error("Error fetching completed jobs count:", err);
@@ -266,7 +263,7 @@ const EmployerDashboard = () => {
             <nav>
               <ul className="space-y-2">
                 <li>
-                  <button 
+                  <button
                     onClick={() => setActiveSection("home")}
                     className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1"
                   >
@@ -310,7 +307,8 @@ const EmployerDashboard = () => {
                   </button>
                 </li>
                 <li>
-                  <button onClick={fetchExpectedArtisan}
+                  <button
+                    onClick={fetchExpectedArtisan}
                     className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1"
                   >
                     <svg
@@ -327,7 +325,7 @@ const EmployerDashboard = () => {
                         d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                       />
                     </svg>
-                    <span>Expected Artisan</span>    
+                    <span>Expected Artisan</span>
                   </button>
                 </li>
                 <li>
@@ -353,7 +351,9 @@ const EmployerDashboard = () => {
                   </button>
                 </li>
                 <li>
-                  <button className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1">
+                  <button
+                    className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1"
+                  >
                     <svg
                       className="w-5 h-5 mr-3"
                       fill="none"
@@ -372,7 +372,9 @@ const EmployerDashboard = () => {
                   </button>
                 </li>
                 <li>
-                  <button className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1">
+                  <button
+                    className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1"
+                  >
                     <svg
                       className="w-5 h-5 mr-3"
                       fill="none"
@@ -391,7 +393,9 @@ const EmployerDashboard = () => {
                   </button>
                 </li>
                 <li>
-                  <button className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1">
+                  <button
+                    className="flex items-center p-3 w-full text-left text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 ease-in-out transform hover:translate-x-1"
+                  >
                     <svg
                       className="w-5 h-5 mr-3"
                       fill="none"
@@ -746,54 +750,107 @@ const EmployerDashboard = () => {
                     <div className="bg-gray-50 rounded-lg p-6">
                       {artisanDetailsList.map((artisanDetails, index) => (
                         <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                          <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center">
-                            <img
-                              src={artisanDetails.artisan_details.profile_image}
-                              alt="Artisan Profile"
-                              className="h-24 w-24 rounded-full object-cover mb-2"
-                              onError={e => {
-                                e.target.src = "https://via.placeholder.com/150";
-                              }}
-                            />
-                            <h4 className="text-lg font-semibold text-gray-800">
-                              {artisanDetails.artisan_details.full_name}
-                            </h4>
-                            <p className="text-gray-600">
-                              {artisanDetails.artisan_details.service}
-                            </p>
-                          </div>
+                          {artisanDetails.artisan_details ? (
+                            <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center">
+                              <img
+                                src={artisanDetails.artisan_details.profile_image || "https://via.placeholder.com/150"}
+                                alt="Artisan Profile"
+                                className="h-24 w-24 rounded-full object-cover mb-2"
+                                onError={e => {
+                                  e.target.src = "https://via.placeholder.com/150";
+                                }}
+                              />
+                              <h4 className="text-lg font-semibold text-gray-800">
+                                {artisanDetails.artisan_details.full_name}
+                              </h4>
+                              <p className="text-gray-600">{artisanDetails.artisan_details.service}</p>
+                            </div>
+                          ) : (
+                            <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center">
+                              <div className="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center mb-2">
+                                <span className="text-gray-500">No Artisan</span>
+                              </div>
+                              <h4 className="text-lg font-semibold text-gray-800">
+                                {artisanDetails.status === "no_artisan_assigned"
+                                  ? "No Artisan Assigned"
+                                  : "Error in Data"}
+                              </h4>
+                              <p className="text-gray-600">Order ID: {artisanDetails.order_id}</p>
+                            </div>
+                          )}
                           <div className="bg-white p-6 rounded-lg shadow-sm">
                             <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                              Artisan Details
+                              {artisanDetails.artisan_details ? "Artisan Details" : "Order Details"}
                             </h4>
                             <div className="space-y-3">
-                              <div>
-                                <p className="text-sm font-medium text-gray-500">Phone Number</p>
-                                <p className="text-gray-900">
-                                  {artisanDetails.artisan_details.phone_number}
-                                </p>
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium text-gray-500">Location</p>
-                                <p className="text-gray-900">
-                                  {artisanDetails.artisan_details.location}
-                                </p>
-                              </div>
+                              {artisanDetails.artisan_details ? (
+                                <>
+                                  <div>
+                                    <p className="text-sm font-medium text-gray-500">Phone Number</p>
+                                    <p className="text-gray-900">
+                                      {artisanDetails.artisan_details.phone_number}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-medium text-gray-500">Location</p>
+                                    <p className="text-gray-900">
+                                      {artisanDetails.artisan_details.location}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-medium text-gray-500">Experience</p>
+                                    <p className="text-gray-900">
+                                      {artisanDetails.artisan_details.experience} years
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-medium text-gray-500">Pay Rate</p>
+                                    <p className="text-gray-900">₦{artisanDetails.artisan_details.pay_rate}</p>
+                                  </div>
+                                </>
+                              ) : (
+                                <div>
+                                  <p className="text-sm font-medium text-gray-500">Status</p>
+                                  <p className="text-gray-900 capitalize">{artisanDetails.status}</p>
+                                </div>
+                              )}
                             </div>
                           </div>
                           <div className="bg-white p-6 rounded-lg shadow-sm">
-                            <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                              Job Details
-                            </h4>
+                            <h4 className="text-lg font-semibold text-gray-900 mb-4">Job Details</h4>
                             <div className="space-y-3">
-                              <div>
-                                <p className="text-sm font-medium text-gray-500">Expected Date</p>
-                                <p className="text-gray-900">
-                                  {new Date(
-                                    artisanDetails.job_details.expectedDate
-                                  ).toLocaleDateString()}
-                                </p>
-                              </div>
+                              {artisanDetails.job_details && Object.keys(artisanDetails.job_details).length > 0 ? (
+                                <>
+                                  <div>
+                                    <p className="text-sm font-medium text-gray-500">Expected Date</p>
+                                    <p className="text-gray-900">
+                                      {artisanDetails.job_details.expectedDate
+                                        ? new Date(artisanDetails.job_details.expectedDate).toLocaleDateString()
+                                        : "Not specified"}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-medium text-gray-500">Description</p>
+                                    <p className="text-gray-900">
+                                      {artisanDetails.job_details.description || "Not specified"}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-medium text-gray-500">Contact Person</p>
+                                    <p className="text-gray-900">
+                                      {artisanDetails.job_details.contact_person || "Not specified"}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-medium text-gray-500">Contact Phone</p>
+                                    <p className="text-gray-900">
+                                      {artisanDetails.job_details.contact_person_phone || "Not specified"}
+                                    </p>
+                                  </div>
+                                </>
+                              ) : (
+                                <p className="text-gray-600">No job details available.</p>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -802,7 +859,7 @@ const EmployerDashboard = () => {
                   )}
                   {artisanDetailsList.length === 0 && !loading.artisan && !error.artisan && (
                     <div className="bg-gray-50 rounded-lg p-6">
-                      <p className="text-gray-600">No paid artisans found.</p>
+                      <p className="text-gray-600">No paid artisans or job details found.</p>
                     </div>
                   )}
                 </div>
@@ -882,52 +939,59 @@ const EmployerDashboard = () => {
                       {/* Pending Orders */}
                       <div className="mb-8">
                         <h4 className="text-lg font-semibold text-blue-800 mb-4">Pending Orders</h4>
-                        {orderHistory.filter(order => order.status === 'pending').length > 0 ? (
+                        {orderHistory.filter(order => order.status === "pending").length > 0 ? (
                           <div className="space-y-4">
-                            {orderHistory.filter(order => order.status === 'pending').map(order => (
-                              <div key={order.id} className="bg-white p-6 rounded-lg shadow-sm">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Order Code</p>
-                                    <p className="text-gray-900">{order.order_code}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Total Price</p>
-                                    <p className="text-gray-900">₦{order.total_price}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Created At</p>
-                                    <p className="text-gray-900">{new Date(order.created_at).toLocaleString()}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Status</p>
-                                    <p className="text-blue-600 capitalize">{order.status}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Paid</p>
-                                    <p className={order.paid ? "text-green-600" : "text-red-600"}>
-                                      {order.paid ? "Yes" : "No"}
-                                    </p>
-                                  </div>
-                                  {order.paid && (
+                            {orderHistory
+                              .filter(order => order.status === "pending")
+                              .map(order => (
+                                <div key={order.id} className="bg-white p-6 rounded-lg shadow-sm">
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                      <p className="text-sm font-medium text-gray-500">Paid At</p>
-                                      <p className="text-gray-900">{new Date(order.paid_at).toLocaleString()}</p>
+                                      <p className="text-sm font-medium text-gray-500">Order Code</p>
+                                      <p className="text-gray-900">{order.order_code}</p>
                                     </div>
-                                  )}
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Total Price</p>
+                                      <p className="text-gray-900">₦{order.total_price}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Created At</p>
+                                      <p className="text-gray-900">
+                                        {new Date(order.created_at).toLocaleString()}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Status</p>
+                                      <p className="text-blue-600 capitalize">{order.status}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Paid</p>
+                                      <p className={order.paid ? "text-green-600" : "text-red-600"}>
+                                        {order.paid ? "Yes" : "No"}
+                                      </p>
+                                    </div>
+                                    {order.paid && (
+                                      <div>
+                                        <p className="text-sm font-medium text-gray-500">Paid At</p>
+                                        <p className="text-gray-900">
+                                          {new Date(order.paid_at).toLocaleString()}
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="mt-4">
+                                    <p className="text-sm font-medium text-gray-500">Items</p>
+                                    <ul className="mt-2 space-y-2">
+                                      {order.items.map(item => (
+                                        <li key={item.id} className="text-gray-900">
+                                          {item.service_name} by {item.artisan_name} - ₦{item.price} (Total: ₦
+                                          {item.total})
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
                                 </div>
-                                <div className="mt-4">
-                                  <p className="text-sm font-medium text-gray-500">Items</p>
-                                  <ul className="mt-2 space-y-2">
-                                    {order.items.map(item => (
-                                      <li key={item.id} className="text-gray-900">
-                                        {item.service_name} by {item.artisan_name} - ₦{item.price} (Total: ${item.total})
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-                            ))}
+                              ))}
                           </div>
                         ) : (
                           <p className="text-gray-600">No pending orders found.</p>
@@ -937,52 +1001,59 @@ const EmployerDashboard = () => {
                       {/* Ongoing Orders */}
                       <div className="mb-8">
                         <h4 className="text-lg font-semibold text-green-800 mb-4">Ongoing Orders</h4>
-                        {orderHistory.filter(order => order.status === 'in_progress').length > 0 ? (
+                        {orderHistory.filter(order => order.status === "in_progress").length > 0 ? (
                           <div className="space-y-4">
-                            {orderHistory.filter(order => order.status === 'in_progress').map(order => (
-                              <div key={order.id} className="bg-white p-6 rounded-lg shadow-sm">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Order Code</p>
-                                    <p className="text-gray-900">{order.order_code}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Total Price</p>
-                                    <p className="text-gray-900"> ₦{order.total_price}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Created At</p>
-                                    <p className="text-gray-900">{new Date(order.created_at).toLocaleString()}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Status</p>
-                                    <p className="text-green-600 capitalize">{order.status}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Paid</p>
-                                    <p className={order.paid ? "text-green-600" : "text-red-600"}>
-                                      {order.paid ? "Yes" : "No"}
-                                    </p>
-                                  </div>
-                                  {order.paid && (
+                            {orderHistory
+                              .filter(order => order.status === "in_progress")
+                              .map(order => (
+                                <div key={order.id} className="bg-white p-6 rounded-lg shadow-sm">
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                      <p className="text-sm font-medium text-gray-500">Paid At</p>
-                                      <p className="text-gray-900">{new Date(order.paid_at).toLocaleString()}</p>
+                                      <p className="text-sm font-medium text-gray-500">Order Code</p>
+                                      <p className="text-gray-900">{order.order_code}</p>
                                     </div>
-                                  )}
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Total Price</p>
+                                      <p className="text-gray-900">₦{order.total_price}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Created At</p>
+                                      <p className="text-gray-900">
+                                        {new Date(order.created_at).toLocaleString()}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Status</p>
+                                      <p className="text-green-600 capitalize">{order.status}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Paid</p>
+                                      <p className={order.paid ? "text-green-600" : "text-red-600"}>
+                                        {order.paid ? "Yes" : "No"}
+                                      </p>
+                                    </div>
+                                    {order.paid && (
+                                      <div>
+                                        <p className="text-sm font-medium text-gray-500">Paid At</p>
+                                        <p className="text-gray-900">
+                                          {new Date(order.paid_at).toLocaleString()}
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="mt-4">
+                                    <p className="text-sm font-medium text-gray-500">Items</p>
+                                    <ul className="mt-2 space-y-2">
+                                      {order.items.map(item => (
+                                        <li key={item.id} className="text-gray-900">
+                                          {item.service_name} by {item.artisan_name} - ₦{item.price} (Total: ₦
+                                          {item.total})
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
                                 </div>
-                                <div className="mt-4">
-                                  <p className="text-sm font-medium text-gray-500">Items</p>
-                                  <ul className="mt-2 space-y-2">
-                                    {order.items.map(item => (
-                                      <li key={item.id} className="text-gray-900">
-                                        {item.service_name} by {item.artisan_name} - ₦{item.price} (Total: ${item.total})
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-                            ))}
+                              ))}
                           </div>
                         ) : (
                           <p className="text-gray-600">No ongoing orders found.</p>
@@ -992,52 +1063,59 @@ const EmployerDashboard = () => {
                       {/* Completed Orders */}
                       <div>
                         <h4 className="text-lg font-semibold text-purple-800 mb-4">Completed Orders</h4>
-                        {orderHistory.filter(order => order.status === 'completed').length > 0 ? (
+                        {orderHistory.filter(order => order.status === "completed").length > 0 ? (
                           <div className="space-y-4">
-                            {orderHistory.filter(order => order.status === 'completed').map(order => (
-                              <div key={order.id} className="bg-white p-6 rounded-lg shadow-sm">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Order Code</p>
-                                    <p className="text-gray-900">{order.order_code}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Total Price</p>
-                                    <p className="text-gray-900">${order.total_price}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Created At</p>
-                                    <p className="text-gray-900">{new Date(order.created_at).toLocaleString()}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Status</p>
-                                    <p className="text-purple-600 capitalize">{order.status}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-500">Paid</p>
-                                    <p className={order.paid ? "text-green-600" : "text-red-600"}>
-                                      {order.paid ? "Yes" : "No"}
-                                    </p>
-                                  </div>
-                                  {order.paid && (
+                            {orderHistory
+                              .filter(order => order.status === "completed")
+                              .map(order => (
+                                <div key={order.id} className="bg-white p-6 rounded-lg shadow-sm">
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                      <p className="text-sm font-medium text-gray-500">Paid At</p>
-                                      <p className="text-gray-900">{new Date(order.paid_at).toLocaleString()}</p>
+                                      <p className="text-sm font-medium text-gray-500">Order Code</p>
+                                      <p className="text-gray-900">{order.order_code}</p>
                                     </div>
-                                  )}
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Total Price</p>
+                                      <p className="text-gray-900">₦{order.total_price}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Created At</p>
+                                      <p className="text-gray-900">
+                                        {new Date(order.created_at).toLocaleString()}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Status</p>
+                                      <p className="text-purple-600 capitalize">{order.status}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-500">Paid</p>
+                                      <p className={order.paid ? "text-green-600" : "text-red-600"}>
+                                        {order.paid ? "Yes" : "No"}
+                                      </p>
+                                    </div>
+                                    {order.paid && (
+                                      <div>
+                                        <p className="text-sm font-medium text-gray-500">Paid At</p>
+                                        <p className="text-gray-900">
+                                          {new Date(order.paid_at).toLocaleString()}
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="mt-4">
+                                    <p className="text-sm font-medium text-gray-500">Items</p>
+                                    <ul className="mt-2 space-y-2">
+                                      {order.items.map(item => (
+                                        <li key={item.id} className="text-gray-900">
+                                          {item.service_name} by {item.artisan_name} - ₦{item.price} (Total: ₦
+                                          {item.total})
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
                                 </div>
-                                <div className="mt-4">
-                                  <p className="text-sm font-medium text-gray-500">Items</p>
-                                  <ul className="mt-2 space-y-2">
-                                    {order.items.map(item => (
-                                      <li key={item.id} className="text-gray-900">
-                                        {item.service_name} by {item.artisan_name} - ${item.price} (Total: ${item.total})
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-                            ))}
+                              ))}
                           </div>
                         ) : (
                           <p className="text-gray-600">No completed orders found.</p>
