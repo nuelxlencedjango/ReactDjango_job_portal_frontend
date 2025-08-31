@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import api from '../../api';
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -12,11 +12,15 @@ const ForgotPassword = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
+
     try {
-      const response = await api.post('acct/password-reset/', { email });
-      setMessage(response.data.message);
+      const response = await api.post('acct/password-reset/', { email }, {
+        // Optionally pass headers to override authentication
+        headers: { 'Authorization': null }, // Force no auth if api supports it
+      });
+      setMessage(response.data.message || 'Password reset email sent');
     } catch (error) {
+      console.error('Forgot Password Error:', error.response?.data || error.message);
       setError(error.response?.data?.error || 'Failed to send reset email. Please try again.');
     } finally {
       setLoading(false);

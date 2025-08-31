@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-
-import api from "../../api";
+import api from '../../api'; 
 
 const ResetPassword = () => {
   const { uidb64, token } = useParams();
@@ -26,11 +25,16 @@ const ResetPassword = () => {
     try {
       const response = await api.post(
         `acct/password-reset-confirm/${uidb64}/${token}/`,
-        { new_password: newPassword }
+        { new_password: newPassword },
+        {
+          // Optionally pass headers to override authentication
+          headers: { 'Authorization': null }, // Force no auth if api supports it
+        }
       );
-      setMessage(response.data.message);
+      setMessage(response.data.message || 'Password has been reset successfully');
       setTimeout(() => navigate('/login'), 3000);
     } catch (error) {
+      console.error('Reset Password Error:', error.response?.data || error.message);
       setError(error.response?.data?.error || 'Failed to reset password. The link may have expired.');
     } finally {
       setLoading(false);
