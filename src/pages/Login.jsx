@@ -67,7 +67,7 @@ function Login() {
                         Register
                     </Link>
                     <Link to="/forgot-password" className="button-link text-[#333] text-semi-bold hover:text-indigo-700">
-                        Forgot Password?
+                        Forgot Password? this
                     </Link>
                 </div>
             </div>
