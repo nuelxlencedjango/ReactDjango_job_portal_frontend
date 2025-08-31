@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -26,7 +25,7 @@ const ResetPassword = () => {
     
     try {
       const response = await api.post(
-        `acct/password-reset-confirm/${uidb64}/${token}/`, 
+        `acct/password-reset-confirm/${uidb64}/${token}/`,
         { new_password: newPassword }
       );
       setMessage(response.data.message);
@@ -81,12 +80,13 @@ const ResetPassword = () => {
               placeholder="Confirm new password"
             />
           </div>
-           <button
-            className="form-button w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
-            type="submit" disabled={loading}>
-              {loading ? "Loading..." : "Login"}
-            </button>
 
+          <button
+            className="form-button w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+            type="submit" disabled={loading}
+          >
+            {loading ? "Resetting..." : "Reset Password"}
+          </button>
         </form>
       </div>
     </div>

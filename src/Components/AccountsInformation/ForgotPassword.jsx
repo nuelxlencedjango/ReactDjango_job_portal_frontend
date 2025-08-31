@@ -1,9 +1,7 @@
-// src/components/ForgotPassword.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import api from '../../api';
-
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -62,7 +60,6 @@ const ForgotPassword = () => {
             {loading ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>
-
 
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
