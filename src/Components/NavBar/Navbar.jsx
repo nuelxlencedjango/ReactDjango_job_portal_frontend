@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import Cookies from 'js-cookie';
 import api from '../../api';
-import logo from '../../assets/logo.jpg';
+//import logo from '../../assets/logo.jpg';
 
+import logo from '../../assets/i-wan-wok-logo.jpeg';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
